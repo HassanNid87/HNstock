@@ -22,10 +22,9 @@ return new class extends Migration
             $table->double('tremise')->default(0);
             $table->double('mremise')->default(0);
             $table->double('mttc')->default(0);
-            $table->double('client_id');
 	        $table->date('deleted_at');
             $table->timestamps();
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
 
 
         });
