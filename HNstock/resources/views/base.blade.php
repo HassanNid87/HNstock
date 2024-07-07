@@ -4,68 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') | {{ config('app.name') }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link href="{{ asset("assets/css/icons.min.css") }}" rel="stylesheet"/>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .navbar-nav .nav-link:hover {
             color: #000000 !important; /* Changer la couleur du texte lors du survol */
             background-color: #ffffff !important; /* Changer la couleur de fond lors du survol */
         }
-
-
     </style>
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#5AB2FF;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('store.index') }}" style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 20px;">Home</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('categories.index') }}" style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Categories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('products.index') }}" style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Products</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('clients.index') }}" style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Clients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('sales.index') }}" style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Sales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('stocks.index') }}" style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Stocks</a>
-                    </li>
-                </ul>
+<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href="/" class="logo logo-light">
+                    <span class="logo-sm">
+                        HN
+                    </span>
+                    <span class="logo-lg">
+                        <img src="{{ asset("assets/images/logo.png") }}" alt="" height="20">
+                    </span>
+                </a>
             </div>
-        </div>
-    </nav>
 
-    <div class="container my-5">
-        @if($errors->any())
-            <div class="alert alert-danger" role="alert">
-                <strong>Errors</strong>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-        @yield('content')
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+
+            <!-- App Search-->
+            <form class="app-search d-none d-lg-block">
+                <div class="position-relative">
+                    <input type="text" class="form-control" placeholder="Search...">
+                    <span class="uil-search"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
+
+<div class="vertical-menu">
+
+    <!-- LOGO -->
+    <div class="navbar-brand-box">
+        <a href="/" class="logo logo-light">
+            <span class="logo-sm">
+                HN
+            </span>
+            <span class="logo-lg">
+                <img src="{{ asset("assets/images/logo.png") }}" alt="" height="60">
+            </span>
+        </a>
+        <a href="/" class="logo logo-dark">
+            <span class="logo-sm">
+                HN
+            </span>
+            <span class="logo-lg">
+                <img src="{{ asset("assets/images/logo.png") }}" alt="" height="60">
+            </span>
+        </a>
     </div>
 
+    <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+        <i class="fa fa-fw fa-bars"></i>
+    </button>
+
+    <div data-simplebar class="sidebar-menu-scroll">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li class="menu-title">Menu</li>
+
+                @foreach(config('routes') as $route)
+                    <li>
+                        <a href="{{ route($route['route']) }}">
+                            <i class="uil-{{ $route['icon']  }}"></i>
+                            <span>{{ $route['name'] }}</span>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+</div>
+
+{{--<nav class="navbar navbar-expand-lg navbar-light" style="background-color:#5AB2FF;">--}}
+{{--    <div class="container-fluid">--}}
+{{--        <a class="navbar-brand" href="{{ route('') }}"--}}
+{{--           style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 20px;">Home</a>--}}
+{{--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"--}}
+{{--                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">--}}
+{{--            <span class="navbar-toggler-icon"></span>--}}
+{{--        </button>--}}
+{{--        <div class="collapse navbar-collapse" id="navbarNav">--}}
+{{--            <ul class="navbar-nav">--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="{{ route('categories.index') }}"--}}
+{{--                       style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Categories</a>--}}
+{{--                </li>--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="{{ route('products.index') }}"--}}
+{{--                       style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Products</a>--}}
+{{--                </li>--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="{{ route('clients.index') }}"--}}
+{{--                       style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Clients</a>--}}
+{{--                </li>--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="{{ route('sales.index') }}"--}}
+{{--                       style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Sales</a>--}}
+{{--                </li>--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link" href="{{ route('stocks.index') }}"--}}
+{{--                       style="color: #ffffff; font-family: Arial, sans-serif; font-weight: bold; font-size: 15px;">Stocks</a>--}}
+{{--                </li>--}}
+{{--            </ul>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</nav>--}}
 
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybBgq8aXCbibzQG8poVRW6LhJ6MzzT6Qf6KpG7rBPsSx5K+N2" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-pZIm8a0DYdL4Dk5cz1EziFW/Mun0HjElcpM1Z9uj4rU7nsfzFiMnU3/P+7x7BSZ6" crossorigin="anonymous"></script>
+@if($errors->any())
+    <div class="alert alert-danger" role="alert">
+        <strong>Errors</strong>
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+<div class="main-content">
 
-    <script src="node_modules/chart.js/dist/chart.min.js"></script>
+    <div class="page-content">
+        <div class="container-fluid">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                        @yield('content')
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+        </div> <!-- container-fluid -->
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz4fnFO9gybBgq8aXCbibzQG8poVRW6LhJ6MzzT6Qf6KpG7rBPsSx5K+N2"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-pZIm8a0DYdL4Dk5cz1EziFW/Mun0HjElcpM1Z9uj4rU7nsfzFiMnU3/P+7x7BSZ6"
+        crossorigin="anonymous"></script>
+
+<script src="{{ asset("assets/libs/metismenu/metisMenu.min.js") }}"></script>
+<script src="{{ asset("assets/libs/node-waves/waves.min.js") }}"></script>
+
+<script src="{{ asset("assets/js/app.js") }}"></script>
+<script src="node_modules/chart.js/dist/chart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
