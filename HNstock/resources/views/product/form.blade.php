@@ -40,11 +40,11 @@
     </div>
     <div class="form-group">
         <label for="priceA" class="form-label">Price A</label>
-        <input type="number" name="priceA" id="priceA" class="form-control" value="{{ old('priceA', $product->priceA) }}">
+        <input type="number" name="priceA" step="0.01" id="priceA" class="form-control" value="{{ old('priceA', $product->priceA) }}">
     </div>
     <div class="form-group">
         <label for="priceV" class="form-label">Price V</label>
-        <input type="number" name="priceV" id="priceV" class="form-control" value="{{ old('priceV', $product->priceV) }}">
+        <input type="number" name="priceV" id="priceV" step="0.01" class="form-control" value="{{ old('priceV', $product->priceV) }}">
     </div>
     <div class="form-group my-3">
         <button type="submit" class="btn btn-primary w-100">{{ $isUpdate ? 'Update' : 'Create' }}</button>
