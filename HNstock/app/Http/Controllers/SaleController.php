@@ -6,6 +6,7 @@ use App\Http\Requests\SaleRequest;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 use Dompdf\Dompdf;
 
@@ -97,6 +98,16 @@ class SaleController extends Controller
             'mttc' => 0,
             'NFact' => Sale::generateNextNFact(), // Génération du numéro de facture
         ]);
+        $sale->details = [
+            new SaleDetail([
+                'sale_id' => 0,
+                'product_id' => 0,
+                'quantity' => 0,
+                'unit_price' => 0,
+                'total' => 0,
+            ])
+        ];
+
         $isUpdate = false;
         return view('sale.form', compact('sale', 'isUpdate', 'clients', 'products'));
     }
