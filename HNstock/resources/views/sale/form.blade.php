@@ -54,11 +54,12 @@
             @foreach($sale->details as $index => $detail)
                 <tr class="sale-row">
                     <td>
-                        <select name="product_id[]" class="form-select">
+                        <select name="product_id[]" class="form-select product-select">
                             <option value="">Select Product</option>
                             @foreach($products as $product)
-                                <option
-                                    value="{{ $product->id }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>{{ $product->name }}</option>
+                                <option @selected($detail->product_id == $product->id)
+                                        data-price="{{ $product->priceV }}"
+                                        value="{{ $product->id }}">{{ $product->name }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -67,15 +68,16 @@
                                value="{{ $detail->quantity }}">
                     </td>
                     <td>
-                        <input type="number" name="unit_price[]" class="form-control unit-price"
+                        <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01"
                                value="{{ $detail->unit_price }}">
                     </td>
                     <td>
                         <input type="number" class="form-control total" name="total[]" value="{{ $detail->total }}"
+                               step="0.01"
                                readonly>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-rounded delete-product" type="button">
+                        <button @disabled($index === 0) class="btn btn-danger btn-rounded delete-product" type="button">
                             <i class="uil uil-trash"></i>
                         </button>
                     </td>
@@ -95,32 +97,36 @@
 
         <div class="form-group">
             <label for="mht" class="form-label">Montant HT</label>
-            <input type="number" name="mht" id="mht" class="form-control" value="{{ old('mht', $sale->mht) }}">
+            <input type="number" name="mht" id="mht" class="form-control" value="{{ old('mht', $sale->mht) }}"
+                   step="0.01">
         </div>
         <div class="form-group">
             <label for="ttva" class="form-label">T-TVA</label>
-            <input type="number" name="ttva" id="ttva" class="form-control" value="{{ old('ttva', $sale->ttva) }}">
+            <input type="number" name="ttva" id="ttva" class="form-control" value="{{ old('ttva', $sale->ttva) }}"
+                   step="0.01">
         </div>
 
         <div class="form-group">
             <label for="mtva" class="form-label">M-TVA</label>
-            <input type="number" name="mtva" id="mtva" class="form-control" value="{{ old('mtva', $sale->mtva) }}">
+            <input type="number" name="mtva" id="mtva" class="form-control" value="{{ old('mtva', $sale->mtva) }}"
+                   step="0.01">
         </div>
         <div class="form-group">
             <label for="tremise" class="form-label">TRemise</label>
             <input type="number" name="tremise" id="tremise" class="form-control"
-                   value="{{ old('tremise', $sale->tremise) }}">
+                   value="{{ old('tremise', $sale->tremise) }}" step="0.01">
         </div>
 
         <div class="form-group">
             <label for="mremise" class="form-label">Remise</label>
             <input type="number" name="mremise" id="mremise" class="form-control"
-                   value="{{ old('mremise', $sale->mremise) }}">
+                   value="{{ old('mremise', $sale->mremise) }}" step="0.01">
         </div>
 
         <div class="form-group">
             <label for="mttc" class="form-label">Montant TTC</label>
-            <input type="number" name="mttc" id="mttc" class="form-control" value="{{ old('mttc', $sale->mttc) }}">
+            <input type="number" name="mttc" id="mttc" class="form-control" value="{{ old('mttc', $sale->mttc) }}"
+                   step="0.01">
         </div>
 
         <br>
@@ -182,7 +188,13 @@
 
         // Ajouter une nouvelle ligne de vente
         $('#add-sale-row').click(function () {
-            var newRow = $('.sale-row').first().clone().removeAttr('id').removeAttr('style');
+            const newRow = $('.sale-row').first().clone().removeAttr('id').removeAttr('style');
+            const deleteBtn = newRow
+                .children('td')
+                .last()
+                .children('.delete-product');
+            deleteBtn.removeAttr("disabled");
+
             $('#sales-table-body').append(newRow);
             resetRow(newRow);
         });
@@ -208,6 +220,7 @@
         // Lorsque la sélection du produit change
         $(document).on('change', '.product-select', function () {
             var price = $(this).find('option:selected').data('price'); // Obtenez le prix du produit sélectionné
+            console.log(price);
             $(this).closest('tr').find('.unit-price').val(price); // Définissez le prix dans la zone de prix
         });
 
