@@ -32,6 +32,8 @@ use App\Http\Controllers\StoreController;
 Route::get('/',[StoreController::class,'index'])->name('store.index');
 
 Route::resource('products',ProductController::class);
+Route::post('/create-invoice', [ProductController::class, 'createInvoice'])->name('createInvoice');
+
 Route::resource('categories', CategoryController::class);
 Route::resource('clients',ClientController::class);
 Route::resource('sales',SaleController::class);
@@ -46,4 +48,6 @@ Route::resource('stocks', StockController::class);
 Route::get('/stock/out', [StockController::class, 'showStockOut'])->name('stock.out');
 //Route::get('sales/{id}/pdf', 'SaleController@generatePDF')->name('sales.pdf');
 //Auth::routes();
+
+
 
