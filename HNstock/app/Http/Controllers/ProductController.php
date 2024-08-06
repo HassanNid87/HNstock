@@ -156,7 +156,36 @@ class ProductController extends Controller
     {
         $product->delete();
         return to_route(route: 'products.index')->with('success', 'Product deleted successfully');
-
-
     }
+
+
+    public function createInvoice(Request $request)
+{
+    $cart = $request->input('cart');
+    //dd($request->input('cart'));
+
+    if (!$cart) {
+        return response()->json(['message' => 'Cart is empty'], 400);
+    }
+
+    // Logic to create invoice from cart data
+    $invoice = new Invoice();
+    $invoice->date = now();
+    $invoice->save();
+
+    foreach ($cart as $item) {
+        $product = Product::find($item['id']);
+        if ($product) {
+            $invoiceItem = new InvoiceItem();
+            $invoiceItem->invoice_id = $invoice->id;
+            $invoiceItem->product_id = $product->id;
+            $invoiceItem->quantity = $item['quantity'];
+            $invoiceItem->price = $product->priceV;
+            $invoiceItem->total = $product->priceV * $item['quantity'];
+            $invoiceItem->save();
+        }
+    }
+
+    return response()->json(['message' => 'Invoice created successfully']);
+}
 }
