@@ -78,7 +78,7 @@ class ProductController extends Controller
         $product = new Product();
         $categories = Category::all();
         $product->fill([
-            'quantity' => 0,
+
             'priceV' =>0,
             'priceA' =>0,
         ]);
@@ -103,7 +103,7 @@ class ProductController extends Controller
              // Create initial stock record
         Stock::create([
             'product_id' => $product->id,
-            'quantity' => $request->input('quantity', 0),
+           'quantity' => $request->input('quantity', 0),
         ]);
             return to_route(route: 'products.index')->with('success', 'Product create successfully');
 
@@ -132,22 +132,33 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, product $product)
-    {
-        $product->fill($request->validated())->save();
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
-        }
-        $product->update($data);
+    public function update(ProductRequest $request, Product $product)
+{
+    // Met à jour les champs du produit avec les données validées du formulaire
+    $product->fill($request->validated())->save();
 
-        // Update stock record
-        $product->stock()->update([
-            'quantity' => $request->input('quantity', $product->stock->quantity),
-        ]);
+    // Initialiser la variable $data
+    $data = [];
 
-        return to_route(route: 'products.index')->with('success', 'Product update successfully');
-
+    // Vérifie si un fichier d'image est présent dans la requête
+    if ($request->hasFile('image')) {
+        // Enregistre l'image et ajoute son chemin dans $data
+        $data['image'] = $request->file('image')->store('products', 'public');
     }
+
+    // Met à jour le produit avec les données (y compris le chemin de l'image si présent)
+    if (!empty($data)) {
+        $product->update($data);
+    }
+
+    // Met à jour l'enregistrement du stock
+    $product->stock()->update([
+        'quantity' => $request->input('quantity', $product->stock->quantity),
+    ]);
+
+    // Redirige vers la liste des produits avec un message de succès
+    return to_route('products.index')->with('success', 'Product updated successfully');
+}
 
     /**
      * Remove the specified resource from storage.

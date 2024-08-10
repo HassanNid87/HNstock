@@ -27,6 +27,12 @@ class SaleDetail extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
+
     public function setTotalAttribute($value)
     {
         $this->attributes['total'] = $this->quantity * $this->unit_price;

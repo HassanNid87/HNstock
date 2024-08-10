@@ -15,10 +15,16 @@
             <h1>Filters</h1>
             <form method="get">
                 <div class="form-group">
-                    <label for="client">Client Name</label>
+                    <!--<label for="NFacture">N° Facture</label>-->
+                    <input type="text" name="NFacture" id="NFacture" class="form-control" placeholder="N° Facture" value="{{ Request::input('NFacture') }}">
+                </div>
+                <br>
+                <div class="form-group">
+                   <!-- <label for="client">Client Name</label>-->
                     <input type="text" name="client" id="client" class="form-control" placeholder="Client Name" value="{{ Request::input('client') }}">
                 </div>
-                <h3>Date</h3>
+                <!--<h3>Date</h3>-->
+                <hr>
                 <div class="form-group">
                     <label for="start_date">Start Date</label>
                     <input type="date" name="start_date" id="start_date" class="form-control" value="{{ Request::input('start_date') }}">
@@ -27,18 +33,25 @@
                     <label for="end_date">End Date</label>
                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ Request::input('end_date') }}">
                 </div>
-                <h3>Amount</h3>
+               <!-- <h3>Amount</h3>-->
+               <hr>
+               <div class="form-group">
+               <!-- <label for="max_amount">Montant Max</label>-->
+                <input type="number" name="max_amount" id="max_amount" class="form-control" placeholder="Mt Max" value="{{ Request::input('max_amount') }}">
+            </div>
                 <div class="form-group">
-                    <label for="min_amount">Min Amount</label>
-                    <input type="number" name="min_amount" id="min_amount" class="form-control" placeholder="Min Amount" value="{{ Request::input('min_amount') }}">
+                    <br>
+                 <!--   <label for="min_amount">Montant Min</label>-->
+                    <input type="number" name="min_amount" id="min_amount" class="form-control" placeholder="Mt Min" value="{{ Request::input('min_amount') }}">
                 </div>
-                <div class="form-group">
-                    <label for="max_amount">Max Amount</label>
-                    <input type="number" name="max_amount" id="max_amount" class="form-control" placeholder="Max Amount" value="{{ Request::input('max_amount') }}">
-                </div>
+
                 <div class="form-group my-2">
-                    <input type="submit" class="btn btn-primary" value="Filter">
-                    <a type="reset" class="btn btn-secondary" href="{{ route('sales.index') }}">Reset</a>
+                    <button type="submit" class="btn btn-primary" title="Filtrer">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <a class="btn btn-secondary" href="{{ route('sales.index') }}" title="Reset">
+                        <i class="fas fa-redo"></i>
+                    </a>
                 </div>
             </form>
         </aside>
@@ -58,7 +71,10 @@
         <main class="col-md-10">
             <div class="d-flex justify-content-between align-items-center">
                 <h1>Sales List</h1>
-                <a href="{{ route('sales.create') }}" class="btn btn-primary">Create</a>
+
+                <a href="{{ route('sales.create') }}" class="btn btn-primary" title="Nouvelle Facture">
+                    <i class="fas fa-file-alt"></i>
+                </a>
             </div>
 
               <!-- Chart -->
@@ -98,16 +114,32 @@
                         <td style="color: #000000;font-family: Arial, sans-serif; font-weight: bold;font-size: 17px;">{{ $sale->mttc }}</td>
                         <td>
                             <div class="btn-group gap-2">
-                                <a href="{{ route('sales.show', $sale->id) }}" class="btn btn-sm btn-outline-info rounded">Details</a>
-                                <a href="{{ route('sales.edit', $sale) }}" class="btn btn-sm btn-outline-primary rounded">Update</a>
+                                <!-- Details Button -->
+                                <a href="{{ route('sales.show', $sale->id) }}" class="btn btn-sm btn-outline-info rounded" title="Details">
+                                    <i class="fas fa-info-circle"></i>
+                                </a>
+
+                                <!-- Update Button -->
+                                <a href="{{ route('sales.edit', $sale) }}" class="btn btn-sm btn-outline-primary rounded" title="Update">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+
+                                <!-- Delete Button -->
                                 <form method="POST" action="{{ route('sales.destroy', $sale) }}" onsubmit="return confirm('Are you sure you want to delete this sale?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </form>
-                                <a href="{{ route('sales.invoice', $sale->id) }}" class="btn btn-sm btn-outline-primary rounded">Print</a>
+
+                                <!-- Print Button -->
+                                <a href="{{ route('sales.invoice', $sale->id) }}" class="btn btn-sm btn-outline-primary rounded" title="Print">
+                                    <i class="fas fa-print"></i>
+                                </a>
                             </div>
                         </td>
+
                     </tr>
                     @empty
                     <tr>

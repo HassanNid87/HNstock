@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\SaleDetail;
 use Illuminate\Http\Request;
-
 
 class StockController extends Controller
 {
@@ -58,31 +56,40 @@ class StockController extends Controller
         return redirect()->route('stocks.index')->with('success', 'Stock deleted successfully');
     }
 
-    public function showStockOut()
-    {
-        $salesDetails = SaleDetail::with(['sale', 'product'])
-            ->get()
-            ->groupBy(function ($item) {
-                return $item->sale->DateFact; // Grouper par date de vente
-            });
+    public function showStockOut(Request $request)
+{
+    // Utiliser les dates par défaut si elles ne sont pas fournies
+    $startDate = $request->input('start_date', date('Y-m-d'));
+    $endDate = $request->input('end_date', date('Y-m-d'));
 
-        $stockOuts = [];
+    // Construire la requête pour récupérer les détails des ventes
+    $query = SaleDetail::with(['sale', 'product.category']) // Charger également la catégorie
+        ->join('sales', 'sale_details.sale_id', '=', 'sales.id') // Join with sales table
+        ->select('sale_details.*') // Select only columns from sale_details
+        ->whereBetween('sales.DateFact', [$startDate, $endDate]); // Filter based on sales.date
 
-        foreach ($salesDetails as $date => $details) {
-            foreach ($details->groupBy('product_id') as $productId => $productDetails) {
-                $totalQuantity = $productDetails->sum('quantity');
-                $stockOuts[] = [
-                    'date' => $date,
-                    'product' => $productDetails->first()->product,
-                    'quantity' => $totalQuantity,
-                ];
-            }
+    $salesDetails = $query->get()->groupBy(function ($item) {
+        return $item->sale->DateFact; // Grouper par date de vente
+    });
+
+    $stockOuts = [];
+
+    foreach ($salesDetails as $date => $details) {
+        foreach ($details->groupBy('product_id') as $productId => $productDetails) {
+            $totalQuantity = $productDetails->sum('quantity');
+            $stockOuts[] = [
+                'date' => $date,
+                'product' => $productDetails->first()->product,
+                'category' => $productDetails->first()->product->category->name, // Ajouter la catégorie
+                'quantity' => $totalQuantity,
+            ];
         }
-        // Convert to a Collection and sort by date in descending order
-        $stockOuts = collect($stockOuts)->sortByDesc('date');
-
-        return view('stock.out', compact('stockOuts'));
     }
 
+    // Convert to a Collection and sort by date in descending order
+    $stockOuts = collect($stockOuts)->sortByDesc('date');
+
+    return view('stock.out', compact('stockOuts'));
+}
 
 }

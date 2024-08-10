@@ -7,9 +7,11 @@
         $route = route('sales.update', $sale);
     }
 @endphp
-
 @section('content')
-    <h1>@yield('title')</h1>
+<div class="card m-3 p-3">
+    <div class="card-header bg-primary text-white">
+        <h1>@yield('title')</h1>
+    </div>
 
     <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -17,16 +19,16 @@
         @if ($isUpdate)
             @method('PUT')
         @endif
+
         <!-- Champ NFact en lecture seule -->
         <div class="form-group">
             <label for="NFact" class="form-label">NFact</label>
-            <input type="text" name="NFact" id="NFact" class="form-control" value="{{ old('NFact', $sale->NFact) }}"
-                   readonly>
+            <input type="text" name="NFact" id="NFact" class="form-control" value="{{ old('NFact', $sale->NFact) }}" readonly>
+
         </div>
         <div class="form-group">
             <label for="DateFact" class="form-label">DateFact</label>
-            <input type="date" name="DateFact" id="DateFact" class="form-control"
-                   value="{{ $sale->DateFact ?? date('Y-m-d') }}">
+            <input type="date" name="DateFact" id="DateFact" class="form-control" value="{{ $sale->DateFact ?? date('Y-m-d') }}">
         </div>
 
         <div class="form-group">
@@ -34,47 +36,59 @@
             <select name="client_id" id="client_id" class="form-select">
                 <option value="">Please choose client</option>
                 @foreach ($clients as $client)
-                    <option @if (old('client_id', $sale->client_id) == $client->id) selected
-                            @endif value="{{ $client->id }}">{{ $client->name }}</option>
+                    <option @if (old('client_id', $sale->client_id) == $client->id) selected @endif value="{{ $client->id }}">{{ $client->name }}</option>
                 @endforeach
             </select>
         </div>
+
         <!-- table ligne facture -->
         <table class="table">
             <thead>
             <tr>
+                <th>Code Barre</th>
+                <th>Categorie</th>
                 <th>Product</th>
+                <th>Image</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
                 <th>Total</th>
-                <th>#</th>
+                <th></th>
             </tr>
             </thead>
             <tbody id="sales-table-body">
-            @foreach($sale->details as $index => $detail)
+                @foreach($sale->details as $index => $detail)
                 <tr class="sale-row">
                     <td>
-                        <select name="product_id[]" class="form-select product-select">
-                            <option value="">Select Product</option>
-                            @foreach($products as $product)
-                                <option @selected($detail->product_id == $product->id)
-                                        data-price="{{ $product->priceV }}"
-                                        value="{{ $product->id }}">{{ $product->name }}</option>
+                        <input type="text" name="barcode[]" class="form-control barcode" value="{{ $detail->barcode }}" placeholder="Enter Barcode">
+                    </td>
+                    <td>
+                        <select name="category_id[]" class="form-select category-select" data-index="{{ $index }}">
+                            <option value="">Select Category</option>
+                            @foreach($categories as $category)
+                                <option @if($detail->product && $detail->product->category_id == $category->id) selected @endif value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="number" name="quantity[]" class="form-control quantity"
-                               value="{{ $detail->quantity }}">
+                        <select name="product_id[]" class="form-select product-select" data-index="{{ $index }}">
+                            <option value="">Select Product</option>
+                            @foreach($products as $product)
+                                <option @selected($detail->product_id == $product->id) data-price="{{ $product->priceV }}" data-category="{{ $product->category_id }}" value="{{ $product->id }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
+
                     </td>
                     <td>
-                        <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01"
-                               value="{{ $detail->unit_price }}">
+                        <img src="{{ $detail->product ? 'storage/' . $detail->product->image : '' }}" class="product-image" data-index="{{ $index }}" style="max-width: 100px;">
                     </td>
                     <td>
-                        <input type="number" class="form-control total" name="total[]" value="{{ $detail->total }}"
-                               step="0.01"
-                               readonly>
+                        <input type="number" name="quantity[]" class="form-control quantity" value="{{ $detail->quantity }}">
+                    </td>
+                    <td>
+                        <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01" value="{{ $detail->unit_price }}">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control total" name="total[]" value="{{ $detail->total }}" step="0.01" readonly>
                     </td>
                     <td>
                         <button @disabled($index === 0) class="btn btn-danger btn-rounded delete-product" type="button">
@@ -82,61 +96,97 @@
                         </button>
                     </td>
                 </tr>
-            @endforeach
+                @endforeach
             </tbody>
+
+
         </table>
 
         <!-- Bouton pour ajouter une nouvelle ligne -->
-        <button type="button" id="add-sale-row" class="btn btn-primary">Add Sale Row</button>
-        <!-- Bouton pour supprimer la dernière ligne -->
-        {{--        <button type="button" id="remove-sale-row" class="btn btn-danger">Remove Sale Row</button>--}}
-
-        <!-- Autres champs du formulaire -->
+        <button type="button" id="add-sale-row" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+        </button>
 
         <br>
 
-        <div class="form-group">
-            <label for="mht" class="form-label">Montant HT</label>
-            <input type="number" name="mht" id="mht" class="form-control" value="{{ old('mht', $sale->mht) }}"
-                   step="0.01">
-        </div>
-        <div class="form-group">
-            <label for="ttva" class="form-label">T-TVA</label>
-            <input type="number" name="ttva" id="ttva" class="form-control" value="{{ old('ttva', $sale->ttva) }}"
-                   step="0.01">
+        <div class="form-group row">
+            <label for="mht" class="form-label col-sm-3 col-form-label m-1 p-1">Montant HT</label>
+            <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                <input type="number" name="mht" id="mht" class="form-control" value="{{ old('mht', $sale->mht) }}" step="0.01">
+                <!-- Button to toggle visibility -->
+                <button type="button" id="toggle-amounts" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
         </div>
 
-        <div class="form-group">
-            <label for="mtva" class="form-label">M-TVA</label>
-            <input type="number" name="mtva" id="mtva" class="form-control" value="{{ old('mtva', $sale->mtva) }}"
-                   step="0.01">
-        </div>
-        <div class="form-group">
-            <label for="tremise" class="form-label">TRemise</label>
-            <input type="number" name="tremise" id="tremise" class="form-control"
-                   value="{{ old('tremise', $sale->tremise) }}" step="0.01">
+
+
+        <!-- Sections to hide/show -->
+        <div id="additional-amounts" style="display: none;">
+            <div class="form-group row">
+                <label for="ttva" class="form-label col-sm-3 col-form-label m-1 p-1">T-TVA</label>
+                <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                    <input type="number" name="ttva" id="ttva" class="form-control" value="{{ old('ttva', $sale->ttva) }}" step="0.01">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="mtva" class="form-label col-sm-3 col-form-label m-1 p-1">M-TVA</label>
+                <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                    <input type="number" name="mtva" id="mtva" class="form-control" value="{{ old('mtva', $sale->mtva) }}" step="0.01">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="tremise" class="form-label col-sm-3 col-form-label m-1 p-1">TRemise</label>
+                <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                    <input type="number" name="tremise" id="tremise" class="form-control" value="{{ old('tremise', $sale->tremise) }}" step="0.01">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="mremise" class="form-label col-sm-3 col-form-label m-1 p-1">Remise</label>
+                <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                    <input type="number" name="mremise" id="mremise" class="form-control" value="{{ old('mremise', $sale->mremise) }}" step="0.01">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="mttc" class="form-label col-sm-3 col-form-label m-1 p-1">Montant TTC</label>
+                <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                    <input type="number" name="mttc" id="mttc" class="form-control" value="{{ old('mttc', $sale->mttc) }}" step="0.01">
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="mremise" class="form-label">Remise</label>
-            <input type="number" name="mremise" id="mremise" class="form-control"
-                   value="{{ old('mremise', $sale->mremise) }}" step="0.01">
-        </div>
 
-        <div class="form-group">
-            <label for="mttc" class="form-label">Montant TTC</label>
-            <input type="number" name="mttc" id="mttc" class="form-control" value="{{ old('mttc', $sale->mttc) }}"
-                   step="0.01">
-        </div>
-
+        <br>
         <br>
 
         <div class="form-group">
-            <input type="submit" class="btn btn-primary w-100" value="{{ $isUpdate ? 'Edit' : 'Create' }}">
+            <a href="{{ route('sales.index') }}" class="btn btn-secondary" title="Liste Factures">
+                <i class="fas fa-list"></i>
+            </a>
+            <input type="submit" class="btn btn-primary w-10" value="{{ $isUpdate ? 'Edit' : 'Create' }}">
         </div>
     </form>
+</div>
 
-    <script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('toggle-amounts');
+        const additionalAmounts = document.getElementById('additional-amounts');
+
+        toggleButton.addEventListener('click', function () {
+            if (additionalAmounts.style.display === 'none') {
+                additionalAmounts.style.display = 'block';
+                toggleButton.innerHTML = '<i class="fas fa-minus"></i> '; // Change the button text
+            } else {
+                additionalAmounts.style.display = 'none';
+                toggleButton.innerHTML = '<i class="fas fa-plus"></i> '; // Change the button text
+            }
+        });
+    });
+
 
         // Initialiser le tableau lors du chargement du document
         $(document).ready(function () {
@@ -233,5 +283,96 @@
             row.find('.total').val(total.toFixed(2)); // Mettre à jour le total
         });
 
+
+
+
+
+        $(document).ready(function () {
+    // Fonction pour mettre à jour l'image du produit
+    function updateProductImage(selectElement) {
+        var selectedOption = $(selectElement).find('option:selected');
+        var imageUrl = selectedOption.data('image');
+        var index = $(selectElement).data('index');
+        var imageElement = $(`img.product-image[data-index="${index}"]`);
+
+        if (imageUrl) {
+            imageElement.attr('src', 'storage/' + imageUrl);
+        } else {
+            imageElement.attr('src', ''); // Optionnel: Afficher une image par défaut ou vider l'image
+        }
+    }
+
+    // Lorsqu'un produit est sélectionné, mettez à jour l'image
+    $(document).on('change', '.product-select', function () {
+        updateProductImage(this);
+    });
+
+    // Initialiser les images au chargement
+    $('.product-select').each(function () {
+        updateProductImage(this);
+    });
+});
+
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fonction pour mettre à jour les produits dans une ligne en fonction de la catégorie sélectionnée
+        function updateProductsByCategory(index) {
+            var selectedCategory = $(`.category-select[data-index="${index}"]`).val();
+            var productSelect = $(`.product-select[data-index="${index}"]`);
+
+            productSelect.find('option').each(function () {
+                var optionCategory = $(this).data('category');
+                if (selectedCategory === '' || optionCategory == selectedCategory) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            // Sélectionner le premier produit si possible
+            if (productSelect.find('option:visible').length > 0) {
+                productSelect.val(productSelect.find('option:visible').first().val()).change();
+            }
+        }
+
+        // Lorsqu'une catégorie est sélectionnée dans une ligne, mettez à jour les produits
+        $(document).on('change', '.category-select', function () {
+            var index = $(this).data('index');
+            updateProductsByCategory(index);
+        });
+
+        // Fonction pour mettre à jour l'image du produit
+        function updateProductImage(index) {
+            var selectedOption = $(`.product-select[data-index="${index}"]`).find('option:selected');
+            var imageUrl = selectedOption.data('image');
+            var imageElement = $(`img.product-image[data-index="${index}"]`);
+
+            if (imageUrl) {
+                imageElement.attr('src', 'storage/' + imageUrl);
+            } else {
+                imageElement.attr('src', ''); // Optionnel: Afficher une image par défaut ou vider l'image
+            }
+        }
+
+        // Lorsqu'un produit est sélectionné, mettez à jour l'image
+        $(document).on('change', '.product-select', function () {
+            var index = $(this).data('index');
+            updateProductImage(index);
+        });
+
+        // Initialiser les produits et images pour chaque ligne au chargement
+        $('.category-select').each(function () {
+            var index = $(this).data('index');
+            updateProductsByCategory(index);
+        });
+        $('.product-select').each(function () {
+            var index = $(this).data('index');
+            updateProductImage(index);
+        });
+    });
+</script>
+
+
 @endsection

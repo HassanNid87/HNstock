@@ -24,7 +24,7 @@ class ProductRequest extends FormRequest
         $rules = [
             'name' =>'required|min:5',
             'description' =>'required|min:5',
-            'quantity' =>'required|numeric|min:1',
+            //'quantity' =>'required|numeric|min:1',
             'priceA' =>'required|numeric',
             'priceV' =>'required|numeric',
             'category_id' =>'required|numeric',

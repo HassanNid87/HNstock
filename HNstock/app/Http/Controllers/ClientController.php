@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class ClientController extends Controller
 {
@@ -65,12 +67,27 @@ class ClientController extends Controller
      * Update the specified resource in storage.
      */
     public function update(ClientRequest $request, Client $client)
-    {
-        $client->fill($request->validated())->save();
-        return to_route(route:'clients.index')->with('success', 'client updated successfully');
+{
+    // Mettre à jour les autres champs du client
+    $client->fill($request->validated());
 
-        //dd($client);
+    // Vérifier si un fichier d'image a été téléchargé
+    if ($request->hasFile('photo')) {
+        // Supprimer l'ancienne image si elle existe
+        if ($client->photo) {
+            Storage::disk('public')->delete($client->photo);
+        }
+
+        // Enregistrer la nouvelle image et mettre à jour le champ `photo`
+        $client->photo = $request->file('photo')->store('clients', 'public');
     }
+
+    // Sauvegarder les modifications
+    $client->save();
+
+    return to_route('clients.index')->with('success', 'Client updated successfully');
+}
+
 
     /**
      * Remove the specified resource from storage.

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SaleRequest;
 use App\Models\Client;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleDetail;
 use Illuminate\Http\Request;
+use App\Models\CompanyInfo;
 use Dompdf\Dompdf;
 
 
@@ -21,10 +23,15 @@ class SaleController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'min_amount' => 'nullable|numeric',
             'max_amount' => 'nullable|numeric|gte:min_amount',
-            'client' => 'nullable|string'
+            'client' => 'nullable|string',
+            'NFacture' => 'nullable|string'
         ]);
 
         $query = Sale::query();
+
+        if ($request->filled('NFacture')) {
+            $query->where('NFact', 'like', '%' . $request->NFacture . '%');
+        }
 
         if ($request->filled('client')) {
             $query->whereHas('client', function ($q) use ($request) {
@@ -91,6 +98,8 @@ class SaleController extends Controller
         $sale = new Sale();
         $clients = Client::all();
         $products = Product::all();
+        $categories = Category::all(); // Récupérer toutes les catégories
+
         $sale->fill([
             'mht' => 0,
             'mtva' => 0,
@@ -109,8 +118,9 @@ class SaleController extends Controller
         ];
 
         $isUpdate = false;
-        return view('sale.form', compact('sale', 'isUpdate', 'clients', 'products'));
+        return view('sale.form', compact('sale', 'isUpdate', 'clients', 'products', 'categories'));
     }
+
 
     // Générer automatiquement le numéro de facture
     public static function generateNextNFact()
@@ -159,17 +169,21 @@ class SaleController extends Controller
     {
         // Charger les détails de la vente avec les relations
         $sale->load('details.product');
+        //dd($sale->details);
 
         return view('sale.show', compact('sale'));
     }
 
     public function edit(Sale $sale)
-    {
-        $isUpdate = true;
-        $clients = Client::all();
-        $products = Product::all();
-        return view('sale.form', compact('sale', 'isUpdate', 'clients', 'products'));
-    }
+{
+    $isUpdate = true;
+    $clients = Client::all();
+    $categories = Category::all(); // Récupération des catégories
+    //dd($categories); // Debugging
+    $products = Product::all();
+   //dd($products);
+    return view('sale.form', compact('sale', 'isUpdate', 'clients', 'categories', 'products'));
+}
 
     public function update(SaleRequest $request, Sale $sale)
     {
@@ -199,6 +213,7 @@ class SaleController extends Controller
 
             $detail = [
                 'product_id' => $productId,
+               // 'image' => $request->image[$key],
                 'quantity' => $request->quantity[$key],
                 'unit_price' => $request->unit_price[$key],
                 'total' => $request->quantity[$key] * $request->unit_price[$key],
@@ -227,29 +242,28 @@ class SaleController extends Controller
 
 
     public function generatePDF($id)
-    {
-        $sale = Sale::findOrFail($id);
-        $html = view('sale.invoice', compact('sale'))->render();
+{
+    $sale = Sale::with('details.product')->findOrFail($id);
+    $companyInfo = CompanyInfo::first(); // assuming you have only one record
+    $html = view('sale.invoice', compact('sale', 'companyInfo'))->render();
 
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
+    $dompdf = new Dompdf();
+    $dompdf->loadHtml($html);
 
-        // (Optionnel) Paramètres de mise en page
-        $dompdf->setPaper('A4', 'portrait');
+    // (Optionnel) Paramètres de mise en page
+    $dompdf->setPaper('A4', 'portrait');
 
-        // Rendu du PDF
-        $dompdf->render();
+    // Rendu du PDF
+    $dompdf->render();
 
-        // Récupération des informations pour le nom du fichier
-        $NFact = $sale->NFact;
-        $DateFact = \DateTime::createFromFormat('Y-m-d', $sale->DateFact)->format('Ymd'); // Formater la date au format YYYYMMDD
+    // Récupération des informations pour le nom du fichier
+    $NFact = $sale->NFact;
+    $DateFact = \DateTime::createFromFormat('Y-m-d', $sale->DateFact)->format('Ymd'); // Formater la date au format YYYYMMDD
 
-        // Générer le nom du fichier
-        $filename = "{$NFact}_{$DateFact}.pdf";
+    // Générer le nom du fichier
+    $filename = "{$NFact}_{$DateFact}.pdf";
 
-        // Envoi du PDF en réponse à la demande
-        return $dompdf->stream($filename);
-    }
-
-
+    // Envoi du PDF en réponse à la demande
+    return $dompdf->stream($filename);
+}
 }

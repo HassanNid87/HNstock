@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CompanyInfoController;
-use App\Http\Controllers\InvoiceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +27,9 @@ use App\Http\Controllers\InvoiceController;
 });*/
 
 /*Route::get('/home', function () {
+    return view('home');
+})->name('home');*/
+/*Route::get('/', function () {
     return view('home');
 })->name('home');*/
 
@@ -48,6 +51,7 @@ Route::resource('stocks', StockController::class);
 
 
 Route::get('/stock/out', [StockController::class, 'showStockOut'])->name('stock.out');
+//Route::get('/stocks/out', [StockController::class, 'showStockOut'])->name('stocks.out');
 
 
 Route::get('company_infos/create', [CompanyInfoController::class, 'create'])->name('company_infos.create');
@@ -59,15 +63,4 @@ Route::put('company_infos/{id}', [CompanyInfoController::class, 'update'])->name
 //Auth::routes();
 
 
-
-Route::prefix('invoices')->group(function () {
-    // Afficher la facture
-    Route::get('{id}', [InvoiceController::class, 'show'])->name('invoices.show');
-
-    // Télécharger la facture au format PDF
-    Route::get('{id}/download', [InvoiceController::class, 'download'])->name('invoices.download');
-});
-
-// web.php
-Route::get('invoices/{id}', [InvoiceController::class, 'show'])->name('sales.invoice');
 
