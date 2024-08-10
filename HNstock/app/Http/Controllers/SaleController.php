@@ -176,7 +176,7 @@ class SaleController extends Controller
         $data = $request->validated();
         $data['DateFact'] = $data['DateFact'] ?? now()->toDateString();
         // NFact should not be updated, remove it if present
-        unset($validatedData['NFact']);
+        unset($data['NFact']);
         // Restore previous stock
         foreach ($sale->details as $detail) {
             $product = Product::findOrFail($detail->product_id);

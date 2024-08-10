@@ -94,6 +94,14 @@
                         </a>
                     </li>
                 @endforeach
+
+                <!-- Ajout de l'onglet Dossier de Société -->
+                <li>
+                    <a href="{{ route('company_infos.show') }}">
+                        <i class="uil-building"></i>
+                        <span>Dossier Société</span>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

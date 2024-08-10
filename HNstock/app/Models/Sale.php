@@ -37,6 +37,14 @@ class Sale extends Model
         return $this->hasMany(SaleDetail::class);
     }
 
+    // Optionnel : Déclaration de la méthode pour le total de la vente
+    public function getTotalAttribute()
+    {
+        return $this->details->sum(function ($detail) {
+            return $detail->unit_price * $detail->quantity;
+        });
+    }
+
 
     // Other model methods and relationships
 

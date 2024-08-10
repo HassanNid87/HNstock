@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -12,20 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('categories')) {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('company_infos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('address');
+            $table->string('website');
+            $table->string('email');
+            $table->string('phone');
+            $table->string('fax');
+            $table->string('patente');
+            $table->string('logo');
             $table->timestamps();
         });
     }
-}
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('company_infos');
     }
 };
