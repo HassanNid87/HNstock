@@ -7,9 +7,8 @@ use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StockController;
-use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CompanyInfoController;
-
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +33,6 @@ use App\Http\Controllers\CompanyInfoController;
 })->name('home');*/
 
 
-Route::get('/',[StoreController::class,'index'])->name('store.index');
 
 Route::resource('products',ProductController::class);
 Route::post('/create-invoice', [ProductController::class, 'createInvoice'])->name('createInvoice');
@@ -64,3 +62,4 @@ Route::put('company_infos/{id}', [CompanyInfoController::class, 'update'])->name
 
 
 
+require_once __DIR__ . "/dashboard.php";
