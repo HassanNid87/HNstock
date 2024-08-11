@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Stock;
 use App\Models\SaleDetail;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
 {
     public function index()
     {
-        $stocks = Stock::with('product')->get();
-        return view('stock.index', compact('stocks'));
+        $stocks = Stock::with('product.category')->get(); // Charger aussi la catégorie
+    $categories = Category::all(); // Récupérer toutes les catégories
+
+    return view('stock.index', compact('stocks', 'categories'));
     }
 
     public function create()
@@ -58,6 +61,8 @@ class StockController extends Controller
 
     public function showStockOut(Request $request)
 {
+
+    $categories = Category::all(); // Récupérer toutes les catégories
     // Utiliser les dates par défaut si elles ne sont pas fournies
     $startDate = $request->input('start_date', date('Y-m-d'));
     $endDate = $request->input('end_date', date('Y-m-d'));
@@ -89,7 +94,7 @@ class StockController extends Controller
     // Convert to a Collection and sort by date in descending order
     $stockOuts = collect($stockOuts)->sortByDesc('date');
 
-    return view('stock.out', compact('stockOuts'));
+    return view('stock.out', compact('stockOuts', 'categories'));
 }
 
 }

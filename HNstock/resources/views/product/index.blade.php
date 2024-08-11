@@ -11,6 +11,54 @@
     .hidden {
     display: none;
 }
+
+.table {
+    margin: 20px 0;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #343a40;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table td, .table th {
+    padding: 10px;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table td {
+    font-size: 14px;
+}
+
+.btn-group .btn {
+    margin-right: 5px;
+}
+
+img.rounded {
+    border-radius: 8px;
+    object-fit: cover;
+}
+
 </style>
 
 
@@ -33,7 +81,7 @@
                             <th>Quantité</th>
                             <th>Prix unitaire</th>
                             <th>Total</th>
-                            <th>Actions</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="cart-items">
@@ -41,7 +89,7 @@
                     </tbody>
                 </table>
                 <div class="d-flex justify-content-between align-items-center">
-                    <strong id="cart-total" class="text-muted">Total: 0.00 MAD</strong>
+                    <strong id="cart-total" class="badge" style="background-color:#790cdf; font-size:16;">Total: 0.00 MAD</strong>
                 </div>
                 <button type="submit" class="btn btn-success btn-sm mt-3" id="create-invoice">
                     <i class="fas fa-file-invoice"></i> Créer la facture
@@ -108,7 +156,7 @@
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 @foreach ($products as $product)
                 <div class="col">
-                    <div class="card h-100" style="max-width: 200px;">
+                    <div class="card h-100" style="max-width: 200px; padding: 6px;">
                         <img class="card-img-top" src="storage/{{ $product->image }}" alt="" style="height: 110px; object-fit: cover;">
                         <div class="card-body" style="padding: 3px;">
                             <h6 class="card-title" style="font-size: 0.875rem;">{{ $product->name }}</h6>
@@ -119,7 +167,7 @@
                              <span class="badge" style="background-color:#F97300;">{{ $product->category->name }}</span>
                             <hr>
                             <div class="d-flex justify-content-between">
-                                <span style="font-size: 0.85rem;"><span class="badge bg-success">Stock: {{ $product->stock->quantity }}</span></span>
+                                <span style="font-size: 0.85rem;"><span class="badge bg-success" >Stock: {{ $product->stock->quantity }}</span></span>
                                 <span style="font-size: 0.85rem;"><span class="badge bg-danger">{{ $product->priceV }} MAD</span></span>
                             </div>
 
@@ -134,7 +182,7 @@
                                 <input type="number" id="quantity-{{ $product->id }}" name="quantity"
                                     min="1" max="{{ $product->quantity }}" value="1"
                                     class="form-control mx-2"
-                                    style="max-width: 70px; font-size: 0.75rem; text-align: center;">
+                                    style="max-width: 60px; font-size: 0.75rem; text-align: center;">
 
                                 <button type="button" class="btn btn-outline-primary quantity-increase"
                                     style="padding: 2px 5px; font-size: 0.75rem;">
@@ -149,7 +197,7 @@
                                     data-name="{{ $product->name }}"
                                     data-price="{{ $product->priceV }}"
                                     data-image="{{ asset('storage/' . $product->image) }}"
-                                    style="padding: 0.5px 4px; font-size: 0.7rem; height: 25px; width: 25px;">
+                                    style="padding: 0.5px 4px; font-size: 0.7rem; height: 30px; width: 30px;">
                                     <i class="fas fa-cart-plus" style="font-size: 0.7rem;"></i>
                                 </button>
                             </div>
@@ -180,63 +228,68 @@
                     <i class="fas fa-plus"></i>
                 </a>
             </div>
-            <table class="table">
-                <thead align="center">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-dark" align="center">
                     <tr>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Category</th>
                         <th>Stock</th>
                         <th>Image</th>
-                        <th>Price A</th>
-                        <th>Price V</th>
+                        <th>Prix A</th>
+                        <th>Prix V</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($products as $product)
-                    <tr align="center">
-                        <td>{{ $product->name }}</td>
-                        <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ">
-                            {!! $product->description !!}
-                        </td>
-                        <td>
-                            @if ($product->category)
-                            <a href="{{ route('categories.show', $product->category_id) }}" class="btn btn-link">
-                                <span class="badge" style="background-color:#F97300;">{{ $product->category->name }}</span>
-                            </a>
-                            @else
-                            ----------
-                            @endif
-                        </td>
-                        <td>{{ $product->stock ? $product->stock->quantity : 'N/A' }}</td>
-                        <td><img width="50px" height="50px" src="storage/{{ $product->image }}" alt=""></td>
-                        <td>{{ $product->priceA }}</td>
-                        <td>{{ $product->priceV }}</td>
-                        <td>
-                            <div class="btn-group gap-2">
-                                <a title="edit" href="{{ route('products.edit', $product) }}" >
-                                    <button title="edit" type="submit" class="btn btn-sm btn-outline-primary rounded"><i class="fas fa-edit"></i></button>
-
-                                </a>
-                                <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Are you sure you want to delete this product?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button title="delete" type="submit" class="btn btn-sm btn-outline-danger rounded">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                </form>
-                            </div>
-
-                        </td>
-                    </tr>
+                        <tr align="center">
+                            <td>{{ $product->name }}</td>
+                            <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
+                                {!! $product->description !!}
+                            </td>
+                            <td>
+                                @if ($product->category)
+                                    <a href="{{ route('categories.show', $product->category_id) }}" class="btn btn-link">
+                                        <span class="badge" style="background-color:#F97300;">{{ $product->category->name }}</span>
+                                    </a>
+                                @else
+                                    ----------
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge bg-success" style="font-size: 12px;">
+                                    {{ $product->stock ? $product->stock->quantity : 'N/A' }}
+                                </span>
+                            </td>
+                            <td>
+                                <img width="40px" height="40px" src="{{ asset('storage/' . $product->image) }}" alt="Product Image" class="rounded">
+                            </td>
+                            <td>{{ number_format($product->priceA, 2) }} </td>
+                            <td>{{ number_format($product->priceV, 2) }} </td>
+                            <td>
+                                <div class="btn-group gap-2">
+                                    <a href="{{ route('products.edit', $product) }}" >
+                                       <span title="Edit" class="btn btn-sm btn-outline-primary rounded"> <i class="fas fa-edit"></i></span>
+                                    </a>
+                                    <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Are you sure you want to delete this product?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded" title="Delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     @empty
-                    <tr>
-                        <td colspan="10" align="center"><h6>No products.</h6></td>
-                    </tr>
+                        <tr>
+                            <td colspan="8" align="center"><h6>No products.</h6></td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
+
         </main>
     </div>
 
@@ -288,11 +341,11 @@ document.addEventListener('DOMContentLoaded', function() {
             total += itemTotal;
             cartItems += `
                 <tr>
-                    <td><img src="${product.imageUrl}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover;"></td>
+                    <td><img src="${product.imageUrl}" alt="${product.name}" style="width: 40px; height: 40px; object-fit: cover;"></td>
                     <td>${product.name}</td>
                     <td>${product.quantity}</td>
-                    <td>${product.price.toFixed(2)} MAD</td>
-                    <td>${itemTotal.toFixed(2)} MAD</td>
+                    <td>${product.price.toFixed(2)} </td>
+                    <td>${itemTotal.toFixed(2)} </td>
                     <td>
                         <button class="btn btn-sm btn-outline-danger remove-from-cart" data-id="${product.id}">
                             <i class="fas fa-trash-alt"></i>

@@ -1,7 +1,56 @@
 @extends('base')
 
 @section('title', 'Clients')
+<style>
 
+.table {
+    margin: 20px 0;
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.table thead {
+    background-color: #343a40;
+    color: white;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.table td, .table th {
+    padding: 10px;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f2f2f2;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table td {
+    font-size: 14px;
+}
+
+.btn-group .btn {
+    margin-right: 5px;
+}
+
+img.rounded-circle {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+</style>
 @section('content')
 <div class="container my-5">
     <div class="card">
@@ -12,8 +61,8 @@
             </a>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-dark">
                     <tr align="center">
                         <th>Name</th>
                         <th>Tel</th>
@@ -30,20 +79,20 @@
                             <td>{{ $client->email }}</td>
                             <td>
                                 @if ($client->photo)
-                                    <img width="50px" height="50px" src="{{ asset('storage/' . $client->photo) }}" alt="Client Photo">
+                                    <img width="40px" height="40px" src="{{ asset('storage/' . $client->photo) }}" alt="Client Photo" class="rounded-circle">
                                 @else
-                                    <img width="50px" height="50px" src="{{ asset('images/default.png') }}" alt="Default Photo">
+                                    <img width="50px" height="50px" src="{{ asset('images/default.png') }}" alt="Default Photo" class="rounded-circle">
                                 @endif
                             </td>
                             <td>
                                 <div class="btn-group gap-2">
-                                    <a href="{{ route('clients.edit', $client) }}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-edit"></i>
+                                    <a href="{{ route('clients.edit', $client) }}" >
+                                        <span class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></span>
                                     </a>
                                     <form action="{{ route('clients.destroy', $client) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this client?')" style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
@@ -52,12 +101,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" align="center"><h4>No Clients</h4></td>
+                            <td colspan="5" align="center"><h4>No Clients</h4></td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
-        </div>
+
     </div>
 </div>
 @endsection

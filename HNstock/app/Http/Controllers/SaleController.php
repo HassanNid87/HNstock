@@ -10,14 +10,17 @@ use App\Models\Sale;
 use App\Models\SaleDetail;
 use Illuminate\Http\Request;
 use App\Models\CompanyInfo;
+use Carbon\Carbon;
 use Dompdf\Dompdf;
 
 
 class SaleController extends Controller
 {
+
     public function index(Request $request)
     {
         // Validation des entrées
+        $clients = Client::all();
         $request->validate([
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -27,6 +30,11 @@ class SaleController extends Controller
             'NFacture' => 'nullable|string'
         ]);
 
+        // Définir les dates par défaut
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
+        $endDate = $request->input('end_date', Carbon::now()->toDateString());
+
+        // Construire la requête de base
         $query = Sale::query();
 
         if ($request->filled('NFacture')) {
@@ -35,19 +43,15 @@ class SaleController extends Controller
 
         if ($request->filled('client')) {
             $query->whereHas('client', function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->client . '%');
+                $q->where('id', $request->client); // Filtre par ID au lieu de nom
             });
         }
 
-        if ($request->filled('start_date')) {
-            $startDate = date('Y-m-d', strtotime($request->start_date)) . ' 00:00:00';
-            $query->where('DateFact', '>=', $startDate);
-        }
+        // Filtrer par date de début
+        $query->where('DateFact', '>=', $startDate . ' 00:00:00');
 
-        if ($request->filled('end_date')) {
-            $endDate = date('Y-m-d', strtotime($request->end_date)) . ' 23:59:59';
-            $query->where('DateFact', '<=', $endDate);
-        }
+        // Filtrer par date de fin
+        $query->where('DateFact', '<=', $endDate . ' 23:59:59');
 
         if ($request->filled('min_amount')) {
             $query->where('mttc', '>=', $request->min_amount);
@@ -64,10 +68,10 @@ class SaleController extends Controller
             ->get();
         $months = $salesByMonth->pluck('month');
         $totals = $salesByMonth->pluck('total');
-        //dd($months, $totals);
+
         $sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
 
-        // Convertir les mois en noms de mois
+        // Convertir les numéros de mois en noms de mois
         $monthNames = [
             1 => 'Jan',
             2 => 'Feb',
@@ -82,44 +86,14 @@ class SaleController extends Controller
             11 => 'Nov',
             12 => 'Dec',
         ];
-
-// Convertir les numéros de mois en noms de mois
         $labels = $months->map(function ($month) use ($monthNames) {
             return $monthNames[$month];
         })->toArray();
 
-// Passer les données à la vue
-        return view('sale.index', compact('sales', 'months', 'labels', 'totals'));
+        // Passer les données à la vue
+        return view('sale.index', compact('sales', 'months', 'labels', 'totals', 'clients', 'startDate', 'endDate'));
     }
 
-
-    public function create()
-    {
-        $sale = new Sale();
-        $clients = Client::all();
-        $products = Product::all();
-        $categories = Category::all(); // Récupérer toutes les catégories
-
-        $sale->fill([
-            'mht' => 0,
-            'mtva' => 0,
-            'mremise' => 0,
-            'mttc' => 0,
-            'NFact' => Sale::generateNextNFact(), // Génération du numéro de facture
-        ]);
-        $sale->details = [
-            new SaleDetail([
-                'sale_id' => 0,
-                'product_id' => 0,
-                'quantity' => 0,
-                'unit_price' => 0,
-                'total' => 0,
-            ])
-        ];
-
-        $isUpdate = false;
-        return view('sale.form', compact('sale', 'isUpdate', 'clients', 'products', 'categories'));
-    }
 
 
     // Générer automatiquement le numéro de facture
