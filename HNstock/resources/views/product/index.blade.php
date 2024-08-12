@@ -350,6 +350,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="btn btn-sm btn-outline-danger remove-from-cart" data-id="${product.id}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
+                        <input type="hidden" name="cart[${product.id}][id]" value="${product.id}" />
+                        <input type="hidden" name="cart[${product.id}][quantity]" value="${product.quantity}" />
                     </td>
                 </tr>
             `;
