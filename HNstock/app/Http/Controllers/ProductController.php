@@ -37,12 +37,16 @@ class ProductController extends Controller
 
 
         $name = ($request->input('name'));
+
         $max = ($request->input('max'));
         $min = ($request->input('min')) ?? 0;
         $categoriesIds = ($request->input('categories'));
 
         if (!empty($name)) {
-            $productsQuery->where('name', 'like', "%{$name}%");
+            $productsQuery->where(function($query) use ($name) {
+                $query->where('name', 'like', "%{$name}%")
+                      ->orWhere('description', 'like', "%{$name}%");
+            });
         }
         if (!empty($categoriesIds)) {
             $productsQuery->whereIn('category_id', $categoriesIds);

@@ -20,7 +20,7 @@
                 @endif
 
                 <div class="form-group mb-3">
-                    <label for="name" class="form-label">Name</label>
+                    <label for="name" class="form-label">Nom</label>
                     <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $client->name) }}">
                 </div>
 

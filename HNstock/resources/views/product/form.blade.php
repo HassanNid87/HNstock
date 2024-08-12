@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', $isUpdate ? 'Update Product' : 'Create Product')
+@section('title', $isUpdate ? 'Update Product' : 'Creer un Produit')
 
 @php
     $route = $isUpdate ? route('products.update', $product) : route('products.store');
@@ -19,7 +19,7 @@
                     @endif
 
                     <div class="form-group mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Nom</label>
                         <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $product->name) }}">
                     </div>
 
@@ -28,9 +28,9 @@
                         <textarea name="description" id="description" class="form-control">{{ old('description', $product->description) }}</textarea>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="category_id" class="form-label">Category</label>
+                        <label for="category_id" class="form-label">Categorie</label>
                         <select name="category_id" id="category_id" class="form-select">
-                            <option value="">Please choose your category</option>
+                            <option value="">Categorie</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>{{ $category->name }}</option>
                             @endforeach

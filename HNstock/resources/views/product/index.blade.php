@@ -107,9 +107,10 @@ img.rounded {
             <h1>Filters</h1>
             <form method="get">
                 <div class="form-group">
-                    <label for="name">Name or Description</label>
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="{{ Request::input('name') }}">
+                   <!-- <label for="name">Name or Description</label>-->
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Name or Description" value="{{ Request::input('name') }}">
                 </div>
+                <hr>
                 <h3>Categories</h3>
                 @php
                     $categoriesIds = Request::input('categories') ?? [];
@@ -122,12 +123,14 @@ img.rounded {
                     </div>
                     @endforeach
                 </div>
-                <h3>Pricing</h3>
+                <hr>
+                <h3>Prix</h3>
                 <div class="form-group">
-                    <label for="max">Max</label>
-                    <input type="text" min="{{ $priceVOptions->minPriceV }}" max="{{ $priceVOptions->maxPriceV }}" name="max" id="max" class="form-control" placeholder="Max Price" value="{{ Request::input('max') }}">
-                    <label for="min">Min</label>
-                    <input type="text" min="{{ $priceVOptions->minPriceV }}" max="{{ $priceVOptions->maxPriceV }}" name="min" id="min" class="form-control" placeholder="Min Price" value="{{ Request::input('min') }}">
+               <!--     <label for="max">Max</label>-->
+                    <input type="text" min="{{ $priceVOptions->minPriceV }}" max="{{ $priceVOptions->maxPriceV }}" name="max" id="max" class="form-control" placeholder="Prix Max" value="{{ Request::input('max') }}">
+                   <br>
+                    <!--<label for="min">Min</label>-->
+                    <input type="text" min="{{ $priceVOptions->minPriceV }}" max="{{ $priceVOptions->maxPriceV }}" name="min" id="min" class="form-control" placeholder="Prix Min" value="{{ Request::input('min') }}">
                 </div>
                 <div class="form-group my-2">
                     <button type="submit" class="btn btn-primary" title="Filtrer">
@@ -147,7 +150,7 @@ img.rounded {
         </aside>
         <main class="col-md-9">
             <div class="d-flex justify-content-between align-items-center">
-                <h1>Products</h1>
+                <h1>Produits</h1>
                 <a href="{{ route('products.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i>
                 </a>
@@ -223,7 +226,7 @@ img.rounded {
         <!-- Main content for product list -->
         <main class="col-md-12" id="listeProducts">
             <div class="d-flex justify-content-between align-items-center" >
-                <h1>Product List</h1>
+                <h1>Liste Produits</h1>
                 <a href="{{ route('products.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i>
                 </a>
@@ -231,9 +234,9 @@ img.rounded {
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark" align="center">
                     <tr>
-                        <th>Name</th>
+                        <th>Nom</th>
                         <th>Description</th>
-                        <th>Category</th>
+                        <th>Categorie</th>
                         <th>Stock</th>
                         <th>Image</th>
                         <th>Prix A</th>

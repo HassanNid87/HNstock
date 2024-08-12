@@ -55,7 +55,7 @@ img.rounded-circle {
 <div class="container my-5">
     <div class="card">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-0">Client List</h5>
+            <h5 class="card-title mb-0">Liste Clients</h5>
             <a href="{{ route('clients.create') }}" class="btn btn-light">
                 <i class="fas fa-plus"></i>
             </a>
@@ -64,7 +64,7 @@ img.rounded-circle {
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
                     <tr align="center">
-                        <th>Name</th>
+                        <th>Nom</th>
                         <th>Tel</th>
                         <th>Email</th>
                         <th>Photo</th>

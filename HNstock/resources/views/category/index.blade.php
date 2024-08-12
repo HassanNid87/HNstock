@@ -54,7 +54,7 @@
             @include('category.inc.category-modal')
 
             <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Category Liste</h5>
+                <h5 class="card-title mb-0">Liste Categories </h5>
                 <span role="button" href="{{ route('categories.create') }}" id="openAddForm" class="btn btn-light">+</span>
             </div>
 
@@ -62,7 +62,7 @@
                 <table class="table table-bordered table-striped table-hover">
                     <thead class="table-dark" align="center">
                         <tr>
-                            <th>Name</th>
+                            <th>Nom</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -73,14 +73,14 @@
                                 <td>
                                     <div class="btn-group gap-2">
                                         <a href="{{ route('categories.show', $category) }}">
-                                            <span class="btn btn-sm btn-outline-info rounded" title="Show"><i
-                                                    class="fas fa-eye"></i></span>
+                                            <span class="btn btn-sm btn-outline-info rounded" title="Show">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
                                         </a>
-                                        <span role="button" class="edit-category" data-name="{{ $category->name }}"
-                                            data-id="{{ $category->id }}" class="btn btn-sm btn-outline-info rounded"
-                                            title="Update">
-                                            <i class="fas fa-edit"></i>
-                                        </span>
+                                        <a href="{{ route('categories.edit', $category) }}" >
+                                           <span class="btn btn-sm btn-outline-info rounded" title="Update"> <i class="fas fa-edit"></i></span>
+                                        </a>
+
                                         <form method="POST" action="{{ route('categories.destroy', $category) }}"
                                             style="display: inline-block;">
                                             @csrf
