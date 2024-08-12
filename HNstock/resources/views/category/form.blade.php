@@ -22,11 +22,6 @@
                     @method('PUT')
                 @endif
 
-                <div class="form-group mb-2">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" name="name" id="name" class="form-control form-control-sm" value="{{ old('name', $category->name) }}">
-                </div>
-
 
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary btn-sm" value="{{ $isUpdate ? 'Edit' : 'Create' }}">

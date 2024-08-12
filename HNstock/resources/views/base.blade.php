@@ -210,9 +210,11 @@
     <script src="{{ asset('assets/libs/node-waves/waves.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/helpers.js') }}"></script>
     <script src="node_modules/chart.js/dist/chart.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    @yield('scripts')
     @stack('custom-script')
 </body>
 

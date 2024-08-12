@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
@@ -26,8 +27,6 @@ class CategoryController extends Controller
         $category = new Category();
         $isUpdate = false;
         return view('category.form', compact('category', 'isUpdate'));
-
-
     }
 
     /**
@@ -36,9 +35,9 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $formFields = $request->validated();
-            Category::create($formFields);
-            return to_route(route: 'categories.index')->with('success', 'Category create successfully');
+        Category::create($formFields);
 
+        return response(null, Response::HTTP_CREATED);
     }
 
     /**
@@ -48,27 +47,27 @@ class CategoryController extends Controller
     {
         $products = ($category->products()->get());
         return view('category.show', compact('category', 'products'));
-
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
-    {
-         $isUpdate = true;
-        return view('category.form', compact('category', 'isUpdate'));
-
-    }
+    // public function edit(Category $category)
+    // {
+    //     $isUpdate = true;
+    //     return view('category.form', compact('category', 'isUpdate'));
+    // }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(CategoryRequest $request, Category $category)
     {
-        $category->fill($request->validated())->save();
-        return to_route(route: 'categories.index')->with('success', 'Category update successfully');
+        $category
+            ->fill($request->validated())
+            ->save();
 
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -78,6 +77,5 @@ class CategoryController extends Controller
     {
         $category->delete();
         return to_route(route: 'categories.index')->with('success', 'Category deleted successfully');
-
     }
 }
