@@ -148,16 +148,15 @@ class SaleController extends Controller
         return view('sale.show', compact('sale'));
     }
 
-    public function edit(Sale $sale)
-{
-    $isUpdate = true;
-    $clients = Client::all();
-    $categories = Category::all(); // Récupération des catégories
-    //dd($categories); // Debugging
-    $products = Product::all();
-   //dd($products);
-    return view('sale.form', compact('sale', 'isUpdate', 'clients', 'categories', 'products'));
-}
+    public function edit(Sale $sale , bool $isUpdate = true)
+    {
+        $clients = Client::all();
+        $categories = Category::all(); // Récupération des catégories
+        //dd($categories); // Debugging
+        $products = Product::all();
+        //dd($products);
+        return view('sale.form', compact('sale', 'isUpdate', 'clients', 'categories', 'products'));
+    }
 
     public function update(SaleRequest $request, Sale $sale)
     {
@@ -187,7 +186,7 @@ class SaleController extends Controller
 
             $detail = [
                 'product_id' => $productId,
-               // 'image' => $request->image[$key],
+                // 'image' => $request->image[$key],
                 'quantity' => $request->quantity[$key],
                 'unit_price' => $request->unit_price[$key],
                 'total' => $request->quantity[$key] * $request->unit_price[$key],
@@ -216,28 +215,56 @@ class SaleController extends Controller
 
 
     public function generatePDF($id)
-{
-    $sale = Sale::with('details.product')->findOrFail($id);
-    $companyInfo = CompanyInfo::first(); // assuming you have only one record
-    $html = view('sale.invoice', compact('sale', 'companyInfo'))->render();
+    {
+        $sale = Sale::with('details.product')->findOrFail($id);
+        $companyInfo = CompanyInfo::first(); // assuming you have only one record
+        $html = view('sale.invoice', compact('sale', 'companyInfo'))->render();
 
-    $dompdf = new Dompdf();
-    $dompdf->loadHtml($html);
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
 
-    // (Optionnel) Paramètres de mise en page
-    $dompdf->setPaper('A4', 'portrait');
+        // (Optionnel) Paramètres de mise en page
+        $dompdf->setPaper('A4', 'portrait');
 
-    // Rendu du PDF
-    $dompdf->render();
+        // Rendu du PDF
+        $dompdf->render();
 
-    // Récupération des informations pour le nom du fichier
-    $NFact = $sale->NFact;
-    $DateFact = \DateTime::createFromFormat('Y-m-d', $sale->DateFact)->format('Ymd'); // Formater la date au format YYYYMMDD
+        // Récupération des informations pour le nom du fichier
+        $NFact = $sale->NFact;
+        $DateFact = \DateTime::createFromFormat('Y-m-d', $sale->DateFact)->format('Ymd'); // Formater la date au format YYYYMMDD
 
-    // Générer le nom du fichier
-    $filename = "{$NFact}_{$DateFact}.pdf";
+        // Générer le nom du fichier
+        $filename = "{$NFact}_{$DateFact}.pdf";
 
-    // Envoi du PDF en réponse à la demande
-    return $dompdf->stream($filename);
-}
+        // Envoi du PDF en réponse à la demande
+        return $dompdf->stream($filename);
+    }
+
+
+    public function create()
+    {
+        $sale = new Sale();
+        $clients = Client::all();
+        $products = Product::all();
+        $sale->fill([
+            'mht' => 0,
+            'mtva' => 0,
+            'mremise' => 0,
+            'mttc' => 0,
+            'NFact' => Sale::generateNextNFact(), // Génération du numéro de facture
+        ]);
+        $sale->details = [
+            new SaleDetail([
+                'sale_id' => 0,
+                'product_id' => 0,
+                'quantity' => 0,
+                'unit_price' => 0,
+                'total' => 0,
+            ])
+        ];
+        $categories = Category::all();
+
+        $isUpdate = false;
+        return view('sale.form', compact('sale', 'isUpdate', 'clients', 'products', 'categories'));
+    }
 }

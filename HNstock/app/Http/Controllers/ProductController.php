@@ -12,6 +12,13 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    public function __construct(
+        protected SaleController $saleController
+    ) {
+
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -170,30 +177,39 @@ class ProductController extends Controller
     {
         $cart = $request->input('cart');
         if (!$cart || blank($cart)) {
-            return view("shared.error" , [
+            return view("shared.error", [
                 'title' => "Cart is empty",
                 'details' => "Sorry we can't handle this request since the cart is empty, please make sure to select on product at least"
             ]);
         }
 
-        // Logic to create invoice from cart data
-        $invoice = new Sale();
-        $invoice->date = now();
-        $invoice->save();
+        $cart = collect($cart);
+        $productsIds = collect($cart)->keys();
+        $products = Product::whereIn("id" , $productsIds)->get();
 
-        foreach ($cart as $item) {
-            $product = Product::find($item['id']);
-            if ($product) {
-                $invoiceItem = new SaleDetail();
-                $invoiceItem->invoice_id = $invoice->id;
-                $invoiceItem->product_id = $product->id;
-                $invoiceItem->quantity = $item['quantity'];
-                $invoiceItem->price = $product->priceV;
-                $invoiceItem->total = $product->priceV * $item['quantity'];
-                $invoiceItem->save();
-            }
+        $sale = new Sale();
+        $sale->fill([
+            'mht' => 0,
+            'mtva' => 0,
+            'mremise' => 0,
+            'mttc' => 0,
+            'NFact' => Sale::generateNextNFact(), // Génération du numéro de facture
+            'date' => now()
+        ]);
+
+        foreach ($products as $value) {
+            $quantity = $cart->get($value->id)['quantity'];
+            $sale->details[] = new SaleDetail([
+                'sale_id' => 0,
+                'product_id' => $value->id,
+                'quantity' => $quantity,
+                'unit_price' => $value->priceV,
+                'total' => $quantity * $value->priceV,
+                'product' => $value,
+                'barcode' => "--"
+            ]);
         }
 
-        return response()->json(['message' => 'Invoice created successfully']);
+        return $this->saleController->edit($sale , false);
     }
 }
