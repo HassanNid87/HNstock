@@ -104,7 +104,6 @@
         </button>
 
         <div data-simplebar class="sidebar-menu-scroll">
-
             <!--- Sidemenu -->
             <div id="sidebar-menu">
                 <!-- Left Menu Start -->
@@ -127,9 +126,18 @@
                             <span>Dossier Société</span>
                         </a>
                     </li>
+
+                    <!-- Ajout de l'onglet Paiements -->
+                    <li>
+                        <a href="{{ route('payments.index') }}">
+                            <i class="uil-credit-card"></i>
+                            <span>Paiements</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
+
     </div>
 
     {{-- <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#5AB2FF;"> --}}

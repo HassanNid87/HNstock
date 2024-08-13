@@ -30,6 +30,7 @@ class SaleRequest extends FormRequest
             'tremise' =>'required|numeric',
             'mremise' =>'required|numeric',
             'mttc' =>'required|numeric',
+            'montant_restant' =>'required|numeric',
             'client_id' =>'required',
 
 

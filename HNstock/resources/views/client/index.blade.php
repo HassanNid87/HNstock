@@ -1,8 +1,8 @@
 @extends('base')
 
 @section('title', 'Clients')
-<style>
 
+<style>
 .table {
     margin: 20px 0;
     width: 100%;
@@ -51,6 +51,7 @@ img.rounded-circle {
 }
 
 </style>
+
 @section('content')
 <div class="container my-5">
     <div class="card">
@@ -67,6 +68,8 @@ img.rounded-circle {
                         <th>Nom</th>
                         <th>Tel</th>
                         <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Solde</th>
                         <th>Photo</th>
                         <th>Actions</th>
                     </tr>
@@ -77,17 +80,19 @@ img.rounded-circle {
                             <td>{{ $client->name }}</td>
                             <td>{{ $client->tel }}</td>
                             <td>{{ $client->email }}</td>
+                            <td>{{ $client->adresse }}</td>
+                            <td>{{ number_format($client->solde, 2) }}</td>
                             <td>
                                 @if ($client->photo)
                                     <img width="40px" height="40px" src="{{ asset('storage/' . $client->photo) }}" alt="Client Photo" class="rounded-circle">
                                 @else
-                                    <img width="50px" height="50px" src="{{ asset('images/default.png') }}" alt="Default Photo" class="rounded-circle">
+                                    <img width="40px" height="40px" src="{{ asset('images/default.png') }}" alt="Default Photo" class="rounded-circle">
                                 @endif
                             </td>
                             <td>
                                 <div class="btn-group gap-2">
                                     <a href="{{ route('clients.edit', $client) }}" >
-                                        <span class="btn btn-sm btn-outline-primary" title="Edit"><i class="fas fa-edit"></i></span>
+                                       <span class="btn btn-sm btn-outline-primary" title="Edit"> <i class="fas fa-edit"></i></span>
                                     </a>
                                     <form action="{{ route('clients.destroy', $client) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this client?')" style="display: inline-block;">
                                         @csrf
@@ -101,12 +106,17 @@ img.rounded-circle {
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" align="center"><h4>No Clients</h4></td>
+                            <td colspan="7" align="center"><h4>No Clients</h4></td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
+            <!-- Pagination Links -->
+            <div class="d-flex justify-content-center mt-4">
+                {{ $clients->links() }}
+            </div>
+        </div>
     </div>
 </div>
 @endsection

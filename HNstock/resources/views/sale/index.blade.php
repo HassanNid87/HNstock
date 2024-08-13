@@ -149,6 +149,7 @@
                         <th>NFact</th>
                         <th>DateFact</th>
                         <th>Client</th>
+                        <th>Status</th>
                         <th class="no-wrap">Montant HT</th>
                         <th class="no-wrap">M-Tva</th>
                         <th class="no-wrap">M-Remise</th>
@@ -172,12 +173,14 @@
                                     ----------
                                 @endif
                             </td>
+                            <td class="no-wrap">{{ $sale->status }}</td>
                             <td>{{ number_format($sale->mht, 2) }} </td>
                             <td>{{ number_format($sale->mtva, 2) }} </td>
                             <td>{{ number_format($sale->mremise, 2) }} </td>
                             <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 17px;">
                                 {{ number_format($sale->mttc, 2) }}
                             </td>
+
                             <td>
                                 <div class="btn-group gap-2">
                                     <!-- Details Button -->

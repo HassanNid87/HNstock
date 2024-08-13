@@ -14,6 +14,17 @@ class Client extends Model
         'tel',
         'email',
         'photo',
+        'adresse', // Ajouter adresse
+        'solde',   // Ajouter solde
     ];
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

@@ -21,7 +21,8 @@ class Sale extends Model
             'tremise',
             'mremise',
             'mttc',
-            'client_id'
+            'client_id',
+            'montant_restant'
 
 
 
@@ -76,5 +77,8 @@ class Sale extends Model
 
         return $newNFact;
     }
+
+
+
 
 }

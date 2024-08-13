@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CompanyInfoController;
 use App\Http\Controllers\DashboardController;
-
+use App\Http\Controllers\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -60,6 +60,7 @@ Route::put('company_infos/{id}', [CompanyInfoController::class, 'update'])->name
 //Route::get('sales/{id}/pdf', 'SaleController@generatePDF')->name('sales.pdf');
 //Auth::routes();
 
+Route::resource('payments', PaymentController::class);
 
 
 require_once __DIR__ . "/dashboard.php";

@@ -251,6 +251,7 @@ class SaleController extends Controller
             'mtva' => 0,
             'mremise' => 0,
             'mttc' => 0,
+            'montant_restant' => 0,
             'NFact' => Sale::generateNextNFact(), // Génération du numéro de facture
         ]);
         $sale->details = [

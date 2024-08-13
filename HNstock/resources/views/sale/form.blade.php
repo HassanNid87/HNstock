@@ -194,6 +194,12 @@
                             value="{{ old('mttc', $sale->mttc) }}" step="0.01">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
+                        <input type="number" name="montant_restant" id="montant_restant" class="form-control"
+                            value="{{ old('mttc', $sale->montant_restant) }}" step="0.01" hidden>
+                    </div>
+                </div>
             </div>
 
 
@@ -275,6 +281,10 @@
 
             var totalTTC = (totalHT + parseFloat(mtva) - parseFloat(remise)).toFixed(2);
             $('#mttc').val(totalTTC);
+
+            var montant_restant = totalTTC;
+            $('#montant_restant').val(montant_restant.toFixed(2));
+
         }
 
         // Ajouter une nouvelle ligne de vente

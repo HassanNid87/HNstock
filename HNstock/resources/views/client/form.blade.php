@@ -2,10 +2,6 @@
 
 @section('title', ($isUpdate ? 'Update' : 'Create') . ' Client')
 
-@php
-    $route = $isUpdate ? route('clients.update', $client) : route('clients.store');
-@endphp
-
 @section('content')
 <div class="container my-5">
     <div class="card">
@@ -13,7 +9,17 @@
             <h5 class="card-title mb-0">@yield('title')</h5>
         </div>
         <div class="card-body">
-            <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ $isUpdate ? route('clients.update', $client) : route('clients.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if ($isUpdate)
                     @method('PUT')
@@ -35,6 +41,16 @@
                 </div>
 
                 <div class="form-group mb-3">
+                    <label for="adresse" class="form-label">Adresse</label>
+                    <input type="text" name="adresse" id="adresse" class="form-control" value="{{ old('adresse', $client->adresse) }}">
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="solde" class="form-label">Solde</label>
+                    <input type="number" name="solde" id="solde" class="form-control" step="0.01" value="{{ old('solde', $client->solde) }}">
+                </div>
+
+                <div class="form-group mb-3">
                     <label for="photo" class="form-label">Photo</label>
                     <input type="file" name="photo" id="photo" class="form-control">
                     <div id="photo-preview" class="mt-2" style="{{ !$client->photo ? 'display:none;' : '' }}">
@@ -45,6 +61,7 @@
                         @endif
                     </div>
                 </div>
+
                 <div class="form-group mb-3">
                     <button type="submit" class="btn btn-primary btn-sm">
                         <i class="fas fa-save fa-sm"></i> {{ $isUpdate ? 'Update' : 'Create' }}

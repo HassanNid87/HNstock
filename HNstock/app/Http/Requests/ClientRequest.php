@@ -22,9 +22,13 @@ class ClientRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'name' => 'required|min:5',
-            'tel' => 'required|min:5',
-            'email' => 'required|min:5',
+
+            'name' => 'required|string|max:255',
+            'tel' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
+            'adresse' => 'nullable|string|max:255',
+            'solde' => 'nullable|numeric|min:0',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
         ];
         if ($this->route()->getActionMethod() === 'create') {
