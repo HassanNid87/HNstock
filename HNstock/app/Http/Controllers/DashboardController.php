@@ -19,7 +19,7 @@ class DashboardController extends Controller
     }
 
 
-    public function summary(Request $request) {
+   public function summary(Request $request) {
         $type = $request->enum('period' , TimeBreakdown::class);
 
         $data['summary'] = $this->dashboardRepository->getSummary($type);
