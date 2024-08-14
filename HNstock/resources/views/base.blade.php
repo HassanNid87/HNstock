@@ -118,15 +118,6 @@
                             </a>
                         </li>
                     @endforeach
-
-                    <!-- Ajout de l'onglet Dossier de Société -->
-                    <li>
-                        <a href="{{ route('company_infos.show') }}">
-                            <i class="uil-building"></i>
-                            <span>Dossier Société</span>
-                        </a>
-                    </li>
-
                     <!-- Ajout de l'onglet Paiements -->
                     <li>
                         <a href="{{ route('payments.index') }}">
@@ -134,6 +125,15 @@
                             <span>Paiements</span>
                         </a>
                     </li>
+                    <!-- Ajout de l'onglet Dossier de Société -->
+                    <li>
+                        <a href="{{ route('company_infos.show') }}">
+                            <i class="uil-building"></i>
+                            <span>Infos Société</span>
+                        </a>
+                    </li>
+
+
                 </ul>
             </div>
         </div>

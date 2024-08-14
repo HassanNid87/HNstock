@@ -5,7 +5,7 @@
 @section('content')
 <div class="container">
     <h1>Modifier le Paiement</h1>
-    <form action="{{ route('payments.update', $payment) }}" method="POST">
+    <form action="{{ route('payments.update', $payment->id) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -58,6 +58,8 @@
                         <th>Numéro de Facture</th>
                         <th>Date de Facture</th>
                         <th>Montant TTC</th>
+                        <th>Montant Restant</th>
+                        <th>Montant à Régler</th>
                     </tr>
                 </thead>
                 <tbody id="sales-list">
@@ -75,6 +77,10 @@
                                 </td>
                                 <td>{{ $sale->DateFact }}</td>
                                 <td>{{ $sale->mttc }}</td>
+                                <td>{{ $sale->montant_restant }}</td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" readonly data-amount="{{ $sale->mttc }}" id="amount-to-pay{{ $sale->id }}">
+                                </td>
                             </tr>
                         @endif
                     @endforeach

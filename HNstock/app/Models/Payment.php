@@ -32,7 +32,10 @@ public function client()
 }
 
 
-
+public function details()
+{
+    return $this->hasMany(PaymentDetail::class);
+}
 
 }
 
