@@ -17,16 +17,6 @@
                     @if ($isUpdate)
                         @method('PUT')
                     @endif
-
-                    <div class="form-group mb-3">
-                        <label for="name" class="form-label">Nom</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $product->name) }}">
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control">{{ old('description', $product->description) }}</textarea>
-                    </div>
                     <div class="form-group mb-3">
                         <label for="category_id" class="form-label">Categorie</label>
                         <select name="category_id" id="category_id" class="form-select">
@@ -37,12 +27,24 @@
                         </select>
                     </div>
                     <div class="form-group mb-3">
+                        <label for="name" class="form-label">Nom</label>
+                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $product->name) }}">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="description" id="description" class="form-control">{{ old('description', $product->description) }}</textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
                         <label for="image" class="form-label">Image</label>
                         <input type="file" name="image" id="image" class="form-control" onchange="previewImage(event)">
                         <div id="image-container" class="mt-2" style="display: {{ $product->image ? 'block' : 'none' }};">
                             <img id="image-preview" width="100px" src="/storage/{{ $product->image }}" alt="Product Image">
                         </div>
                     </div>
+
+                    <hr>
 
                     <div class="form-group mb-3">
                         <label for="priceA" class="form-label">Price A</label>
@@ -53,6 +55,20 @@
                         <label for="priceV" class="form-label">Price V</label>
                         <input type="number" name="priceV" id="priceV" step="0.01" class="form-control" value="{{ old('priceV', $product->priceV) }}">
                     </div>
+
+                    <hr>
+
+                    <div class="form-group mb-3">
+                        <label for="stockmax" class="form-label">Stock-Max</label>
+                        <input type="number" name="stockmax" id="stockmax" class="form-control" value="{{ old('priceV', $product->stockmax) }}">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="stockmin" class="form-label">Stock-Min</label>
+                        <input type="number" name="stockmin" id="stockmin" class="form-control" value="{{ old('priceV', $product->stockmin) }}">
+                    </div>
+
+                    <hr>
+
 
                     <div class="form-group mb-3">
                         <button type="submit" class="btn btn-primary btn-sm">

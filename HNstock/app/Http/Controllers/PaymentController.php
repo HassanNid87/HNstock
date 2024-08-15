@@ -89,6 +89,12 @@ class PaymentController extends Controller
             $totalAmount -= $amountToPay;
         }
 
+         // Mise à jour du crédit du client
+         $client = $payment->client;
+         $client->credit += $payment->montant; // `amount` est le montant du paiement
+         $client->solde = $client->debit - $client->credit; // Mise à jour du solde
+         $client->save();
+
         return redirect()->route('payments.index')->with('success', 'Paiement ajouté avec succès.');
     }
 

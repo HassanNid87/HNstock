@@ -154,6 +154,7 @@
                         <th class="no-wrap">M-Tva</th>
                         <th class="no-wrap">M-Remise</th>
                         <th class="no-wrap">M-TTC</th>
+                       <!-- <th class="no-wrap">M-Restant</th>-->
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -206,6 +207,9 @@
                             <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
                                 {{ number_format($sale->mttc, 2) }}
                             </td>
+                           <!-- <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
+                                {{ number_format($sale->montant_restant, 2) }}
+                            </td>-->
 
                             <td>
                                 <div class="btn-group gap-2">

@@ -29,6 +29,10 @@
                     <label for="name" class="form-label">Nom</label>
                     <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $client->name) }}">
                 </div>
+                <div class="form-group mb-3">
+                    <label for="adresse" class="form-label">Adresse</label>
+                    <input type="text" name="adresse" id="adresse" class="form-control" value="{{ old('adresse', $client->adresse) }}">
+                </div>
 
                 <div class="form-group mb-3">
                     <label for="tel" class="form-label">Tel</label>
@@ -40,15 +44,13 @@
                     <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $client->email) }}">
                 </div>
 
-                <div class="form-group mb-3">
-                    <label for="adresse" class="form-label">Adresse</label>
-                    <input type="text" name="adresse" id="adresse" class="form-control" value="{{ old('adresse', $client->adresse) }}">
-                </div>
 
-                <div class="form-group mb-3">
+
+               <!-- <div class="form-group mb-3">
                     <label for="solde" class="form-label">Solde</label>
                     <input type="number" name="solde" id="solde" class="form-control" step="0.01" value="{{ old('solde', $client->solde) }}">
-                </div>
+                </div>-->
+
 
                 <div class="form-group mb-3">
                     <label for="photo" class="form-label">Photo</label>
@@ -61,6 +63,12 @@
                         @endif
                     </div>
                 </div>
+<hr>
+                <div class="form-group mb-3">
+                    <label for="soldemax" class="form-label">Solde-Max</label>
+                    <input type="number" name="soldemax" id="soldemax" class="form-control" step="0.01" value="{{ old('solde', $client->soldemax) }}">
+                </div>
+                <hr>
 
                 <div class="form-group mb-3">
                     <button type="submit" class="btn btn-primary btn-sm">

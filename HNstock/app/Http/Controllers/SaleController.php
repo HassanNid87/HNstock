@@ -151,6 +151,12 @@ class SaleController extends Controller
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
 
+         // Mise à jour du débit du client
+         $client = $sale->client;
+         $client->debit += $sale->mttc; // `amount` est le montant de la vente
+         $client->solde = $client->debit - $client->credit; // Mise à jour du solde
+         $client->save();
+
         return redirect()->route('sales.index')->with('success', 'Sale created successfully');
     }
 

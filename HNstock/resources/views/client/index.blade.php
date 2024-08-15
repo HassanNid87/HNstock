@@ -65,23 +65,20 @@ img.rounded-circle {
             <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark">
                     <tr align="center">
+                        <th>Photo</th>
                         <th>Nom</th>
+                        <th>Adresse</th>
                         <th>Tel</th>
                         <th>Email</th>
-                        <th>Adresse</th>
-                        <th>Solde</th>
-                        <th>Photo</th>
+                        <th>débit</th>
+                        <th>crédit</th>
+                        <th>solde</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($clients as $client)
                         <tr align="center">
-                            <td>{{ $client->name }}</td>
-                            <td>{{ $client->tel }}</td>
-                            <td>{{ $client->email }}</td>
-                            <td>{{ $client->adresse }}</td>
-                            <td>{{ number_format($client->solde, 2) }}</td>
                             <td>
                                 @if ($client->photo)
                                     <img width="40px" height="40px" src="{{ asset('storage/' . $client->photo) }}" alt="Client Photo" class="rounded-circle">
@@ -89,6 +86,14 @@ img.rounded-circle {
                                     <img width="40px" height="40px" src="{{ asset('images/default.png') }}" alt="Default Photo" class="rounded-circle">
                                 @endif
                             </td>
+                            <td>{{ $client->name }}</td>
+                            <td>{{ $client->adresse }}</td>
+                            <td>{{ $client->tel }}</td>
+                            <td>{{ $client->email }}</td>
+                            <td>{{ number_format($client->total_debit, 2) }}</td>
+                            <td>{{ number_format($client->total_credit, 2) }}</td>
+                            <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">{{ number_format($client->solde, 2) }}</td>
+
                             <td>
                                 <div class="btn-group gap-2">
                                     <a href="{{ route('clients.edit', $client) }}" >
