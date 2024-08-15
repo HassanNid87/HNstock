@@ -26,7 +26,8 @@ class PaymentDetailRequest extends FormRequest
             'sale_id' => 'required|exists:sales,id|numeric',
             'NFact' => 'required|string|max:255',
             'DateFact' => 'required|date',
-            'montant_restant' => 'required|numeric|min:0',
+            'mttc' => 'required|numeric|min:0',
+            'montant_regle' => 'required|numeric|min:0',
         ];
     }
 }

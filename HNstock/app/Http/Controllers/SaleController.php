@@ -90,8 +90,24 @@ class SaleController extends Controller
             return $monthNames[$month];
         })->toArray();
 
+// Mettre à jour le statut des ventes après la récupération
+$sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
+
+// Mettre à jour le statut des ventes
+$sales->getCollection()->transform(function ($sale) {
+    if ($sale->montant_restant == $sale->mttc) {
+        $sale->status = 'EnAttente';
+    } elseif ($sale->montant_restant > 0) {
+        $sale->status = 'PartPayée';
+    } else {
+        $sale->status = 'Réglée';
+    }
+    return $sale;
+});
+
         // Passer les données à la vue
         return view('sale.index', compact('sales', 'months', 'labels', 'totals', 'clients', 'startDate', 'endDate'));
+
     }
 
 
@@ -196,6 +212,9 @@ class SaleController extends Controller
             // Decrement the stock
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
+
+
+    $sale->save();
 
         return redirect()->route('sales.index')->with('success', 'Sale updated successfully');
     }

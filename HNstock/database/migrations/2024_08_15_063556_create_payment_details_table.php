@@ -19,7 +19,8 @@ return new class extends Migration
 
             $table->string('NFact');
             $table->date('DateFact');
-            $table->double('montant_restant')->default(0);
+            $table->double('mttc')->default(0);
+            $table->double('montant_regle')->default(0);
 
             $table->timestamps();
         });

@@ -19,18 +19,20 @@ class PaymentController extends Controller
     public function create()
     {
         // Récupérer tous les clients
-    $clients = Client::all();
+        $clients = Client::all();
 
-    // Récupérer uniquement les ventes avec le statut 'pending' et les clients associés
-    $sales = Sale::where('status', 'pending')->with('client')->get();
+        // Récupérer uniquement les ventes avec le statut 'Attente' ou 'Partiellement Payée' et les clients associés
+        $sales = Sale::whereIn('status', ['EnAttente', 'PartPayée'])->with('client')->get();
 
-    // Compter le nombre de paiements existants
-    $paymentCount = Payment::count() + 1;
+        // Compter le nombre de paiements existants
+        $paymentCount = Payment::count() + 1;
 
-    // Formater le numéro de paiement
-    $Npayment = 'Reg' . str_pad($paymentCount, 4, '0', STR_PAD_LEFT);
-        return view('payment.create', compact( 'sales', 'clients', 'Npayment'));
+        // Formater le numéro de paiement
+        $Npayment = 'Reg' . str_pad($paymentCount, 4, '0', STR_PAD_LEFT);
+
+        return view('payment.create', compact('sales', 'clients', 'Npayment'));
     }
+
 
     public function store(Request $request)
     {
@@ -43,33 +45,54 @@ class PaymentController extends Controller
             'sales' => 'required|array', // Les factures sélectionnées doivent être fournies
         ]);
 
+        // Créer le paiement
         $payment = Payment::create($validated);
 
+        // Montant total du paiement
         $totalAmount = $validated['montant'];
+
+        // Récupérer les ventes sélectionnées
         $selectedSales = Sale::whereIn('id', $request->input('sales'))->get();
 
+        // Boucle pour traiter chaque vente
         foreach ($selectedSales as $sale) {
             if ($totalAmount <= 0) {
-                break;
+                break; // Arrêter si le montant total est épuisé
             }
 
-            $amountToPay = min($sale->mttc, $totalAmount);
+            // Calculer le montant à régler pour cette vente
+            $amountToPay = min($sale->montant_restant, $totalAmount);
+
+            // Mettre à jour le montant restant pour la vente
             $sale->montant_restant -= $amountToPay;
-            $sale->status = $sale->montant_restant > 0 ? 'pending' : 'paid';
+
+            // Mettre à jour le statut de la vente
+            if ($sale->montant_restant <= 0) {
+                $sale->status = 'Réglée'; // Facture complètement réglée
+            } elseif ($sale->montant_restant < $sale->mttc) {
+                $sale->status = 'PartPayée'; // Facture partiellement réglée
+            } else {
+                $sale->status = 'EnAttente'; // Facture encore en attente de paiement
+            }
             $sale->save();
 
+            // Créer un détail de paiement
             $payment->details()->create([
                 'sale_id' => $sale->id,
                 'NFact' => $sale->NFact,
                 'DateFact' => $sale->DateFact,
-                'montant_restant' => $sale->montant_restant,
+                'mttc' => $sale->mttc,
+                'montant_regle' => $amountToPay, // Enregistrer le montant réglé pour cette vente
             ]);
 
+            // Réduire le montant total du paiement par le montant payé pour cette vente
             $totalAmount -= $amountToPay;
         }
 
         return redirect()->route('payments.index')->with('success', 'Paiement ajouté avec succès.');
     }
+
+
 
 
 

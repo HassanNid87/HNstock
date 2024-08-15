@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var salesItems = @json($sales); // Charger toutes les ventes
 
         salesItems.forEach(function(sale) {
-            if (sale.client_id == clientId && sale.status === 'pending') { // Filtrer par statut 'pending'
+            if (sale.client_id == clientId && (sale.status === 'EnAttente' || sale.status === 'PartPayée')) { // Filtrer par statuts 'Attente' et 'Partiellement Payée'
                 totalRemainingAmount += sale.montant_restant; // Ajouter au total des montants restants
                 var amountToApply = Math.min(sale.montant_restant, remainingAmount); // Calculer le montant à appliquer pour cette facture
                 remainingAmount -= amountToApply; // Réduire le montant restant
@@ -177,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
     var npayment = "{{ $Npayment }}" + "-" + today.replace(/-/g, '');
     document.getElementById('Npayment').value = npayment;
 });
-
 
 </script>
 @endsection

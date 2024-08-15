@@ -146,14 +146,14 @@
               <table class="table table-bordered table-striped table-hover">
                 <thead class="table-dark" align="center">
                     <tr>
-                        <th>NFact</th>
-                        <th>DateFact</th>
+                        <th>N°Fact</th>
+                        <th>Date</th>
                         <th>Client</th>
-                        <th>Status</th>
-                        <th class="no-wrap">Montant HT</th>
+                        <th>Statut</th>
+                        <th class="no-wrap">M-HT</th>
                         <th class="no-wrap">M-Tva</th>
                         <th class="no-wrap">M-Remise</th>
-                        <th class="no-wrap">Montant TTC</th>
+                        <th class="no-wrap">M-TTC</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -165,7 +165,7 @@
                             <td>
                                 @if ($sale->client)
                                     <a href="{{ route('clients.show', $sale->client_id) }}" class="btn btn-link">
-                                        <span class="badge" style="background-color:#F97300;">
+                                        <span class="badge" style="background-color:#789ec2;">
                                             {{ $sale->client->name }}
                                         </span>
                                     </a>
@@ -173,11 +173,37 @@
                                     ----------
                                 @endif
                             </td>
-                            <td class="no-wrap">{{ $sale->status }}</td>
+                            <td>
+                                @php
+                                    // Déterminez la couleur de fond en fonction du statut
+                                    $backgroundColor = '';
+                                    switch ($sale->status) {
+                                        case 'Réglée':
+                                            $backgroundColor = '#11a333'; // Vert clair
+                                            break;
+                                        case 'EnAttente':
+                                            $backgroundColor = '#c00515'; // Rouge clair
+                                            break;
+                                        case 'PartPayée':
+                                            $backgroundColor = '#f3bc06'; // Orange clair
+                                            break;
+                                        default:
+                                            $backgroundColor = '#ffffff'; // Couleur par défaut si aucun statut ne correspond
+                                            break;
+                                    }
+                                @endphp
+
+                                <a class="btn btn-link">
+                                    <span class="badge" style="background-color: {{ $backgroundColor }};">
+                                        {{ $sale->status }}
+                                    </span>
+                                </a>
+                            </td>
+
                             <td>{{ number_format($sale->mht, 2) }} </td>
                             <td>{{ number_format($sale->mtva, 2) }} </td>
                             <td>{{ number_format($sale->mremise, 2) }} </td>
-                            <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 17px;">
+                            <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
                                 {{ number_format($sale->mttc, 2) }}
                             </td>
 

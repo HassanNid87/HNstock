@@ -34,7 +34,8 @@ class PaymentDetailController extends Controller
         $paymentDetail->fill([
             'NFact' => '',
             'DateFact' => now()->toDateString(),
-            'montant_restant' => 0,
+            'mttc' => 0,
+            'montant_regle' => 0,
         ]);
 
         // Indiquer qu'il s'agit d'une création
@@ -93,7 +94,8 @@ class PaymentDetailController extends Controller
             'sale_id' => 'required|exists:sales,id',
             'NFact' => 'required|string',
             'DateFact' => 'required|date',
-            'montant_restant' => 'required|numeric',
+            'mttc' => 'required|numeric',
+            'montant_regle' => 'required|numeric',
         ]);
 
         // Mettre à jour le détail de paiement avec les données validées

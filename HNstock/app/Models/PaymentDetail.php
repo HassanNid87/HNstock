@@ -14,7 +14,8 @@ class PaymentDetail extends Model
         'sale_id',
         'NFact',
         'DateFact',
-        'montant_restant'
+        'mttc',
+        'montant_regle'
 
     ];
 
