@@ -89,21 +89,20 @@ class SaleController extends Controller
         $labels = $months->map(function ($month) use ($monthNames) {
             return $monthNames[$month];
         })->toArray();
+  // Récupérer les ventes
+  $sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
 
-// Mettre à jour le statut des ventes après la récupération
-$sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
-
-// Mettre à jour le statut des ventes
-$sales->getCollection()->transform(function ($sale) {
-    if ($sale->montant_restant == $sale->mttc) {
-        $sale->status = 'EnAttente';
-    } elseif ($sale->montant_restant > 0) {
-        $sale->status = 'PartPayée';
-    } else {
-        $sale->status = 'Réglée';
-    }
-    return $sale;
-});
+  // Mettre à jour le statut des ventes
+  foreach ($sales as $sale) {
+      if ($sale->montant_restant == $sale->mttc) {
+          $sale->status = 'EnAttente';
+      } elseif ($sale->montant_restant > 0) {
+          $sale->status = 'PartPayée';
+      } else {
+          $sale->status = 'Réglée';
+      }
+      $sale->save(); // Enregistre les modifications en base de données
+  }
 
         // Passer les données à la vue
         return view('sale.index', compact('sales', 'months', 'labels', 'totals', 'clients', 'startDate', 'endDate'));
