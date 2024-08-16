@@ -10,7 +10,7 @@
     if (!function_exists('getProductImage')) {
         function getProductImage($product): string
         {
-            return $product ? 'storage/' . $product->image : '';
+            return $product ? '/storage/' . $product->image : '';
         }
     }
 @endphp
