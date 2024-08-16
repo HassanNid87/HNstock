@@ -488,6 +488,10 @@
 
                         alertBox.find('.error-messages').html(errorHtml);
                         alertBox.show();
+
+                        $("html, body").animate({
+                            scrollTop: 0
+                        }, 500)
                     } else {
                         alert("Sorry, an unexpected error occurred.");
                     }
