@@ -79,7 +79,7 @@
                 </thead>
                 <tbody id="sales-table-body">
                     @foreach ($sale->details as $index => $detail)
-                        <tr class="sale-row">
+                        <tr class="sale-row" data-index="{{ $index }}">
                             <td>
                                 <input type="text" name="barcode[]" class="form-control barcode"
                                     value="{{ $detail->barcode }}" placeholder="Enter Barcode">
@@ -256,7 +256,7 @@
 
         // Fonction pour réinitialiser une ligne
         function resetRow(row) {
-            $(row).find('.quantity').val(0);
+            $(row).find('.quantity').val(1);
             $(row).find('.unit-price').val(0);
             updateTotal(row);
             calculateSummary(); // Recalculate summary when resetting a row
@@ -291,7 +291,13 @@
         // Ajouter une nouvelle ligne de vente
         $('#add-sale-row').click(function() {
             const totalRows = $(".sale-row").length;
-            const newRow = $('.sale-row').first().clone().removeAttr('id').removeAttr('style');
+            const newRowIndex = totalRows + 1;
+            const newRow = $('.sale-row')
+                .first()
+                .clone()
+                .removeAttr('id')
+                .removeAttr('style')
+                .attr('data-index', newRowIndex);
 
             const deleteBtn = newRow
                 .children('td')
@@ -299,19 +305,17 @@
                 .children('.delete-product');
             deleteBtn.removeAttr("disabled");
 
-
             const categorySelect = newRow
                 .children("td")
                 .eq(1)
                 .children('.category-select');
-            categorySelect.attr('data-index', totalRows + 1);
+            categorySelect.attr('data-index', newRowIndex);
 
             const productSelect = newRow
                 .children("td")
                 .eq(2)
                 .children('.product-select');
-            productSelect.attr('data-index', totalRows + 1);
-
+            productSelect.attr('data-index', newRowIndex);
 
             $('#sales-table-body').append(newRow);
             resetRow(newRow);
@@ -361,10 +365,10 @@
                 var imageUrl = productsImages[$(selectElement).val()];
 
                 var index = $(selectElement).data('index');
-                var imageElement = $(`img.product-image[data-index="${index}"]`);
+                var imageElement = $(`.sale-row[data-index="${index}"] img.product-image`);
 
                 if (imageUrl) {
-                    imageElement.attr('src', "storage/" + imageUrl + "?time=" + Math.random());
+                    imageElement.attr('src', "/storage/" + imageUrl + "?time=" + Math.random());
                 } else {
                     imageElement.attr('src', ''); // Optionnel: Afficher une image par défaut ou vider l'image
                 }
@@ -372,6 +376,8 @@
 
             // Lorsqu'un produit est sélectionné, mettez à jour l'image
             $(document).on('change', '.product-select', function() {
+                console.log(this);
+
                 updateProductImage(this);
             });
 

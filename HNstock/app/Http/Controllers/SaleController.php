@@ -280,7 +280,7 @@ class SaleController extends Controller
             new SaleDetail([
                 'sale_id' => 0,
                 'product_id' => 0,
-                'quantity' => 0,
+                'quantity' => 1,
                 'unit_price' => 0,
                 'total' => 0,
             ])
