@@ -27,12 +27,12 @@
 
 
 @section('content')
-    <div class="card m-3 p-3">
+    <div class="card m-3 p-3" id="formContainer">
         <div class="card-header bg-primary text-white">
             <h1>@yield('title')</h1>
         </div>
 
-        <form action="{{ $route }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ $route }}" method="POST" id="saleForm" enctype="multipart/form-data">
             @csrf
 
             @if ($isUpdate)
@@ -111,8 +111,8 @@
                                     data-index="{{ $index }}" style="max-width: 100px;">
                             </td>
                             <td>
-                                <input type="number" name="quantity[]" class="form-control quantity"
-                                    value="{{ $detail->quantity }}">
+                                <input type="number" name="quantity[]" min="1" value="1"
+                                    class="form-control quantity" value="{{ $detail->quantity }}">
                             </td>
                             <td>
                                 <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01"
@@ -162,7 +162,7 @@
                 <div class="form-group row">
                     <label for="ttva" class="form-label col-sm-3 col-form-label m-1 p-1">T-TVA</label>
                     <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
-                        <input type="number" name="ttva" id="ttva" class="form-control"
+                        <input type="number" name="ttva" value="0" id="ttva" class="form-control"
                             value="{{ old('ttva', $sale->ttva) }}" step="0.01">
                     </div>
                 </div>
@@ -176,7 +176,7 @@
                 <div class="form-group row">
                     <label for="tremise" class="form-label col-sm-3 col-form-label m-1 p-1">TRemise</label>
                     <div class="col-sm-3 d-flex justify-content-end m-1 p-1">
-                        <input type="number" name="tremise" id="tremise" class="form-control"
+                        <input type="number" name="tremise" id="tremise" value="0" class="form-control"
                             value="{{ old('tremise', $sale->tremise) }}" step="0.01">
                     </div>
                 </div>
@@ -210,7 +210,9 @@
                 <a href="{{ route('sales.index') }}" class="btn btn-secondary" title="Liste Factures">
                     <i class="fas fa-list"></i>
                 </a>
-                <input type="submit" class="btn btn-primary w-10" value="{{ $isUpdate ? 'Edit' : 'Create' }}">
+                <button type="submit" class="btn btn-primary w-10">
+                    save
+                </button>
             </div>
         </form>
     </div>
@@ -282,9 +284,8 @@
             var totalTTC = (totalHT + parseFloat(mtva) - parseFloat(remise)).toFixed(2);
             $('#mttc').val(totalTTC);
 
-            var montant_restant = totalTTC;
-            $('#montant_restant').val(montant_restant.toFixed(2));
-
+            var montantRestant = parseFloat(totalTTC);
+            $('#montant_restant').val((montantRestant ?? 0).toFixed(2));
         }
 
         // Ajouter une nouvelle ligne de vente
@@ -336,8 +337,12 @@
 
         // Lorsque la sélection du produit change
         $(document).on('change', '.product-select', function() {
+            const row = $(this).closest('tr');
             var price = $(this).find('option:selected').data('price'); // Obtenez le prix du produit sélectionné
-            $(this).closest('tr').find('.unit-price').val(price); // Définissez le prix dans la zone de prix
+            row.find('.unit-price').val(price); // Définissez le prix dans la zone de prix
+
+            updateTotal(row);
+            calculateSummary();
         });
 
         // Lorsqu'un champ de quantité ou de prix unitaire change, mettez à jour le total
@@ -348,10 +353,6 @@
             var total = isNaN(quantity) || isNaN(unitPrice) ? 0 : (quantity * unitPrice);
             row.find('.total').val(total.toFixed(2)); // Mettre à jour le total
         });
-
-
-
-
 
         $(document).ready(function() {
             // Fonction pour mettre à jour l'image du produit
@@ -439,6 +440,53 @@
             //     var index = $(this).data('index');
             //     updateProductImage(index);
             // });
+        });
+
+
+        const submitBtn = $("#saleForm button[type='submit']");
+        const alertBox = $('<div class="alert alert-danger validation-errors fade show" role="alert">' +
+            '<div class="error-messages"></div>' +
+            '</div>').hide();
+
+        $("#formContainer").prepend(alertBox);
+
+        $("#saleForm").on('submit', function(e) {
+            e.preventDefault();
+
+            submitBtn.attr("disabled", "disabled").html("Saving...");
+            alertBox.hide().find('.error-messages').html(''); // Clear previous errors
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ $route }}',
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    submitBtn.removeAttr("disabled").html("Save");
+                    // Handle successful form submission (e.g., redirect or show a success message)
+                    location.href = "{{ route('sales.index') }}";
+                },
+                error: function(xhr) {
+                    submitBtn.removeAttr("disabled").html("Save");
+
+                    if (xhr.status === HTTP_STATUS.UNPROCESSABLE_CONTENT) {
+                        // Laravel validation error
+                        const errors = xhr.responseJSON.errors;
+                        let errorHtml = '';
+
+                        $.each(errors, function(key, value) {
+                            errorHtml += '<p>' + value[0] + '</p>';
+                        });
+
+                        alertBox.find('.error-messages').html(errorHtml);
+                        alertBox.show();
+                    } else {
+                        alert("Sorry, an unexpected error occurred.");
+                    }
+                }
+            });
         });
     </script>
 

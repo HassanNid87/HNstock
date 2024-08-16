@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SaleRequest extends FormRequest
 {
@@ -22,20 +24,22 @@ class SaleRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'NFact' =>'required',
-            'DateFact' =>'required|',
-            'mht' =>'required|numeric',
-            'ttva' =>'required|numeric',
-            'mtva' =>'required|numeric',
-            'tremise' =>'required|numeric',
-            'mremise' =>'required|numeric',
-            'mttc' =>'required|numeric',
-            'montant_restant' =>'required|numeric',
-            'client_id' =>'required',
+            'NFact' => 'required',
+            'DateFact' => 'required|',
+            'mht' => 'required|numeric',
+            'ttva' => 'required|numeric',
+            'mtva' => 'required|numeric',
+            'tremise' => 'required|numeric',
+            'mremise' => 'required|numeric',
+            'mttc' => 'required|numeric',
+            'montant_restant' => 'required|numeric',
+            'client_id' => 'required',
+            'product_id' => ['required' , 'array' , 'min:1'],
+            'product_id.*' => ['required' , 'numeric', Rule::exists(Product::class , 'id')],
+        ];
 
-
-
-        ] ;
-              return $rules;
+        return $rules;
     }
+
+
 }

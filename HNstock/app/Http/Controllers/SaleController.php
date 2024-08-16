@@ -89,24 +89,23 @@ class SaleController extends Controller
         $labels = $months->map(function ($month) use ($monthNames) {
             return $monthNames[$month];
         })->toArray();
-  // Récupérer les ventes
-  $sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
+        // Récupérer les ventes
+        $sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
 
-  // Mettre à jour le statut des ventes
-  foreach ($sales as $sale) {
-      if ($sale->montant_restant == $sale->mttc) {
-          $sale->status = 'EnAttente';
-      } elseif ($sale->montant_restant > 0) {
-          $sale->status = 'PartPayée';
-      } else {
-          $sale->status = 'Réglée';
-      }
-      $sale->save(); // Enregistre les modifications en base de données
-  }
+        // Mettre à jour le statut des ventes
+        foreach ($sales as $sale) {
+            if ($sale->montant_restant == $sale->mttc) {
+                $sale->status = 'EnAttente';
+            } elseif ($sale->montant_restant > 0) {
+                $sale->status = 'PartPayée';
+            } else {
+                $sale->status = 'Réglée';
+            }
+            $sale->save(); // Enregistre les modifications en base de données
+        }
 
         // Passer les données à la vue
         return view('sale.index', compact('sales', 'months', 'labels', 'totals', 'clients', 'startDate', 'endDate'));
-
     }
 
 
@@ -130,9 +129,8 @@ class SaleController extends Controller
 
         $sale = Sale::create($validatedData);
 
-        foreach ($request->product_id as $key => $productId) {
-            $product = Product::findOrFail($productId);
-
+        $products = Product::whereIn('id', $request->product_id)->get();
+        foreach ($products as $key => $product) {
             // Check stock availability
             if ($product->stock->quantity < $request->quantity[$key]) {
                 return redirect()->back()->with('error', 'Not enough stock available for product: ' . $product->name);
@@ -140,7 +138,7 @@ class SaleController extends Controller
 
             // Create sale detail
             $detail = [
-                'product_id' => $productId,
+                'product_id' => $product->id,
                 'quantity' => $request->quantity[$key],
                 'unit_price' => $request->unit_price[$key],
                 'total' => $request->quantity[$key] * $request->unit_price[$key],
@@ -151,13 +149,13 @@ class SaleController extends Controller
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
 
-         // Mise à jour du débit du client
-         $client = $sale->client;
-         $client->debit += $sale->mttc; // `amount` est le montant de la vente
-         $client->solde = $client->debit - $client->credit; // Mise à jour du solde
-         $client->save();
+        // Mise à jour du débit du client
+        $client = $sale->client;
+        $client->debit += $sale->mttc; // `amount` est le montant de la vente
+        $client->solde = $client->debit - $client->credit; // Mise à jour du solde
+        $client->save();
 
-        return redirect()->route('sales.index')->with('success', 'Sale created successfully');
+        return response()->json(['status' => "ok"]);
     }
 
     public function show(Sale $sale)
@@ -169,7 +167,7 @@ class SaleController extends Controller
         return view('sale.show', compact('sale'));
     }
 
-    public function edit(Sale $sale , bool $isUpdate = true)
+    public function edit(Sale $sale, bool $isUpdate = true)
     {
         $clients = Client::all();
         $categories = Category::all(); // Récupération des catégories
@@ -219,7 +217,7 @@ class SaleController extends Controller
         }
 
 
-    $sale->save();
+        $sale->save();
 
         return redirect()->route('sales.index')->with('success', 'Sale updated successfully');
     }

@@ -37,6 +37,10 @@
             align-items: center;
             justify-content: center
         }
+
+        .validation-errors p {
+            margin: 0;
+        }
     </style>
 
     @yield('style')
