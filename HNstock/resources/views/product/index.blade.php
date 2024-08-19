@@ -108,7 +108,7 @@ img.rounded {
             <form method="get">
                 <div class="form-group">
                    <!-- <label for="name">Name or Description</label>-->
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Name or Description" value="{{ Request::input('name') }}">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="CodeBarre / Name / Description" value="{{ Request::input('name') }}">
                 </div>
                 <hr>
                 <h3>Categories</h3>
@@ -141,20 +141,20 @@ img.rounded {
                     </a>
                 </div>
 
-                <div class="form-group my-2">
-                    <a class="btn btn-primary" href="#listeProducts" title="Liste Produits">
-                        <i class="fas fa-list"></i>
-                    </a>
-                </div>
+
             </form>
         </aside>
         <main class="col-md-9">
             <div class="d-flex justify-content-between align-items-center">
                 <h1>Produits</h1>
+
+                <a class="btn btn-primary" href="#listeProducts" title="Liste Produits">
+                    <i class="fas fa-list"></i>
+                </a>
                 <a href="{{ route('products.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i>
                 </a>
-                            </div>
+            </div>
 
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 @foreach ($products as $product)
@@ -208,9 +208,6 @@ img.rounded {
 
                     </div>
                 </div>
-
-
-
                 @endforeach
             </div>
 
@@ -299,143 +296,142 @@ img.rounded {
 </div>
 
 
+<script>
+    const cart = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Masquer l'en-tête du tableau si le panier est vide au chargement initial
+        updateCart();
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const name = this.dataset.name;
+                const price = parseFloat(this.dataset.price);
+                const quantity = parseInt(document.getElementById('quantity-' + id).value);
+                const imageUrl = this.dataset.image; // Ajouter une donnée pour l'image
+
+                const existingProduct = cart.find(product => product.id === id);
+                if (existingProduct) {
+                    existingProduct.quantity = quantity;
+                } else {
+                    cart.push({ id, name, price, quantity, imageUrl });
+                }
+
+                updateCart();
+            });
+        });
+
+        function updateCart() {
+            let cartItems = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                document.getElementById('cart-header').classList.add('hidden');
+            } else {
+                document.getElementById('cart-header').classList.remove('hidden');
+            }
+
+            cart.forEach(product => {
+                const itemTotal = product.price * product.quantity;
+                total += itemTotal;
+                cartItems += `
+                    <tr>
+                        <td><img src="${product.imageUrl}" alt="${product.name}" style="width: 40px; height: 40px; object-fit: cover;"></td>
+                        <td>${product.name}</td>
+                        <td>${product.quantity}</td>
+                        <td>${product.price.toFixed(2)} </td>
+                        <td>${itemTotal.toFixed(2)} </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger remove-from-cart" data-id="${product.id}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <input type="hidden" name="cart[${product.id}][id]" value="${product.id}" />
+                            <input type="hidden" name="cart[${product.id}][quantity]" value="${product.quantity}" />
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('cart-items').innerHTML = cartItems;
+            document.getElementById('cart-total').innerText = `Total: ${total.toFixed(2)} MAD`;
+
+            // Add event listeners for remove buttons
+            document.querySelectorAll('.remove-from-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const index = cart.findIndex(product => product.id === id);
+                    if (index > -1) {
+                        cart.splice(index, 1);
+                        updateCart();
+                    }
+                });
+            });
+        }
+
+        document.getElementById('create-invoice').addEventListener('click', createInvoice);
+
+        function createInvoice() {
+            if (cart.length === 0) {
+                alert('Votre panier est vide.');
+                return;
+            }
+
+            console.log('Données du panier avant l\'envoi:', cart);
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch('http://127.0.0.1:8000/create-invoice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({ cart })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur réseau');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                cart.length = 0;
+                updateCart();
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+            });
+        }
+    });
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gérer l'incrémentation
+            document.querySelectorAll('.quantity-increase').forEach(button => {
+                button.addEventListener('click', function () {
+                    const input = this.parentNode.querySelector('input[name="quantity"]');
+                    const max = parseInt(input.max);
+                    if (parseInt(input.value) < max) {
+                        input.value = parseInt(input.value) + 1;
+                    }
+                });
+            });
+
+            // Gérer la décrémentation
+            document.querySelectorAll('.quantity-decrease').forEach(button => {
+                button.addEventListener('click', function () {
+                    const input = this.parentNode.querySelector('input[name="quantity"]');
+                    const min = parseInt(input.min);
+                    if (parseInt(input.value) > min) {
+                        input.value = parseInt(input.value) - 1;
+                    }
+                });
+            });
+        });
+    </script>
 
 @endsection
 
-
-<script>
-const cart = [];
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Masquer l'en-tête du tableau si le panier est vide au chargement initial
-    updateCart();
-
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const name = this.dataset.name;
-            const price = parseFloat(this.dataset.price);
-            const quantity = parseInt(document.getElementById('quantity-' + id).value);
-            const imageUrl = this.dataset.image; // Ajouter une donnée pour l'image
-
-            const existingProduct = cart.find(product => product.id === id);
-            if (existingProduct) {
-                existingProduct.quantity = quantity;
-            } else {
-                cart.push({ id, name, price, quantity, imageUrl });
-            }
-
-            updateCart();
-        });
-    });
-
-    function updateCart() {
-        let cartItems = '';
-        let total = 0;
-
-        if (cart.length === 0) {
-            document.getElementById('cart-header').classList.add('hidden');
-        } else {
-            document.getElementById('cart-header').classList.remove('hidden');
-        }
-
-        cart.forEach(product => {
-            const itemTotal = product.price * product.quantity;
-            total += itemTotal;
-            cartItems += `
-                <tr>
-                    <td><img src="${product.imageUrl}" alt="${product.name}" style="width: 40px; height: 40px; object-fit: cover;"></td>
-                    <td>${product.name}</td>
-                    <td>${product.quantity}</td>
-                    <td>${product.price.toFixed(2)} </td>
-                    <td>${itemTotal.toFixed(2)} </td>
-                    <td>
-                        <button class="btn btn-sm btn-outline-danger remove-from-cart" data-id="${product.id}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <input type="hidden" name="cart[${product.id}][id]" value="${product.id}" />
-                        <input type="hidden" name="cart[${product.id}][quantity]" value="${product.quantity}" />
-                    </td>
-                </tr>
-            `;
-        });
-
-        document.getElementById('cart-items').innerHTML = cartItems;
-        document.getElementById('cart-total').innerText = `Total: ${total.toFixed(2)} MAD`;
-
-        // Add event listeners for remove buttons
-        document.querySelectorAll('.remove-from-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.dataset.id;
-                const index = cart.findIndex(product => product.id === id);
-                if (index > -1) {
-                    cart.splice(index, 1);
-                    updateCart();
-                }
-            });
-        });
-    }
-
-    document.getElementById('create-invoice').addEventListener('click', createInvoice);
-
-    function createInvoice() {
-        if (cart.length === 0) {
-            alert('Votre panier est vide.');
-            return;
-        }
-
-        console.log('Données du panier avant l\'envoi:', cart);
-
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-        fetch('http://127.0.0.1:8000/create-invoice', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({ cart })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur réseau');
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert(data.message);
-            cart.length = 0;
-            updateCart();
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-        });
-    }
-});
-
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Gérer l'incrémentation
-        document.querySelectorAll('.quantity-increase').forEach(button => {
-            button.addEventListener('click', function () {
-                const input = this.parentNode.querySelector('input[name="quantity"]');
-                const max = parseInt(input.max);
-                if (parseInt(input.value) < max) {
-                    input.value = parseInt(input.value) + 1;
-                }
-            });
-        });
-
-        // Gérer la décrémentation
-        document.querySelectorAll('.quantity-decrease').forEach(button => {
-            button.addEventListener('click', function () {
-                const input = this.parentNode.querySelector('input[name="quantity"]');
-                const min = parseInt(input.min);
-                if (parseInt(input.value) > min) {
-                    input.value = parseInt(input.value) - 1;
-                }
-            });
-        });
-    });
-</script>

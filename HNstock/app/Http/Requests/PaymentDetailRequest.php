@@ -27,6 +27,7 @@ class PaymentDetailRequest extends FormRequest
             'NFact' => 'required|string|max:255',
             'DateFact' => 'required|date',
             'mttc' => 'required|numeric|min:0',
+            'montant_restant' => 'required|numeric|min:0',
             'montant_regle' => 'required|numeric|min:0',
         ];
     }

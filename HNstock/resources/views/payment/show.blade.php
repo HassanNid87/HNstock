@@ -30,6 +30,37 @@
         <p>{{ $payment->client ? $payment->client->name : 'N/A' }}</p>
     </div>
 
+    <!-- Liste des factures liées à ce paiement -->
+            <div class="card">
+                <div class="card-header">
+                    Détails  Régelement
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>N Facture</th>
+                                <th>Date Facture</th>
+                                <th>Montant TTc</th>
+                                <th>Montant Restant</th>
+                                <th>Montant Réglée</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($payment->details as $detail)
+                                <tr>
+                                    <td>{{ $detail->NFact }}</td>
+                                    <td>{{ $detail->DateFact }}</td>
+                                    <td>{{ number_format($detail->mttc, 2) }} MAD</td>
+                                    <td>{{ number_format($detail->montant_restant, 2) }} MAD</td>
+                                    <td>{{ number_format($detail->montant_regle, 2) }} MAD</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
     <a href="{{ route('payments.edit', $payment->id) }}" class="btn btn-warning">Modifier</a>
     <a href="{{ route('payments.index') }}" class="btn btn-secondary">Retour</a>
 </div>

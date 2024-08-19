@@ -45,7 +45,8 @@ class ProductController extends Controller
         if (!empty($name)) {
             $productsQuery->where(function($query) use ($name) {
                 $query->where('name', 'like', "%{$name}%")
-                      ->orWhere('description', 'like', "%{$name}%");
+                      ->orWhere('description', 'like', "%{$name}%")
+                      ->orWhere('codebare', 'like', "%{$name}%");
             });
         }
         if (!empty($categoriesIds)) {
@@ -216,4 +217,26 @@ class ProductController extends Controller
 
         return $this->saleController->edit($sale , false);
     }
+
+
+// ProductController.php
+public function findByBarcode($barcode)
+{
+    $product = Product::where('barcode', $barcode)->first();
+
+    if ($product) {
+        return response()->json([
+            'category_id' => $product->category_id,
+            'product_id' => $product->id,
+            'image' => $product->image,
+            'price' => $product->priceV,
+            'name' => $product->name
+        ]);
+    }
+
+    return response()->json(['error' => 'Product not found'], 404);
+}
+
+
+
 }

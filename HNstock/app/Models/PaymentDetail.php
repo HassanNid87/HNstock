@@ -15,6 +15,7 @@ class PaymentDetail extends Model
         'NFact',
         'DateFact',
         'mttc',
+        'montant_restant',
         'montant_regle'
 
     ];

@@ -24,10 +24,11 @@ class ClientRequest extends FormRequest
         $rules = [
 
             'name' => 'required|string|max:255',
+            'code' => 'required|string|max:255',
             'tel' => 'required|string|max:20',
             'email' => 'required|email|max:255',
             'adresse' => 'nullable|string|max:255',
-            'solde' => 'nullable|numeric|min:0',
+            //'soldemax' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 
         ];

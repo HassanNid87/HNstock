@@ -6,15 +6,73 @@ use App\Models\Payment;
 use App\Models\Sale;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class PaymentController extends Controller
 {
-    public function index()
-    {
-        $payments = Payment::with('client')->paginate(15);
-        return view('payment.index', compact('payments'));
+    public function index(Request $request)
+{
+    // Validation des entrées
+    $request->validate([
+        'start_date' => 'nullable|date',
+        'end_date' => 'nullable|date|after_or_equal:start_date',
+        'Npayment' => 'nullable|string',
+        'client' => 'nullable|exists:clients,id',
+        'mode_payment' => 'nullable|array',
+        'mode_payment.*' => 'in:espece,chéque',
+        'min_amount' => 'nullable|numeric',
+        'max_amount' => 'nullable|numeric|gte:min_amount',
+    ]);
+
+     // Définir les dates par défaut
+     $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
+     $endDate = $request->input('end_date', Carbon::now()->toDateString());
+
+    // Récupération des clients pour le filtrage
+    $clients = Client::all();
+
+    // Construction de la requête de base
+    $query = Payment::query();
+
+    // Filtrage par numéro de paiement
+    if ($request->filled('Npayment')) {
+        $query->where('Npayment', 'like', '%' . $request->Npayment . '%');
     }
+
+    // Filtrage par client
+    if ($request->filled('client')) {
+        $query->where('client_id', $request->client);
+    }
+
+    // Filtrage par mode de paiement
+    if ($request->filled('mode_payment')) {
+        $query->whereIn('mode_payment', $request->mode_payment);
+    }
+
+      // Filtrer par date de début
+      $query->where('date_payment', '>=', $startDate . ' 00:00:00');
+
+      // Filtrer par date de fin
+      $query->where('date_payment', '<=', $endDate . ' 23:59:59');
+
+
+    // Filtrage par montant minimum et maximum
+    if ($request->filled('min_amount')) {
+        $query->where('montant', '>=', $request->min_amount);
+    }
+
+    if ($request->filled('max_amount')) {
+        $query->where('montant', '<=', $request->max_amount);
+    }
+
+    // Pagination des résultats
+    $payments = $query->paginate(15);
+
+    // Retourner la vue avec les données
+    return view('payment.index', compact('payments', 'clients', 'startDate', 'endDate'));
+}
+
 
     public function create()
     {
@@ -82,6 +140,7 @@ class PaymentController extends Controller
                 'NFact' => $sale->NFact,
                 'DateFact' => $sale->DateFact,
                 'mttc' => $sale->mttc,
+                'montant_restant' => $sale->mttc,
                 'montant_regle' => $amountToPay, // Enregistrer le montant réglé pour cette vente
             ]);
 
@@ -90,10 +149,16 @@ class PaymentController extends Controller
         }
 
          // Mise à jour du crédit du client
-         $client = $payment->client;
+        /* $client = $payment->client;
          $client->credit += $payment->montant; // `amount` est le montant du paiement
          $client->solde = $client->debit - $client->credit; // Mise à jour du solde
-         $client->save();
+         $client->save();*/
+
+                // Recalcul du solde du client
+            $client = $payment->client;
+            $client->credit = $client->payments->sum('montant');
+            $client->solde = $client->debit - $client->credit;
+            $client->save();
 
         return redirect()->route('payments.index')->with('success', 'Paiement ajouté avec succès.');
     }
@@ -102,8 +167,8 @@ class PaymentController extends Controller
 
 
 
-    public function edit(Payment $payment)
-    {
+
+    public function edit(Payment $payment) {
         // Récupérer tous les clients
         $clients = Client::all();
 
@@ -113,55 +178,66 @@ class PaymentController extends Controller
                      ->get();
 
         // Récupérer les ventes associées à ce paiement
+
         $selectedSales = $payment->details->pluck('sale_id')->toArray();
+       // dd($selectedSales);
 
         return view('payment.edit', compact('payment', 'clients', 'sales', 'selectedSales'));
     }
 
 
     public function update(Request $request, Payment $payment)
-    {
-        // Valider les données du formulaire
-        $validated = $request->validate([
-            'Npayment' => 'required|string',
-            'montant' => 'required|numeric',
-            'date_payment' => 'required|date',
-            'mode_payment' => 'required|string',
-            'client_id' => 'required|exists:clients,id',
-            'sales' => 'nullable|array', // Les factures sélectionnées sont optionnelles lors de la mise à jour
-        ]);
+{
+    // Valider les données du formulaire
+    $validated = $request->validate([
+        'Npayment' => 'required|string',
+        'montant' => 'required|numeric',
+        'date_payment' => 'required|date',
+        'mode_payment' => 'required|string',
+        'client_id' => 'required|exists:clients,id',
+        'sales' => 'nullable|array', // Les factures sélectionnées sont optionnelles lors de la mise à jour
+    ]);
 
-        // Mettre à jour les informations du paiement
-        $payment->update($validated);
+    // Mettre à jour les informations du paiement
+    $payment->update($validated);
 
-        // Supprimer les anciens détails de paiement
-        $payment->details()->delete();
+    // Supprimer les anciens détails de paiement
+    $payment->details()->delete();
 
-        $totalAmount = $validated['montant'];
-        $selectedSales = Sale::whereIn('id', $request->input('sales', []))->get();
+    $totalAmount = $validated['montant'];
+    $selectedSales = Sale::whereIn('id', $request->input('sales', []))->get();
 
-        foreach ($selectedSales as $sale) {
-            if ($totalAmount <= 0) {
-                break;
-            }
-
-            $amountToPay = min($sale->mttc, $totalAmount);
-            $sale->montant_restant -= $amountToPay;
-            $sale->status = $sale->montant_restant > 0 ? 'pending' : 'paid';
-            $sale->save();
-
-            $payment->details()->create([
-                'sale_id' => $sale->id,
-                'NFact' => $sale->NFact,
-                'DateFact' => $sale->DateFact,
-                'montant_restant' => $sale->montant_restant,
-            ]);
-
-            $totalAmount -= $amountToPay;
+    foreach ($selectedSales as $sale) {
+        if ($totalAmount <= 0) {
+            break;
         }
 
-        return redirect()->route('payments.index')->with('success', 'Paiement mis à jour avec succès.');
+        $amountToPay = min($sale->montant_restant, $totalAmount);
+        $sale->montant_restant -= $amountToPay;
+        $sale->status = $sale->montant_restant > 0 ? 'PartPayée' : 'Réglée';
+        $sale->save();
+
+        $payment->details()->create([
+            'sale_id' => $sale->id,
+            'NFact' => $sale->NFact,
+            'DateFact' => $sale->DateFact,
+            'mttc' => $sale->mttc,
+            'montant_restant' => $sale->montant_restant,
+            'montant_regle' => $amountToPay, // Enregistrer le montant réglé pour cette vente
+        ]);
+
+        $totalAmount -= $amountToPay;
     }
+
+    // Recalcul du solde du client
+    $client = $payment->client;
+    $client->credit = $client->payments->sum('montant');
+    $client->solde = $client->debit - $client->credit;
+    $client->save();
+
+    return redirect()->route('payments.index')->with('success', 'Paiement mis à jour avec succès.');
+}
+
 
 
 
@@ -171,11 +247,18 @@ class PaymentController extends Controller
     $payment->details()->delete(); // Supprimer les détails associés
     $payment->delete();
 
+       // Recalcul du solde du client
+       $client = $payment->client;
+       $client->credit = $client->payments->sum('montant');
+       $client->solde = $client->debit - $client->credit;
+       $client->save();
+
     return redirect()->route('payments.index')->with('success', 'Paiement supprimé avec succès.');
 }
 
-    public function show(Payment $payment)
-    {
-        return view('payment.show', compact('payment'));
-    }
+public function show(Payment $payment)
+{
+    return view('payment.show', compact('payment'));
+}
+
 }

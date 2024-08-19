@@ -1,5 +1,5 @@
 @extends('base')
-@section('title', $isUpdate ? 'Update Product' : 'Creer un Produit')
+@section('title', $isUpdate ? 'Update Product' : 'Create Product')
 
 @php
     $route = $isUpdate ? route('products.update', $product) : route('products.store');
@@ -18,7 +18,7 @@
                         @method('PUT')
                     @endif
                     <div class="form-group mb-3">
-                        <label for="category_id" class="form-label">Categorie</label>
+                      <!--  <label for="category_id" class="form-label">Categorie</label>-->
                         <select name="category_id" id="category_id" class="form-select">
                             <option value="">Categorie</option>
                             @foreach ($categories as $category)
@@ -27,36 +27,49 @@
                         </select>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="name" class="form-label">Nom</label>
-                        <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $product->name) }}">
+                        <!--<label for="codebare" class="form-label">Code Barre</label>-->
+                        <input type="text" name="codebare" id="codebare" placeholder="Code Barre" class="form-control" value="{{ old('codebare', $product->codebare) }}">
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control">{{ old('description', $product->description) }}</textarea>
+                        <!--<label for="name" class="form-label">Nom</label>-->
+                        <input type="text" name="name" id="name" placeholder="Nom" class="form-control" value="{{ old('name', $product->name) }}">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <!--<label for="description" class="form-label">Description</label>-->
+                        <textarea name="description" id="description" placeholder="Description" class="form-control">{{ old('description', $product->description) }}</textarea>
                     </div>
 
                     <div class="form-group mb-3">
                         <label for="image" class="form-label">Image</label>
                         <input type="file" name="image" id="image" class="form-control" onchange="previewImage(event)">
                         <div id="image-container" class="mt-2" style="display: {{ $product->image ? 'block' : 'none' }};">
-                            <img id="image-preview" width="100px" src="/storage/{{ $product->image }}" alt="Product Image">
+                            <img id="image-preview" width="100px"  src="/storage/{{ $product->image }}" alt="Product Image">
                         </div>
                     </div>
 
                     <hr>
 
                     <div class="form-group mb-3">
-                        <label for="priceA" class="form-label">Price A</label>
-                        <input type="number" name="priceA" step="0.01" id="priceA" class="form-control" value="{{ old('priceA', $product->priceA) }}">
+                        <label for="priceA" class="form-label">Prix Achat</label>
+                        <input type="number" name="priceA" placeholder="Prix d'Achat" step="0.01" id="priceA" class="form-control" value="{{ old('priceA', $product->priceA) }}">
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="priceV" class="form-label">Price V</label>
-                        <input type="number" name="priceV" id="priceV" step="0.01" class="form-control" value="{{ old('priceV', $product->priceV) }}">
+                       <label for="priceV" class="form-label">Prix Vente</label>
+                        <input type="number" name="priceV" id="priceV" placeholder="Prix de vente" step="0.01" class="form-control" value="{{ old('priceV', $product->priceV) }}">
                     </div>
 
+                    <div class="form-group mb-3">
+                        <!--<label for="unite" class="form-label">Unité</label>-->
+                        <input type="text" name="unite" id="unite" placeholder="Unité" class="form-control" value="{{ old('unite', $product->unite) }}">
+                    </div>
                     <hr>
+                    <div class="form-group mb-3">
+                        <!--<label for="etagere" class="form-label">Étagère</label>-->
+                        <input type="text" name="etagere" id="etagere" placeholder="Étagère" class="form-control" value="{{ old('etagere', $product->etagere) }}">
+                    </div>
 
                     <div class="form-group mb-3">
                         <label for="stockmax" class="form-label">Stock-Max</label>
@@ -66,6 +79,13 @@
                         <label for="stockmin" class="form-label">Stock-Min</label>
                         <input type="number" name="stockmin" id="stockmin" class="form-control" value="{{ old('priceV', $product->stockmin) }}">
                     </div>
+
+
+                    <!--<div class="form-group mb-3">
+                        <label for="priceVgros" class="form-label">Prix V-Gros</label>
+                        <input type="number" name="priceVgros" id="priceVgros" step="0.01" class="form-control" value="{{ old('priceV', $product->priceVgros) }}">
+                    </div>-->
+
 
                     <hr>
 

@@ -35,6 +35,7 @@ class PaymentDetailController extends Controller
             'NFact' => '',
             'DateFact' => now()->toDateString(),
             'mttc' => 0,
+            'montant_restant' => 0,
             'montant_regle' => 0,
         ]);
 
@@ -95,6 +96,7 @@ class PaymentDetailController extends Controller
             'NFact' => 'required|string',
             'DateFact' => 'required|date',
             'mttc' => 'required|numeric',
+            'montant_restant' => 'required|numeric',
             'montant_regle' => 'required|numeric',
         ]);
 

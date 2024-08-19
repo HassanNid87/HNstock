@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('date_payment').value = today;
 
     // Formater le numéro de paiement
-    var npayment = "{{ $Npayment }}" + "-" + today.replace(/-/g, '');
+    var npayment = "{{ $Npayment }}";
     document.getElementById('Npayment').value = npayment;
 });
 

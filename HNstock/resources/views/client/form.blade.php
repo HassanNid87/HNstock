@@ -24,6 +24,10 @@
                 @if ($isUpdate)
                     @method('PUT')
                 @endif
+                <div class="form-group mb-3">
+                    <label for="code" class="form-label">Code</label>
+                    <input type="text" name="code" id="code" class="form-control" value="{{ old('code', $client->code) }}">
+                </div>
 
                 <div class="form-group mb-3">
                     <label for="name" class="form-label">Nom</label>

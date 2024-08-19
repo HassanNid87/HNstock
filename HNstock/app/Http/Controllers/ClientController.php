@@ -13,11 +13,46 @@ class ClientController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $clients = Client::paginate(10);
-        return view('client.index', compact('clients'));
+    public function index(Request $request)
+{
+
+
+    $request->validate([
+        'minsolde' => 'nullable|numeric',
+        'maxsolde' => 'nullable|numeric|gte:minsolde',
+        'client' => 'nullable|string',
+        'name' => 'nullable|string',
+    ]);
+
+    // Initialisation de la requête de base
+    $query = Client::query();
+
+    // Filtrage par nom
+    if ($request->filled('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
     }
+
+    // Filtrage par client
+    if ($request->filled('client')) {
+        $query->where('id', $request->client);
+    }
+
+    // Filtrage par solde minimum
+    if ($request->filled('minsolde')) {
+        $query->where('solde', '>=', $request->minsolde);
+    }
+
+    // Filtrage par solde maximum
+    if ($request->filled('maxsolde')) {
+        $query->where('solde', '<=', $request->maxsolde);
+    }
+
+    // Exécution de la requête avec pagination
+    $clients = $query->paginate(10);
+
+    return view('client.index', compact('clients'));
+}
+
 
 
     /**

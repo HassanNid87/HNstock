@@ -11,6 +11,7 @@ class StockController extends Controller
 {
     public function index()
     {
+
         $stocks = Stock::with('product.category')->get(); // Charger aussi la catégorie
     $categories = Category::all(); // Récupérer toutes les catégories
 

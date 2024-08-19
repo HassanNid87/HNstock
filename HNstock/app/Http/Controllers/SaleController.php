@@ -27,7 +27,9 @@ class SaleController extends Controller
             'min_amount' => 'nullable|numeric',
             'max_amount' => 'nullable|numeric|gte:min_amount',
             'client' => 'nullable|string',
-            'NFacture' => 'nullable|string'
+            'NFacture' => 'nullable|string',
+            'status' => 'nullable|array',
+            'status.*' => 'in:EnAttente,PartPayée,Réglée'
         ]);
 
         // Définir les dates par défaut
@@ -46,6 +48,11 @@ class SaleController extends Controller
                 $q->where('id', $request->client); // Filtre par ID au lieu de nom
             });
         }
+
+         // Filtrer par statut
+    if ($request->filled('status')) {
+        $query->whereIn('status', $request->status);
+    }
 
         // Filtrer par date de début
         $query->where('DateFact', '>=', $startDate . ' 00:00:00');
@@ -149,11 +156,16 @@ class SaleController extends Controller
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
 
-        // Mise à jour du débit du client
+            // Calculer le montant restant comme étant égal au montant TTC
+        $sale->montant_restant = $sale->mttc;
+        $sale->save();
+
+         // Recalcul du solde du client
         $client = $sale->client;
-        $client->debit += $sale->mttc; // `amount` est le montant de la vente
-        $client->solde = $client->debit - $client->credit; // Mise à jour du solde
+        $client->debit = $client->sales->sum('mttc');
+        $client->solde = $client->debit - $client->credit;
         $client->save();
+
 
         return response()->json(['status' => "ok"]);
     }
@@ -174,6 +186,8 @@ class SaleController extends Controller
         //dd($categories); // Debugging
         $products = Product::all();
         //dd($products);
+
+
         return view('sale.form', compact('sale', 'isUpdate', 'clients', 'categories', 'products'));
     }
 
@@ -216,6 +230,12 @@ class SaleController extends Controller
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
 
+            // Recalcul du solde du client
+            $client = $sale->client;
+            $client->debit = $client->sales->sum('mttc');
+            $client->solde = $client->debit - $client->credit;
+            $client->save();
+
 
         $sale->save();
 
@@ -229,6 +249,11 @@ class SaleController extends Controller
             $product = Product::findOrFail($detail->product_id);
             $product->stock->increment('quantity', $detail->quantity);
         }
+            // Recalcul du solde du client
+            $client = $sale->client;
+            $client->debit = $client->sales->sum('mttc');
+            $client->solde = $client->debit - $client->credit;
+            $client->save();
 
         $sale->delete();
 

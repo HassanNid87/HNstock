@@ -51,38 +51,30 @@
         <!-- Liste des factures -->
         <div class="mb-3">
             <label for="sales" class="form-label">Factures</label>
-            <table class="table table-bordered" id="sales-table">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>Numéro de Facture</th>
-                        <th>Date de Facture</th>
-                        <th>Montant TTC</th>
+                        <th>  #
+                        </th>
+                        <th>N Facture</th>
+                        <th>Date Facture</th>
+                        <th>Montant TTc</th>
                         <th>Montant Restant</th>
-                        <th>Montant à Régler</th>
+                        <th>Montant Réglée</th>
                     </tr>
                 </thead>
                 <tbody id="sales-list">
-                    <!-- Les lignes de factures seront ajoutées ici par JavaScript -->
-                    @foreach($sales as $sale)
-                        @if($sale->client_id == $payment->client_id && $sale->status === 'pending')
-                            <tr>
-                                <td>
-                                    <input class="form-check-input" type="checkbox" name="sales[]" value="{{ $sale->id }}" data-amount="{{ $sale->mttc }}" id="sale{{ $sale->id }}" {{ in_array($sale->id, $selectedSales) ? 'checked' : '' }}>
-                                </td>
-                                <td>
-                                    <label class="form-check-label" for="sale{{ $sale->id }}">
-                                        {{ $sale->NFact }}
-                                    </label>
-                                </td>
-                                <td>{{ $sale->DateFact }}</td>
-                                <td>{{ $sale->mttc }}</td>
-                                <td>{{ $sale->montant_restant }}</td>
-                                <td>
-                                    <input type="text" class="form-control form-control-sm" readonly data-amount="{{ $sale->mttc }}" id="amount-to-pay{{ $sale->id }}">
-                                </td>
-                            </tr>
-                        @endif
+                    @foreach ($payment->details as $detail)
+                        <tr>
+                            <td>
+                                <input class="form-check-input" type="checkbox" name="sales[]" value="{{ $detail->id }}" data-amount="{{ $detail->montant_restant }}" id="sale{{ $detail->id }}">
+                            </td>
+                            <td>{{ $detail->NFact }}</td>
+                            <td>{{ $detail->DateFact }}</td>
+                            <td>{{ number_format($detail->mttc, 2) }} MAD</td>
+                            <td>{{ number_format($detail->montant_restant, 2) }} MAD</td>
+                            <td>{{ number_format($detail->montant_regle, 2) }} MAD</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -109,7 +101,6 @@
 <!-- Script JavaScript pour gérer les interactions -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var clientId = document.getElementById('client_id').value;
         var salesTableBody = document.getElementById('sales-list');
         var totalSelected = 0;
 
@@ -144,4 +135,14 @@
     });
 </script>
 
+<script>
+    var selectedSales = @json($selectedSales);
+
+    selectedSales.forEach(function(saleId) {
+        var checkbox = document.getElementById(`sale${saleId}`);
+        if (checkbox) {
+            checkbox.checked = true;
+        }
+    });
+</script>
 @endsection

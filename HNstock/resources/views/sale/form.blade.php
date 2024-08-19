@@ -284,7 +284,7 @@
             var totalTTC = (totalHT + parseFloat(mtva) - parseFloat(remise)).toFixed(2);
             $('#mttc').val(totalTTC);
 
-            var montantRestant = parseFloat(totalTTC);
+          var montantRestant = parseFloat(totalTTC);
             $('#montant_restant').val((montantRestant ?? 0).toFixed(2));
         }
 

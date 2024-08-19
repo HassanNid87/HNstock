@@ -59,17 +59,30 @@
     font-size: 12px;
 }
 
+
+#filters {
+    /*display: none; /* Masquer par défaut */
+}
+
+
 </style>
 <!--@php
     //$startDate = request('start_date', \Carbon\Carbon::now()->startOfMonth()->toDateString());
     //$endDate = request('end_date', \Carbon\Carbon::now()->toDateString());
 @endphp-->
 <div class="container-fluid">
+    <button type="button" id="toggle-filter" class="">
+         <i class="fa fa-fw fa-bars fas fa-filter"></i>
+    </button>
+
     <div class="row">
         <!-- Sidebar for filters -->
-        <aside class="col-md-2">
-            <h1>Filters</h1>
+
+        <aside id="filters" class="col-md-2">
+
+            <!--<h1>Filters</h1>-->
             <form method="get">
+                <br>
                 <div class="form-group">
                     <!--<label for="NFacture">N° Facture</label>-->
                     <input type="text" name="NFacture" id="NFacture" class="form-control" placeholder="N° Facture" value="{{ Request::input('NFacture') }}">
@@ -86,6 +99,22 @@
                     </select>
                 </div>
                 <!--<h3>Date</h3>-->
+                <hr>
+                <div class="form-group">
+                   <!-- <label>Statut</label><br>-->
+                    <div class="form-check">
+                        <input type="checkbox" name="status[]" value="EnAttente" id="status_enattente" class="form-check-input" {{ in_array('EnAttente', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_enattente">EnAttente</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="status[]" value="PartPayée" id="status_partpayee" class="form-check-input" {{ in_array('PartPayée', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_partpayee">PartPayée</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="status[]" value="Réglée" id="status_reglee" class="form-check-input" {{ in_array('Réglée', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_reglee">Réglée</label>
+                    </div>
+                </div>
                 <hr>
                 <div class="form-group">
                     <label for="start_date" class="form-label-sm">Start Date</label>
@@ -154,7 +183,7 @@
                         <th class="no-wrap">M-Tva</th>
                         <th class="no-wrap">M-Remise</th>
                         <th class="no-wrap">M-TTC</th>
-                       <!-- <th class="no-wrap">M-Restant</th>-->
+                        <th class="no-wrap">M-Restant</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -207,20 +236,21 @@
                             <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
                                 {{ number_format($sale->mttc, 2) }}
                             </td>
-                           <!-- <td style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
+                            <td >
                                 {{ number_format($sale->montant_restant, 2) }}
-                            </td>-->
+                            </td>
 
                             <td>
                                 <div class="btn-group gap-2">
-                                    <!-- Details Button -->
-                                    <a href="{{ route('sales.show', $sale->id) }}" class="btn btn-sm btn-outline-info rounded" title="Details">
-                                        <i class="fas fa-info-circle"></i>
-                                    </a>
                                     <!-- Update Button -->
                                     <a href="{{ route('sales.edit', $sale) }}" class="btn btn-sm btn-outline-primary rounded" title="Update">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    <!-- Details Button -->
+                                    <a href="{{ route('sales.show', $sale->id) }}" class="btn btn-sm btn-outline-info rounded" title="Details">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+
                                     <!-- Delete Button -->
                                     <form method="POST" action="{{ route('sales.destroy', $sale) }}" onsubmit="return confirm('Are you sure you want to delete this sale?')">
                                         @csrf
@@ -229,11 +259,21 @@
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>
-                                    <!-- Print Button -->
-                                    <a href="{{ route('sales.invoice', $sale->id) }}" class="btn btn-sm btn-outline-primary rounded" title="Print">
+
+                                     <!-- Pay Invoice Button -->
+                                     <form action="" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-sm btn-outline-success rounded" title="Régler la facture">
+                                            <i class="fas fa-credit-card"></i>
+                                        </button>
+                                    </form>
+                                     <!-- Print Button -->
+                                     <a href="{{ route('sales.invoice', $sale->id) }}" class="btn btn-sm btn-outline-primary rounded" title="Print">
                                         <i class="fas fa-print"></i>
                                     </a>
                                 </div>
+
                             </td>
                         </tr>
                     @empty
@@ -286,4 +326,16 @@
         }
     });
 </script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#toggle-filter').on('click', function() {
+            var filters = $('#filters');
+            filters.slideToggle(); // Utilisation de slideToggle pour un effet de glissement
+        });
+    });
+</script>
+
+
 @endsection

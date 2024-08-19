@@ -69,10 +69,10 @@
             <h5 class="card-title">Stock List</h5>
         </div>
         <div class="card-body">
-            <!--<a href="{{ route('stocks.create') }}" class="btn btn-primary mb-3">Add Stock</a>-->
+            <a href="{{ route('stocks.create') }}" class="btn btn-primary mb-3">Add Stock</a>
             <div class="filter-container">
                 <!-- Liste déroulante pour les catégories -->
-                <div class="form-group  mb-4">
+                <div class="form-group mb-4">
                     <!--<label for="category-filter">Select Category</label>-->
                     <select id="category-filter" class="form-select">
                         <option value="">Select Categorie</option>
@@ -80,30 +80,35 @@
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                         @endforeach
                     </select>
-
-
+                    <br>
+                    <div class="form-group">
+                        <!-- <label for="name">Name or Description</label>-->
+                        <input type="text" name="name" id="name-filter" class="form-control" placeholder="CodeBarre / Name / Description">
+                    </div>
                     <br>
                     <br>
-
                     <table class="table table-bordered table-striped table-hover">
                         <thead class="table-dark">
                             <tr align="center">
                                 <th>Product</th>
+                                <th>Description</th>
                                 <th>Quantity</th>
                             </tr>
                         </thead>
                         <tbody id="stock-tbody" align="center">
                             @foreach($stocks as $stock)
                                 <tr data-category-id="{{ $stock->product->category->id }}">
-                                    <td>{{ $stock->product->name }}</td>
+                                    <td hidden class="product-codebar">{{ $stock->product->codebare }}</td>
+                                    <td class="product-name">{{ $stock->product->name }}</td>
+                                    <td class="product-description">{{ $stock->product->description }}</td>
                                     <td>{{ $stock->quantity }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
-
-
+                </div>
             </div>
+
 
         </div>
     </div>
@@ -124,4 +129,24 @@
 });
 
  </script>
+
+
+<script>
+    document.getElementById('name-filter').addEventListener('keyup', function() {
+        var filter = this.value.toLowerCase();
+        var rows = document.querySelectorAll('#stock-tbody tr');
+
+        rows.forEach(function(row) {
+            var productName = row.querySelector('.product-name').textContent.toLowerCase();
+            var productDescription = row.querySelector('.product-description')?.textContent.toLowerCase();
+            var productCodeBarre = row.querySelector('.product-codebar')?.textContent.toLowerCase();
+
+            if (productName.includes(filter) || (productDescription && productDescription.includes(filter)) || (productCodeBarre && productCodeBarre.includes(filter))) {
+                row.style.display = ''; // Afficher la ligne
+            } else {
+                row.style.display = 'none'; // Masquer la ligne
+            }
+        });
+    });
+    </script>
 @endsection

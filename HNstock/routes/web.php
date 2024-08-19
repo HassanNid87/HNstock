@@ -35,6 +35,8 @@ use App\Http\Controllers\PaymentController;
 
 
 Route::resource('products',ProductController::class);
+Route::get('/product/{barcode}', [ProductController::class, 'findByBarcode']);
+
 Route::post('/create-invoice', [ProductController::class, 'createInvoice'])->name('createInvoice');
 
 Route::resource('categories', CategoryController::class);
@@ -61,6 +63,7 @@ Route::put('company_infos/{id}', [CompanyInfoController::class, 'update'])->name
 //Auth::routes();
 
 Route::resource('payments', PaymentController::class);
+Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
 
 
 require_once __DIR__ . "/dashboard.php";
