@@ -40,6 +40,7 @@ Route::get('/product/{barcode}', [ProductController::class, 'findByBarcode']);
 Route::post('/create-invoice', [ProductController::class, 'createInvoice'])->name('createInvoice');
 
 Route::resource('categories', CategoryController::class);
+
 Route::resource('clients',ClientController::class);
 Route::resource('sales',SaleController::class);
 Route::get('sales/{sale}', [SaleController::class, 'show'])->name('sales.show');
@@ -48,8 +49,6 @@ Route::get('sales/{sale}/invoice', [SaleController::class, 'generatePDF'])->name
 
 
 Route::resource('stocks', StockController::class);
-
-
 Route::get('/stock/out', [StockController::class, 'showStockOut'])->name('stock.out');
 //Route::get('/stocks/out', [StockController::class, 'showStockOut'])->name('stocks.out');
 

@@ -93,6 +93,7 @@
                                 <th>Product</th>
                                 <th>Description</th>
                                 <th>Quantity</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="stock-tbody" align="center">
@@ -102,6 +103,16 @@
                                     <td class="product-name">{{ $stock->product->name }}</td>
                                     <td class="product-description">{{ $stock->product->description }}</td>
                                     <td>{{ $stock->quantity }}</td>
+                                    <td>
+                                        <div class="btn-group gap-2">
+                                            <!-- Edit Stock Button -->
+                                            <a href="{{ route('stocks.edit', $stock) }}" class="btn btn-sm btn-outline-warning rounded" title="Edit Stock">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <!-- Other buttons (view, delete, etc.) -->
+                                        </div>
+                                    </td>
+
                                 </tr>
                             @endforeach
                         </tbody>

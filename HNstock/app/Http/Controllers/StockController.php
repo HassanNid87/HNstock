@@ -20,8 +20,10 @@ class StockController extends Controller
 
     public function create()
     {
+        $categories = Category::all(); // Assurez-vous d'avoir une table Category
         $products = Product::all();
-        return view('stock.create', compact('products'));
+
+        return view('stock.create', compact('categories' , 'products'));
     }
 
     public function store(Request $request)
@@ -31,15 +33,27 @@ class StockController extends Controller
             'quantity' => 'required|integer',
         ]);
 
-        Stock::create($request->all());
+        // Rechercher un enregistrement de stock existant pour ce produit
+        $stock = Stock::where('product_id', $request->product_id)->first();
 
-        return redirect()->route('stocks.index')->with('success', 'Stock created successfully');
+        if ($stock) {
+            // Si le stock existe déjà, mettre à jour la quantité existante
+            $stock->quantity += $request->quantity;
+            $stock->save();
+        } else {
+            // Sinon, créer un nouvel enregistrement de stock
+            Stock::create($request->all());
+        }
+
+        return redirect()->route('stocks.index')->with('success', 'Stock updated successfully');
     }
+
 
     public function edit(Stock $stock)
     {
+        $categories = Category::all(); // Assurez-vous d'avoir une table Category
         $products = Product::all();
-        return view('stock.edit', compact('stock', 'products'));
+        return view('stock.edit', compact('stock', 'categories', 'products'));
     }
 
     public function update(Request $request, Stock $stock)
@@ -97,5 +111,8 @@ class StockController extends Controller
 
     return view('stock.out', compact('stockOuts', 'categories'));
 }
+
+
+
 
 }
