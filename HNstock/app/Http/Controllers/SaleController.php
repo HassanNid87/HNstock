@@ -68,34 +68,7 @@ class SaleController extends Controller
             $query->where('mttc', '<=', $request->max_amount);
         }
 
-        // Graphique
-        $salesByMonth = Sale::selectRaw('MONTH(DateFact) as month, SUM(mttc) as total')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
-        $months = $salesByMonth->pluck('month');
-        $totals = $salesByMonth->pluck('total');
 
-        $sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
-
-        // Convertir les numéros de mois en noms de mois
-        $monthNames = [
-            1 => 'Jan',
-            2 => 'Feb',
-            3 => 'Mar',
-            4 => 'Apr',
-            5 => 'May',
-            6 => 'Jun',
-            7 => 'Jul',
-            8 => 'Aug',
-            9 => 'Sep',
-            10 => 'Oct',
-            11 => 'Nov',
-            12 => 'Dec',
-        ];
-        $labels = $months->map(function ($month) use ($monthNames) {
-            return $monthNames[$month];
-        })->toArray();
         // Récupérer les ventes
         $sales = $query->with('client', 'details.product')->paginate(15)->appends($request->all());
 
@@ -112,7 +85,7 @@ class SaleController extends Controller
         }
 
         // Passer les données à la vue
-        return view('sale.index', compact('sales', 'months', 'labels', 'totals', 'clients', 'startDate', 'endDate'));
+        return view('sale.index', compact('sales',   'clients', 'startDate', 'endDate'));
     }
 
 

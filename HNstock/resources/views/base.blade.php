@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker.min.css') }}">
     <link href="{{ asset('assets/css/icons.min.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -17,8 +18,10 @@
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.2/js/bootstrap.min.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         .navbar-nav .nav-link:hover {
@@ -48,8 +51,7 @@
     @stack('custom-style')
 
 </head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.2/js/bootstrap.min.js"></script>
+
 
 <body>
 <div id="layout-wrapper">
@@ -182,16 +184,7 @@
     {{-- </nav> --}}
 
 
-    @if ($errors->any())
-        <div class="alert alert-danger" role="alert">
-            <strong>Errors</strong>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+
 
 
       <div class="main-content">
@@ -210,6 +203,16 @@
 
                 </div>
                 <!-- end page title -->
+                @if ($errors->any())
+                <div class="alert alert-danger" role="alert">
+                    <strong>Errors</strong>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
                 @yield('content')
             </div> <!-- container-fluid -->
         </div> <!-- page content-->
@@ -217,11 +220,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <script>document.write(new Date().getFullYear())</script>2024 © Minible.
+                        <script>document.write(new Date().getFullYear())</script> - 2019 © All rights reserved.
                     </div>
                     <div class="col-sm-6">
                         <div class="text-sm-end d-none d-sm-block">
-                            Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
+                            Created <i class="mdi mdi-heart text-danger"></i> by <a href="#" target="_blank" class="text-reset">HassanNid: 06.68.28.33.63</a>
                         </div>
                     </div>
                 </div>
@@ -245,6 +248,8 @@
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/js/helpers.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
     <script src="node_modules/chart.js/dist/chart.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

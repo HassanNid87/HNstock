@@ -3,7 +3,6 @@
 @section('content')
 
 
-
 <div class="row">
     <div class="col-md-4">
         <div>
@@ -13,22 +12,28 @@
                         </i>
                         Nouvelle Facture
                 </button>
-                </a>
+            </a>
         </div>
     </div>
     <div class="col-md-8">
         <div class="float-end">
-            <div class=" mb-3">
-                <div class="input-daterange input-group" id="datepicker6" data-date-format="dd M, yyyy" data-date-autoclose="true" data-provide="datepicker" data-date-container="#datepicker6">
-                    <input type="text" class="form-control text-start" placeholder="From" name="From">
-                    <input type="text" class="form-control text-start" placeholder="To" name="To">
-
-                    <button type="button" class="btn btn-primary"><i class="mdi mdi-filter-variant"></i></button>
-                </div>
+            <div class="mb-3">
+                <form method="get" action="{{ url()->current() }}">
+                    <div class="input-daterange input-group" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
+                        <input type="text" class="form-control text-start" placeholder="From" name="start_date" value="{{ request('start_date') }}">
+                        <input type="text" class="form-control text-start" placeholder="To" name="end_date" value="{{ request('end_date') }}">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="mdi mdi-filter-variant"></i>
+                        </button>
+                        <a class="btn btn-secondary" href="{{ route('sales.index') }}" title="Reset">
+                            <i class="fas fa-redo"></i>
+                        </a>
+                    </div>
+                </form>
             </div>
-
         </div>
     </div>
+
 </div>
 <div class="row">
     <div class="col-lg-12">
@@ -36,24 +41,37 @@
             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
+                        <form method="get" id="clientForm">
+                            <div class="dataTables_length" id="DataTables_Table_0_length">
+                                <label>
+                                    <input type="search" name="client" id="client" class="form-control form-control-sm" placeholder="Enter Client Code" value="{{ Request::input('client') }}" aria-controls="DataTables_Table_0">
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <form method="get" id="searchForm">
+                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                <label>
+                                    <input type="search" name="NFacture" id="NFacture" class="form-control form-control-sm" placeholder="N° Facture" value="{{ Request::input('NFacture') }}" aria-controls="DataTables_Table_0">
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div class="col-sm-12 col-md-6">
                         <div class="dataTables_length" id="DataTables_Table_0_length">
-                            <label>Show
+                            <label>Show entries
                                 <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
                                     <option value="10">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
-                                </select> entries</label>
-                            </div>
+                                </select> </label>
+                        </div>
                      </div>
-                    <div class="col-sm-12 col-md-6">
-                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
-                                <label>Search:
-                                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="DataTables_Table_0">
-                                </label>
-                            </div>
-                    </div>
-                    </div>
+               </div>-->
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-centered datatable dt-responsive nowrap table-card-list dataTable no-footer dtr-inline" style="border-collapse: collapse; border-spacing: 0px 12px; width: 100%;" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
@@ -197,11 +215,80 @@
         </div>
     </div>
 </div>
+<div class="row">
+
+    <div class="col-md-2">
+        <div class="float-end">
+            <div class="mb-3">
+                <form method="get" action="{{ url()->current() }}" id="filterForm">
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" name="status[]" value="EnAttente" id="status_enattente" class="form-check-input" {{ in_array('EnAttente', Request::input('status', [])) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="status_enattente">EnAttente</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="status[]" value="PartPayée" id="status_partpayee" class="form-check-input" {{ in_array('PartPayée', Request::input('status', [])) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="status_partpayee">PartPayée</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" name="status[]" value="Réglée" id="status_reglee" class="form-check-input" {{ in_array('Réglée', Request::input('status', [])) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="status_reglee">Réglée</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 
+<script>
+    $(document).ready(function () {
+        $('#datepicker6').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('NFacture');
+        const searchForm = document.getElementById('searchForm');
+
+        // Listen for input changes
+        searchInput.addEventListener('input', function() {
+            if (searchInput.value === '') {
+                searchForm.submit(); // Automatically submit the form if the input is cleared
+            }
+        });
+    });
+    </script>
 
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const clientInput = document.getElementById('client');
+        const clientForm = document.getElementById('clientForm');
+
+        clientInput.addEventListener('change', function() {
+            clientForm.submit(); // Automatically submit the form when the input value changes
+        });
+    });
+</script>
+
+
+<script>
+    // Soumet le formulaire chaque fois qu'une case est cochée ou décochée
+    document.querySelectorAll('input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
 
 
 @endsection
