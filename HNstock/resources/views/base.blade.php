@@ -52,6 +52,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.2/js/bootstrap.min.js"></script>
 
 <body>
+<div id="layout-wrapper">
     <header id="page-topbar">
         <div class="navbar-header">
             <div class="d-flex">
@@ -191,7 +192,9 @@
             </ul>
         </div>
     @endif
-    <div class="main-content">
+
+
+      <div class="main-content">
 
         <div class="page-content">
             <div class="container-fluid">
@@ -200,14 +203,32 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-flex align-items-center justify-content-between">
-                            @yield('content')
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- end page title -->
+                @yield('content')
+            </div> <!-- container-fluid -->
+        </div> <!-- page content-->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <script>document.write(new Date().getFullYear())</script>2024 © Minible.
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end d-none d-sm-block">
+                            Crafted with <i class="mdi mdi-heart text-danger"></i> by <a href="https://themesbrand.com/" target="_blank" class="text-reset">Themesbrand</a>
                         </div>
                     </div>
                 </div>
-                <!-- end page title -->
-            </div> <!-- container-fluid -->
-        </div>
+            </div>
+        </footer>
     </div>
+</div>
 
     <script>
         const loadingHtml =
