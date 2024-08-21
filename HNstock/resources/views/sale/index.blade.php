@@ -44,10 +44,11 @@
                         <form method="get" id="clientForm">
                             <div class="dataTables_length" id="DataTables_Table_0_length">
                                 <label>
-                                    <input type="search" name="client" id="client" class="form-control form-control-sm" placeholder="Enter Client Code" value="{{ Request::input('client') }}" aria-controls="DataTables_Table_0">
+                                    <input type="search" name="code" id="code" class="form-control form-control-sm" placeholder="Client Code" value="{{ Request::input('code') }}" aria-controls="DataTables_Table_0">
                                 </label>
                             </div>
                         </form>
+
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <form method="get" id="searchForm">
@@ -270,14 +271,17 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const clientInput = document.getElementById('client');
-        const clientForm = document.getElementById('clientForm');
+  document.addEventListener('DOMContentLoaded', function() {
+    const clientInput = document.getElementById('code');
+    const clientForm = document.getElementById('clientForm');
 
-        clientInput.addEventListener('change', function() {
-            clientForm.submit(); // Automatically submit the form when the input value changes
-        });
+    clientInput.addEventListener('input', function() {
+        if (clientInput.value === '') {
+            clientForm.submit(); // Soumettre automatiquement le formulaire si le champ est vidé
+        }
     });
+});
+
 </script>
 
 

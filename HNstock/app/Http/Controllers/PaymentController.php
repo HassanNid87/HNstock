@@ -12,66 +12,70 @@ use Carbon\Carbon;
 class PaymentController extends Controller
 {
     public function index(Request $request)
-{
-    // Validation des entrées
-    $request->validate([
-        'start_date' => 'nullable|date',
-        'end_date' => 'nullable|date|after_or_equal:start_date',
-        'Npayment' => 'nullable|string',
-        'client' => 'nullable|exists:clients,id',
-        'mode_payment' => 'nullable|array',
-        'mode_payment.*' => 'in:espece,chéque',
-        'min_amount' => 'nullable|numeric',
-        'max_amount' => 'nullable|numeric|gte:min_amount',
-    ]);
+    {
+        // Validation des entrées
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'Npayment' => 'nullable|string',
+            'code' => 'nullable|exists:clients,code', // Validation mise à jour
+            'mode_payment' => 'nullable|array',
+            'mode_payment.*' => 'in:espece,chéque',
+            'min_amount' => 'nullable|numeric',
+            'max_amount' => 'nullable|numeric|gte:min_amount',
+        ]);
 
-     // Définir les dates par défaut
-     $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
-     $endDate = $request->input('end_date', Carbon::now()->toDateString());
+        // Définir les dates par défaut
+        $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
+        $endDate = $request->input('end_date', Carbon::now()->toDateString());
 
-    // Récupération des clients pour le filtrage
-    $clients = Client::all();
+        // Récupération des clients pour le filtrage
+        $clients = Client::all();
 
-    // Construction de la requête de base
-    $query = Payment::query();
+        // Construction de la requête de base
+        $query = Payment::query();
 
-    // Filtrage par numéro de paiement
-    if ($request->filled('Npayment')) {
-        $query->where('Npayment', 'like', '%' . $request->Npayment . '%');
+        // Filtrage par numéro de paiement
+        if ($request->filled('Npayment')) {
+            $query->where('Npayment', 'like', '%' . $request->Npayment . '%');
+        }
+
+        // Filtrage par client
+        if ($request->filled('code')) {
+            $query->whereHas('client', function ($q) use ($request) {
+                $q->where('code', $request->input('code')); // Assurez-vous d'utiliser la valeur du code correctement
+            });
+        }
+
+
+
+        // Filtrage par mode de paiement
+        if ($request->filled('mode_payment')) {
+            $query->whereIn('mode_payment', $request->mode_payment);
+        }
+
+        // Filtrer par date de début
+        $query->where('date_payment', '>=', $startDate . ' 00:00:00');
+
+        // Filtrer par date de fin
+        $query->where('date_payment', '<=', $endDate . ' 23:59:59');
+
+        // Filtrage par montant minimum et maximum
+        if ($request->filled('min_amount')) {
+            $query->where('montant', '>=', $request->min_amount);
+        }
+
+        if ($request->filled('max_amount')) {
+            $query->where('montant', '<=', $request->max_amount);
+        }
+
+        // Pagination des résultats
+        $payments = $query->paginate(15);
+
+        // Retourner la vue avec les données
+        return view('payment.index', compact('payments', 'clients', 'startDate', 'endDate'));
     }
 
-    // Filtrage par client
-    if ($request->filled('client')) {
-        $query->where('client_id', $request->client);
-    }
-
-    // Filtrage par mode de paiement
-    if ($request->filled('mode_payment')) {
-        $query->whereIn('mode_payment', $request->mode_payment);
-    }
-
-      // Filtrer par date de début
-      $query->where('date_payment', '>=', $startDate . ' 00:00:00');
-
-      // Filtrer par date de fin
-      $query->where('date_payment', '<=', $endDate . ' 23:59:59');
-
-
-    // Filtrage par montant minimum et maximum
-    if ($request->filled('min_amount')) {
-        $query->where('montant', '>=', $request->min_amount);
-    }
-
-    if ($request->filled('max_amount')) {
-        $query->where('montant', '<=', $request->max_amount);
-    }
-
-    // Pagination des résultats
-    $payments = $query->paginate(15);
-
-    // Retourner la vue avec les données
-    return view('payment.index', compact('payments', 'clients', 'startDate', 'endDate'));
-}
 
 
     public function create()

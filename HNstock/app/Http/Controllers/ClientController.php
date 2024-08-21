@@ -15,26 +15,25 @@ class ClientController extends Controller
      */
     public function index(Request $request)
 {
-
-
     $request->validate([
         'minsolde' => 'nullable|numeric',
         'maxsolde' => 'nullable|numeric|gte:minsolde',
-        'client' => 'nullable|string',
+        'code' => 'nullable|string',
         'name' => 'nullable|string',
+        'adresse' => 'nullable|string',
     ]);
 
     // Initialisation de la requête de base
     $query = Client::query();
 
-    // Filtrage par nom
-    if ($request->filled('name')) {
-        $query->where('name', 'like', '%' . $request->name . '%');
-    }
-
-    // Filtrage par client
-    if ($request->filled('client')) {
-        $query->where('id', $request->client);
+    // Filtrage par code, nom ou adresse
+    if ($request->filled('code')) {
+        $code = $request->input('code');
+        $query->where(function($query) use ($code) {
+            $query->where('name', 'like', "%{$code}%")
+                  ->orWhere('adresse', 'like', "%{$code}%")
+                  ->orWhere('code', 'like', "%{$code}%");
+        });
     }
 
     // Filtrage par solde minimum
@@ -52,6 +51,7 @@ class ClientController extends Controller
 
     return view('client.index', compact('clients'));
 }
+
 
 
 

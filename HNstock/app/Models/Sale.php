@@ -30,7 +30,7 @@ class Sale extends Model
 
     public function Client(): BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'client_id'); // Assurez-vous que 'client_id' est correct
     }
 
     public function details()

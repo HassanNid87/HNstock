@@ -26,7 +26,7 @@ class SaleController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'min_amount' => 'nullable|numeric',
             'max_amount' => 'nullable|numeric|gte:min_amount',
-            'client' => 'nullable|string',
+            'code' => 'nullable|string',
             'NFacture' => 'nullable|string',
             'status' => 'nullable|array',
             'status.*' => 'in:EnAttente,PartPayée,Réglée'
@@ -43,11 +43,13 @@ class SaleController extends Controller
             $query->where('NFact', 'like', '%' . $request->NFacture . '%');
         }
 
-        if ($request->filled('client')) {
+        if ($request->filled('code')) {
             $query->whereHas('client', function ($q) use ($request) {
-                $q->where('id', $request->client); // Filtre par ID au lieu de nom
+                $q->where('code', $request->code); // Filtre par code client
             });
         }
+
+
 
          // Filtrer par statut
     if ($request->filled('status')) {
