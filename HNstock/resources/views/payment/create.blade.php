@@ -3,92 +3,179 @@
 @section('title', 'Ajouter un Paiement')
 
 @section('content')
-<div class="container">
-    <h1>Ajouter un Paiement</h1>
-    <form action="{{ route('payments.store') }}" method="POST">
-        @csrf
 
-        <!-- Numéro de paiement (Généré automatiquement) -->
-        <div class="mb-3">
-            <label for="Npayment" class="form-label">Numéro de Paiement</label>
-            <input type="text" name="Npayment" id="Npayment" class="form-control" value="{{ $Npayment }}" readonly required>
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div id="addproduct-accordion" class="custom-accordion">
+            <div class="card">
+                <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
+                    <div class="p-4">
+
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar-xs">
+                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                        01
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h5 class="font-size-16 mb-1">Informations de Base</h5>
+                                <p class="text-muted text-truncate mb-0">Remplissez toutes les informations ci-dessous</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </a>
+
+                <div id="addproduct-billinginfo-collapse" class="collapse show" data-bs-parent="#addproduct-accordion">
+                    <div class="p-4 border-top">
+                        <form action="{{ route('payments.store') }}" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="Npayment" class="form-label">N° Réglement</label>
+                                        <input type="text" name="Npayment" id="Npayment" class="form-control" value="{{ $Npayment }}" readonly required>
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                            <label for="date_payment" class="form-label">Date de Paiement</label>
+                                             <input type="date" name="date_payment" id="date_payment" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="mode_payment" class="form-label">Mode de Paiement</label>
+                                        <input type="text" name="mode_payment" id="mode_payment" class="form-control" required>
+                                    </div>
+                                </div>
+                     <!--   </form>-->
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label for="client_id" class="form-label">Client</label>
+                                <select name="client_id" id="client_id" class="form-select" required>
+                                    <option value="" disabled selected>Sélectionnez un client</option>
+                                    @foreach($clients as $client)
+                                        <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="mb-3">
+                                <label for="montant" class="form-label">Montant</label>
+                                 <input type="number" name="montant" id="montant" class="form-control" step="0.01" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Liste des factures -->
+
+                <div class="row">
+                    <div class="mb-3">
+                        <table class="table" id="sales-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Numéro de Facture</th>
+                                    <th>Date de Facture</th>
+                                    <th>Montant TTC</th>
+                                    <th>Montant Restant</th>
+                                    <th>Montant à Régler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sales-list">
+                                <!-- Les lignes de factures seront ajoutées ici par JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                </div>
+
+                </div>
+            </div>
+            <div class="card">
+                <a href="#addproduct-metadata-collapse" class="text-dark collapsed" data-bs-toggle="collapse" aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-metadata-collapse">
+                    <div class="p-4">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar-xs">
+                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                        02
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h5 class="font-size-16 mb-1">Montants Totaux</h5>
+                                <p class="text-muted text-truncate mb-0">les montants totaux calculés les factures declient</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </a>
+
+                <div id="addproduct-metadata-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
+                    <div class="p-4 border-top">
+                        <form>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="total_remaining" class="form-label">Total des Montants Restants   </label>
+                                        <input type="text" id="total_remaining" class="form-control" readonly></div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="total_selected" class="form-label">Total des Factures Sélectionnées</label>
+                                         <input type="text" id="total_selected" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="difference" class="form-label">Solde</label>
+                                        <input type="text" id="difference" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+        <div class="row mb-4">
+            <div class="col ms-auto">
+                <div class="d-flex flex-reverse flex-wrap gap-2">
+                    <a href="" class="btn btn-secondary" title="Liste Factures">
+                        <i class="fas fa-list"></i>
+                    </a>
+                    <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
+                    <a href="#" class="btn btn-success" t> <i class="uil uil-file-alt">
+
+                    </i> </a>
+                </div>
+            </div> <!-- end col -->
         </div>
-
-        <!-- Montant -->
-        <div class="mb-3">
-            <label for="montant" class="form-label">Montant</label>
-            <input type="number" name="montant" id="montant" class="form-control" step="0.01" required>
-        </div>
-
-        <!-- Date de paiement (Date du jour par défaut) -->
-        <div class="mb-3">
-            <label for="date_payment" class="form-label">Date de Paiement</label>
-            <input type="date" name="date_payment" id="date_payment" class="form-control" required>
-        </div>
-
-        <!-- Mode de paiement -->
-        <div class="mb-3">
-            <label for="mode_payment" class="form-label">Mode de Paiement</label>
-            <input type="text" name="mode_payment" id="mode_payment" class="form-control" required>
-        </div>
-
-        <hr>
-
-        <!-- Sélection du client -->
-        <div class="mb-3">
-            <label for="client_id" class="form-label">Client</label>
-            <select name="client_id" id="client_id" class="form-select" required>
-                <option value="" disabled selected>Sélectionnez un client</option>
-                @foreach($clients as $client)
-                    <option value="{{ $client->id }}">{{ $client->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <!-- Liste des factures -->
-        <div class="mb-3">
-            <label for="sales" class="form-label">Factures</label>
-            <table class="table table-bordered" id="sales-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Numéro de Facture</th>
-                        <th>Date de Facture</th>
-                        <th>Montant TTC</th>
-                        <th>Montant Restant</th>
-                        <th>Montant à Régler</th>
-                    </tr>
-                </thead>
-                <tbody id="sales-list">
-                    <!-- Les lignes de factures seront ajoutées ici par JavaScript -->
-                </tbody>
-            </table>
-        </div>
-
-        <hr>
-
-        <!-- Total des Montants Restants de Toutes les Factures -->
-        <div class="mb-3">
-            <label for="total_remaining" class="form-label">Total des Montants Restants de Toutes les Factures</label>
-            <input type="text" id="total_remaining" class="form-control" readonly>
-        </div>
-
-
-        <!-- Total des factures sélectionnées -->
-        <div class="mb-3">
-            <label for="total_selected" class="form-label">Total des Factures Sélectionnées</label>
-            <input type="text" id="total_selected" class="form-control" readonly>
-        </div>
-
-        <!-- Différence entre le montant du paiement et le total des factures sélectionnées -->
-        <div class="mb-3">
-            <label for="difference" class="form-label">Solde</label>
-            <input type="text" id="difference" class="form-control" readonly>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
+    </div>
+    </div>
 </div>
+
 
 <!-- Script JavaScript pour filtrer les factures -->
 <script>

@@ -20,7 +20,13 @@ class Product extends Model
         'priceA',
         'priceV',
         'category_id',
-        'quantity'
+        'codebare',
+        'etagere',
+        'unite',
+        'stockmax',
+        'stockmin',
+
+
     ];
 
     public function category(): BelongsTo

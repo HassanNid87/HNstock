@@ -132,12 +132,12 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(product $product)
-    {
-        $isUpdate = true;
-        $categories = Category::all();
-        return view('product.form', compact('product', 'isUpdate', 'categories'));
-    }
+    public function edit(Product $product)
+{
+    $isUpdate = true;
+    $categories = Category::all();
+    return view('product.form', compact('product', 'isUpdate', 'categories'));
+}
 
     /**
      * Update the specified resource in storage.
