@@ -20,8 +20,8 @@
             <div class="mb-3">
                 <form method="get" action="{{ url()->current() }}">
                     <div class="input-daterange input-group" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
-                        <input type="text" class="form-control text-start" placeholder="From" name="start_date" value="{{ request('start_date') }}">
-                        <input type="text" class="form-control text-start" placeholder="To" name="end_date" value="{{ request('end_date') }}">
+                        <input type="text" class="form-control text-start" placeholder="From" name="start_date" value="{{ request('start_date') }}" autocomplete="off" autocorrect="off">
+                        <input type="text" class="form-control text-start" placeholder="To" name="end_date" value="{{ request('end_date') }}" autocomplete="off" autocorrect="off">
                         <button type="submit" class="btn btn-primary">
                             <i class="mdi mdi-filter-variant"></i>
                         </button>
@@ -76,15 +76,15 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-centered datatable dt-responsive nowrap table-card-list dataTable no-footer dtr-inline" style="border-collapse: collapse; border-spacing: 0px 12px; width: 100%;" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
-                                <thead>
+                                <thead style="background-color: #dde0e0;">
                                     <tr class="bg-transparent" role="row">
                                         <th style="width: 24px;" class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
 
                                         : activate to sort column descending">
-                                            <div class="form-check text-center">
+                                            <!--<div class="form-check text-center">
                                                 <input type="checkbox" class="form-check-input" id="invoicecheck">
                                                 <label class="form-check-label" for="invoicecheck"></label>
-                                            </div>
+                                            </div>-->
                                         </th>
                                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 96px;" aria-label="Invoice ID: activate to sort column ascending">N°Fact</th>
                                         <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 110px;" aria-label="Date: activate to sort column ascending">Date</th>
@@ -116,7 +116,7 @@
                                             @else
                                                 ----------
                                             @endif</td>
-                                            <td>{{ number_format($sale->mttc, 2) }}</td>
+                                            <td class="text-dark fw-bold">{{ number_format($sale->mttc, 2) }}</td>
                                             <td>
                                                 @php
                                                 // Déterminez la couleur de fond en fonction du statut

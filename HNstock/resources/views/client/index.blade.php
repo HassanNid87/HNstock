@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-lg-12">
-        <div>
+
             <div>
                 <a href="{{ route('clients.create') }}" title="Nouvelle Facture">
                     <button type="button" class="btn btn-success waves-effect waves-light mb-3">
@@ -48,14 +48,15 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <table class="table table-centered datatable dt-responsive nowrap table-card-list dataTable no-footer dtr-inline" style="border-collapse: collapse; border-spacing: 0px 12px; width: 100%;" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
-                                    <thead>
-                                        <tr class="bg-transparent" role="row"><th style="width: 22px;" class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                    <thead style="background-color: #dde0e0;">
+                                        <tr class="bg-transparent" role="row">
+                                            <th style="width: 22px;" class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label="
 
                                             : activate to sort column descending">
-                                                <div class="form-check text-center">
+                                                <!--<div class="form-check text-center">
                                                     <input type="checkbox" class="form-check-input" id="customercheck">
                                                     <label class="form-check-label" for="customercheck"></label>
-                                                </div>
+                                                </div>-->
                                             </th>
                                             <th style="width: 120px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Customer ID: activate to sort column ascending">Code</th>
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 217px;" aria-label="Customer: activate to sort column ascending">Client</th>
@@ -70,7 +71,7 @@
                                     </thead>
                                     <tbody>
                         @forelse ($clients as $client)
-                    <tr role="row" class="odd">
+                         <tr role="row" class="odd">
                             <td class="sorting_1 dtr-control">
                                 <div class="form-check text-center">
                                     <input type="checkbox" class="form-check-input" id="customercheck1">
@@ -147,7 +148,6 @@
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 

@@ -1,147 +1,114 @@
 @extends('base')
-
 @section('title', 'Stock Out')
 
 @section('content')
-<style>
-    /* Style pour le conteneur du sélecteur */
-    .filter-container {
-        margin: 20px 0;
-        padding: 15px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
 
-    /* Style pour le sélecteur */
-    #category-filter {
-        width: 150px; /* Ajustez la largeur selon vos besoins */
-        padding: 5px;
-        border-radius: 4px;
-        border: 1px solid #ced4da;
-        background-color: #fff;
-        font-size: 14px; /* Ajustez la taille de la police selon vos besoins */
-        color: #495057;
-    }
+<div class="row">
+    <div class="col-lg-12">
 
-    /* Style pour les options du sélecteur */
-    #category-filter option {
-        padding: 10px; /* Ajustez cette valeur selon vos besoins */
-    }
-
-    .table {
-    margin: 20px 0;
-    width: 100%;
-    text-align: center;
-    border-collapse: collapse;
-}
-
-.table thead {
-    background-color: #343a40;
-    color: white;
-}
-
-.table tbody tr:hover {
-    background-color: #f5f5f5;
-}
-
-.table td, .table th {
-    padding: 10px;
-    vertical-align: middle;
-    border: 1px solid #ddd;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f2f2f2;
-}
-
-.table-hover tbody tr:hover {
-    background-color: #e9ecef;
-}
-
-.table th {
-    font-weight: bold;
-}
-
-.table td {
-    font-size: 14px;
-}
-
-</style>
-
-<div class="container my-5">
-    <a href="{{ route('stocks.index') }}" class="btn btn-secondary mb-3">Stock Liste</a>
-
-    <!-- Formulaire de filtrage par date -->
-    <form action="{{ route('stock.out') }}" method="GET" class="mb-4">
-        <div class="row">
-            <div class="col-md-3">
-                <label for="start_date" class="form-label">Du</label>
-                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ request('start_date', date('Y-m-d')) }}">
-            </div>
-            <div class="col-md-3">
-                <label for="end_date" class="form-label">Au</label>
-                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ request('end_date', date('Y-m-d')) }}">
-            </div>
-            <div class="col-md-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary" title="Filtrer">
-                    <i class="fas fa-filter"></i>
+        <div class="d-inline-flex">
+            <a href="{{ route('stocks.index') }}" title="Add Stock">
+                <button type="button" class="btn btn-success waves-effect waves-light mb-3 me-2">
+                    <i class="mdi mdi-plus me-1"></i>
+                    Retour au Stock
                 </button>
+            </a>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <form method="get" id="dateFilterForm" action="{{ url()->current() }}">
+                    <div class="input-daterange input-group" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
+                        <input type="text" class="form-control text-start" placeholder="From" name="start_date" id="start_date" value="{{ request('start_date') }}" autocomplete="off" autocorrect="off">
+                        <input type="text" class="form-control text-start" placeholder="To" name="end_date" id="end_date" value="{{ request('end_date') }}" autocomplete="off" autocorrect="off">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="mdi mdi-filter-variant"></i>
+                        </button>
+                        <a class="btn btn-secondary" href="{{ route('stock.out') }}" title="Reset">
+                            <i class="fas fa-redo"></i>
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
 
-    <!-- Carte pour afficher les sorties de stock -->
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="card-title">Stock Out</h5>
-        </div>
-        <div class="card-body">
-            <div class="filter-container">
-                <!-- Liste déroulante pour les catégories -->
-                <div class="form-group mb-4">
-                    <!--<label for="category-filter" class="form-label">Select Category</label>-->
-                    <select id="category-filter" class="form-select">
-                        <option value="">Select Categorie</option>
-                        @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                    <br>
-                    <div class="form-group">
-                        <!-- <label for="name">Name or Description</label>-->
-                        <input type="text" name="name" id="name-filter" class="form-control" placeholder="CodeBarre / Name / Description">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <form method="get" id="categoryFilterForm">
+                    <div class="dataTables_length" id="DataTables_Table_0_length">
+                        <label class="d-flex align-items-center">
+                            <select id="category-filter" name="category" class="form-control form-control-sm me-2 w-auto" aria-controls="DataTables_Table_0">
+                                <option value="">Select Category</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </label>
                     </div>
+                </form>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <form method="get" id="nameFilterForm">
+                    <div class="dataTables_length" id="DataTables_Table_0_length">
+                        <label class="d-flex align-items-center">
+                            <input type="search" name="name" id="name-filter" class="form-control form-control-sm me-2 w-auto"
+                                   placeholder="CodeBarre / Name / Description" value="{{ Request::input('name') }}" aria-controls="DataTables_Table_0">
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-                        <br>
-                    <table class="table table-bordered table-striped table-hover">
-                        <thead class="table-dark">
-                            <tr align="center">
-                                <th>Product</th>
-                                <th>Description</th>
-                                <th>Quantity</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stock-tbody" align="center">
-                            @foreach ($stockOuts as $stockOut)
+        <div class="table-responsive mb-4">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-centered datatable dt-responsive nowrap table-card-list dataTable no-footer dtr-inline"
+                               style="border-collapse: collapse; border-spacing: 0px 12px; width: 100%;"
+                               id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                            <thead style="background-color: #dde0e0;">
+                                <tr align="center">
+                                    <th>Product</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stock-tbody">
+                                @foreach ($stockOuts as $stockOut)
                                 <tr data-category-id="{{ $stockOut['product']->category->id }}">
                                     <td hidden class="product-codebar">{{ $stockOut['product']->codebare }}</td>
                                     <td class="product-name">{{ $stockOut['product']->name }}</td>
-                                    <td class="product-name">{{ $stockOut['product']->description }}</td>
+                                    <td class="product-description">{{ $stockOut['product']->description }}</td>
                                     <td>{{ $stockOut['quantity'] }}</td>
                                     <td>{{ $stockOut['date'] }}</td>
                                 </tr>
                             @endforeach
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
 
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
-        </div>
+
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#datepicker6').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+    </script>
+
+
 
 <script>
     document.getElementById('category-filter').addEventListener('change', function() {
@@ -160,21 +127,57 @@
 </script>
 
 <script>
-    document.getElementById('name-filter').addEventListener('keyup', function() {
-        var filter = this.value.toLowerCase();
-        var rows = document.querySelectorAll('#stock-tbody tr');
+  document.getElementById('name-filter').addEventListener('keyup', function() {
+    var filter = this.value.toLowerCase();
+    var rows = document.querySelectorAll('#stock-tbody tr');
 
-        rows.forEach(function(row) {
-            var productName = row.querySelector('.product-name').textContent.toLowerCase();
-            var productDescription = row.querySelector('.product-description')?.textContent.toLowerCase();
-            var productCodeBarre = row.querySelector('.product-codebar')?.textContent.toLowerCase();
+    rows.forEach(function(row) {
+        var productName = row.querySelector('.product-name').textContent.toLowerCase();
+        var productDescription = row.querySelector('.product-description')?.textContent.toLowerCase();
+        var productCodeBarre = row.querySelector('.product-codebar')?.textContent.toLowerCase();
 
-            if (productName.includes(filter) || (productDescription && productDescription.includes(filter)) || (productCodeBarre && productCodeBarre.includes(filter))) {
-                row.style.display = ''; // Afficher la ligne
-            } else {
-                row.style.display = 'none'; // Masquer la ligne
-            }
-        });
+        if (productName.includes(filter) ||
+            (productDescription && productDescription.includes(filter)) ||
+            (productCodeBarre && productCodeBarre.includes(filter))) {
+            row.style.display = ''; // Afficher la ligne
+        } else {
+            row.style.display = 'none'; // Masquer la ligne
+        }
     });
-    </script>
+});
+
+</script>
+
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+    const nameFilter = document.getElementById('name-filter');
+    const nameFilterForm = document.getElementById('nameFilterForm');
+    const dateFilterForm = document.getElementById('dateFilterForm');
+    const savedStartDate = document.getElementById('start_date');
+    const savedEndDate = document.getElementById('end_date');
+
+    nameFilter.addEventListener('input', function() {
+        if (nameFilter.value === '') {
+            // Copier les valeurs actuelles des champs de date dans le formulaire de recherche par nom
+            if (savedStartDate && savedEndDate) {
+                nameFilterForm.appendChild(createHiddenInput('start_date', savedStartDate.value));
+                nameFilterForm.appendChild(createHiddenInput('end_date', savedEndDate.value));
+            }
+            nameFilterForm.submit(); // Soumettre automatiquement le formulaire
+        }
+    });
+
+    function createHiddenInput(name, value) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        return input;
+    }
+});
+
+</script>
+
+
+
 @endsection

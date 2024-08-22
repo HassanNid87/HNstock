@@ -62,7 +62,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <table class="table table-centered datatable dt-responsive nowrap table-card-list dataTable no-footer dtr-inline" style="border-collapse: collapse; border-spacing: 0px 12px; width: 100%;" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
-                            <thead style="background-color: #bcc0c0;">
+                            <thead style="background-color: #dde0e0;">
                                 <tr class="bg-transparent" role="row">
                                     <th style="width: 24px;" class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" aria-label=": activate to sort column descending">
                                         <!--<div class="form-check text-center">
@@ -101,7 +101,7 @@
                                         @else
                                             ----------
                                         @endif</td>
-                                        <td>{{ $payment->montant ?? 'N/A' }}</td>
+                                        <td class="text-dark fw-bold">{{ $payment->montant ?? 'N/A' }}</td>
                                         <td>  @php
                                             // Déterminez la couleur de fond en fonction du statut
                                             $backgroundColor = '';
@@ -134,6 +134,10 @@
                                             </button>
                                         </td>
                                         <td>
+                                             <!-- Edit Button -->
+                                             <a href="{{ route('payments.edit', $payment->id) }}" class="btn btn-sm btn-outline-primary rounded" title="Update">
+                                                <i class="uil uil-pen font-size-14"></i>
+                                            </a>
                                             <!-- Delete Button -->
                                             <form method="POST" action="{{ route('payments.destroy', $payment->id) }}" onsubmit="return confirm('Are you sure you want to delete this payment?')" style="display:inline;">
                                                 @csrf
@@ -142,12 +146,6 @@
                                                     <i class="uil uil-trash-alt font-size-14"></i>
                                                 </button>
                                             </form>
-
-                                            <!-- Edit Button -->
-                                            <a href="{{ route('payments.edit', $payment->id) }}" class="btn btn-sm btn-outline-primary rounded" title="Update">
-                                                <i class="uil uil-pen font-size-14"></i>
-                                            </a>
-
                                             <!-- Button for Showing Details -->
                                             <a href="{{ route('payments.show', $payment->id) }}" class="btn btn-sm btn-outline-info rounded" title="Afficher les détails">
                                                 <i class="uil uil-eye font-size-14"></i>
