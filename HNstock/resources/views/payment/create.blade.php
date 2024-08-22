@@ -6,13 +6,11 @@
 
 
 <div class="row">
-
     <div class="col-lg-12">
         <div id="addproduct-accordion" class="custom-accordion">
             <div class="card">
                 <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
                     <div class="p-4">
-
                         <div class="d-flex align-items-center">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar-xs">
@@ -161,7 +159,7 @@
         <div class="row mb-4">
             <div class="col ms-auto">
                 <div class="d-flex flex-reverse flex-wrap gap-2">
-                    <a href="" class="btn btn-secondary" title="Liste Factures">
+                    <a href="{{ route('payments.index') }}" class="btn btn-secondary" title="Liste Factures">
                         <i class="fas fa-list"></i>
                     </a>
                     <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>

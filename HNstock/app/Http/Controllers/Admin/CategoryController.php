@@ -52,11 +52,11 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    // public function edit(Category $category)
-    // {
-    //     $isUpdate = true;
-    //     return view('category.form', compact('category', 'isUpdate'));
-    // }
+    public function edit(Category $category)
+    {
+        $isUpdate = true;
+        return view('category.form', compact('category', 'isUpdate'));
+     }
 
     /**
      * Update the specified resource in storage.
