@@ -76,24 +76,43 @@ class PaymentController extends Controller
         return view('payment.index', compact('payments', 'clients', 'startDate', 'endDate'));
     }
 
+    public static function generateNextNReglement()
+    {
+        $latestReglement = Payment::latest()->first();
+        $latestNReglement = $latestReglement ? $latestReglement->Npayment : 'RG0000';
 
+        // Extraire la partie numérique et l'incrémenter
+        $number = (int)substr($latestNReglement, 2) + 1;
+
+        // Formater le nouveau numéro avec des zéros initiaux
+        return 'RG' . str_pad($number, 4, '0', STR_PAD_LEFT);
+    }
 
     public function create()
-    {
-        // Récupérer tous les clients
-        $clients = Client::all();
+{
+    // Récupérer tous les clients
+    $clients = Client::all();
 
-        // Récupérer uniquement les ventes avec le statut 'Attente' ou 'Partiellement Payée' et les clients associés
-        $sales = Sale::whereIn('status', ['EnAttente', 'PartPayée'])->with('client')->get();
+    // Récupérer uniquement les ventes avec le statut 'Attente' ou 'Partiellement Payée' et les clients associés
+    $sales = Sale::whereIn('status', ['EnAttente', 'PartPayée'])->with('client')->get();
 
-        // Compter le nombre de paiements existants
-        $paymentCount = Payment::count() + 1;
+    // Compter le nombre de paiements existants
+    $paymentCount = Payment::count() + 1;
 
-        // Formater le numéro de paiement
-        $Npayment = 'Reg' . str_pad($paymentCount, 4, '0', STR_PAD_LEFT);
+    $payment = new Payment();
+    // Formater le numéro de paiement
+    $payment->fill([
+        'montant' => 0,
+        'Npayment' => Payment::generateNextNReglement(), // Génération du numéro de facture
+    ]);
+    // Créer une nouvelle instance de Payment
 
-        return view('payment.create', compact('sales', 'clients', 'Npayment'));
-    }
+
+    $isUpdate = false;
+
+    return view('payment.form', compact('sales', 'clients',  'isUpdate', 'payment'));
+}
+
 
 
     public function store(Request $request)
@@ -167,14 +186,10 @@ class PaymentController extends Controller
         return redirect()->route('payments.index')->with('success', 'Paiement ajouté avec succès.');
     }
 
-
-
-
-
-
     public function edit(Payment $payment) {
         // Récupérer tous les clients
         $clients = Client::all();
+        $isUpdate = true;
 
         // Récupérer les ventes associées au client du paiement en cours
         $sales = Sale::where('client_id', $payment->client_id)
@@ -186,7 +201,7 @@ class PaymentController extends Controller
         $selectedSales = $payment->details->pluck('sale_id')->toArray();
        // dd($selectedSales);
 
-        return view('payment.edit', compact('payment', 'clients', 'sales', 'selectedSales'));
+        return view('payment.form', compact('payment', 'clients','isUpdate', 'sales', 'selectedSales'));
     }
 
 
@@ -264,5 +279,9 @@ public function show(Payment $payment)
 {
     return view('payment.show', compact('payment'));
 }
+
+
+
+
 
 }

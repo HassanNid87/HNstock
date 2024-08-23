@@ -85,7 +85,7 @@
                                     <div class="mb-3">
                                         <label for="client_id" class="form-label">Client</label>
                                         <select name="client_id" id="client_id" class="form-select">
-                                            <option value="">Please choose client</option>
+                                            <option value="">Sélectionnez un client</option>
                                             @foreach ($clients as $client)
                                                 <option @selected(old('client_id', $sale->client_id) == $client->id) value="{{ $client->id }}">
                                                     {{ $client->name }}</option>

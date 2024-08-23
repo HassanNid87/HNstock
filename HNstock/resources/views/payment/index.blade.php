@@ -135,11 +135,11 @@
                                         </td>
                                         <td>
                                              <!-- Edit Button -->
-                                             <a href="{{ route('payments.edit', $payment->id) }}" class="btn btn-sm btn-outline-primary rounded" title="Update">
+                                             <a href="{{ route('payments.edit', $payment) }}" class="btn btn-sm btn-outline-primary rounded" title="Update">
                                                 <i class="uil uil-pen font-size-14"></i>
                                             </a>
                                             <!-- Delete Button -->
-                                            <form method="POST" action="{{ route('payments.destroy', $payment->id) }}" onsubmit="return confirm('Are you sure you want to delete this payment?')" style="display:inline;">
+                                            <form method="POST" action="{{ route('payments.destroy', $payment) }}" onsubmit="return confirm('Are you sure you want to delete this payment?')" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded" title="Delete">
@@ -147,7 +147,7 @@
                                                 </button>
                                             </form>
                                             <!-- Button for Showing Details -->
-                                            <a href="{{ route('payments.show', $payment->id) }}" class="btn btn-sm btn-outline-info rounded" title="Afficher les détails">
+                                            <a href="{{ route('payments.show', $payment) }}" class="btn btn-sm btn-outline-info rounded" title="Afficher les détails">
                                                 <i class="uil uil-eye font-size-14"></i>
                                             </a>
                                         </td>
