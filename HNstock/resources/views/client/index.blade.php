@@ -4,7 +4,21 @@
 
 
 @section('content')
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">Liste Clients</h4>
 
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Clients</a></li>
+                    <li class="breadcrumb-item active">Liste Clients</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
 
@@ -60,12 +74,15 @@
                                             </th>
                                             <th style="width: 120px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Customer ID: activate to sort column ascending">Code</th>
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 217px;" aria-label="Customer: activate to sort column ascending">Client</th>
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 144px;" aria-label="Email: activate to sort column ascending">Type</th>
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 144px;" aria-label="Customer: activate to sort column ascending">Adresse</th>
-                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 144px;" aria-label="Email: activate to sort column ascending">Tel</th>
-                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 86px;" aria-label="Join Date: activate to sort column ascending">Email</th>
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 59px;" aria-label="Status: activate to sort column ascending">Tel</th>
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 144px;" aria-label="Email: activate to sort column ascending">Whatsapp</th>
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 59px;" aria-label="Status: activate to sort column ascending">Débit</th>
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 59px;" aria-label="Status: activate to sort column ascending">Crédit</th>
                                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 59px;" aria-label="Status: activate to sort column ascending">Solde</th>
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 59px;" aria-label="Status: activate to sort column ascending">Email</th>
+                                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 59px;" aria-label="Status: activate to sort column ascending">SiteWeb</th>
                                             <th style="width: 150px;" class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending">Actions</th>
                                         </tr>
                                     </thead>
@@ -87,14 +104,17 @@
                                 <img width="40px" height="40px" src="{{ asset('images/default.png') }}" alt="Default Photo" class="rounded-circle">
                             @endif                                <span>{{ $client->name }}</span>
                             </td>
+                            <td>{{ $client->Type }}</td>
                             <td>{{ $client->adresse }}</td>
 
                             <td>    {{ $client->tel }}      </td>
-                            <td>   {{ $client->email }}     </td>
+                            <td>    {{ $client->whatsapp }}      </td>
                             <td>   {{ number_format($client->total_debit, 2) }}   </td>
                             <td>   {{ number_format($client->total_credit, 2) }}     </td>
                              <td   style="color: #000000; font-family: Arial, sans-serif; font-weight: bold; font-size: 13px;">
                                             {{ number_format($client->solde, 2) }}       </td>
+                             <td>   {{ $client->email }}     </td>
+                            <td>    {{ $client->siteweb }}      </td>
                             <td style="white-space: nowrap;">
                                    <!-- Delete Button -->
                                    <form method="POST" action="{{ route('clients.destroy', $client) }}" onsubmit="return confirm('Are you sure you want to delete this sale?')" style="display:inline;">
@@ -123,8 +143,7 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
                         <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-                            Showing 1 to 10 of 12 entries
-                        </div>
+                                 Affichage de 1 à 10 sur 12 entrées                        </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
                         <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">

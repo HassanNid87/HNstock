@@ -3,6 +3,21 @@
 @section('title', ($isUpdate ? 'Update' : 'Create') . ' Client')
 
 @section('content')
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">{{ $isUpdate ? 'Editer Un Client' : 'Ajouter Un Client' }}</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Clients</a></li>
+                    <li class="breadcrumb-item active">{{ $isUpdate ? 'Editer Un Client' : 'Ajouter Un Client' }}</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
 <div class="row">
     <!-- Première carte : Code, Nom, Adresse, Type -->
     <div class="card">
@@ -58,9 +73,14 @@
                         <div class="col-lg-6">
                             <div class="form-group mb-3">
                                 <label for="type" class="form-label">Type</label>
-                                <input type="text" name="type" id="type" class="form-control" value="{{ old('type', $client->type) }}">
+                                <select name="type" id="type" class="form-control">
+                                    <option value="">Sélectionner un type</option>
+                                    <option value="Société" {{ old('type', $client->type) == 'Société' ? 'selected' : '' }}>Société</option>
+                                    <option value="Individuel" {{ old('type', $client->type) == 'Individuel' ? 'selected' : '' }}>Individuel</option>
+                                </select>
                             </div>
                         </div>
+
                     </div>
             </div>
         </div>

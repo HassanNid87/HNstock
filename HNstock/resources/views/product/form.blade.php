@@ -1,12 +1,26 @@
 @extends('base')
-@section('title', $isUpdate ? 'Update Product' : 'Create Product')
+@section('title', $isUpdate ? 'Edit Produit' : 'Ajouter Produit')
 
 @php
     $route = $isUpdate ? route('products.update', $product) : route('products.store');
 @endphp
 
 @section('content')
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">{{ $isUpdate ? 'Editer Un Produit' : 'Ajouter Un Produit' }}</h4>
 
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Produits</a></li>
+                    <li class="breadcrumb-item active">{{ $isUpdate ? 'Editer Un Produit' : 'Ajouter Un Produit' }}</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
         <div id="addproduct-accordion" class="custom-accordion">
@@ -87,9 +101,21 @@
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="unite" class="form-label">Unité</label>
-                                        <input type="text" name="unite" id="unite" placeholder="Unité" class="form-control" value="{{ old('unite', $product->unite) }}">
-                                      </div>
+                                        <select name="unite" id="unite" class="form-select" required>
+                                            <option value="" disabled selected>Sélectionnez une unité</option>
+                                            <option value="pièce" @selected(old('unite', $product->unite) == 'pièce')>Pièce</option>
+                                            <option value="boîte" @selected(old('unite', $product->unite) == 'boîte')>Boîte</option>
+                                            <option value="kilogramme" @selected(old('unite', $product->unite) == 'kilogramme')>Kilogramme</option>
+                                            <option value="Litre" @selected(old('unite', $product->unite) == 'Litre')>Litre</option>
+                                            <option value="pack" @selected(old('unite', $product->unite) == 'pack')>Pack</option>
+                                            <option value="rouleau" @selected(old('unite', $product->unite) == 'rouleau')>Rouleau</option>
+                                            <option value="Mètre carré" @selected(old('unite', $product->unite) == 'Mètre carré')>Mètre carré</option>
+                                            <option value="mètre cube" @selected(old('unite', $product->unite) == 'mètre cube')>Mètre cube</option>
+                                            <option value="tonne" @selected(old('unite', $product->unite) == 'tonne')>Tonne</option>
+                                        </select>
+                                    </div>
                                 </div>
+
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="etagere" class="form-label">Étagère</label>

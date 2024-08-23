@@ -23,65 +23,68 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $request->validate([
-            'code' => 'nullable|string',
-            'name' => 'nullable|string',
-            'description' => 'nullable|string',
-            'min' => 'nullable|numeric',
-            'max' => 'nullable|numeric',
-            'categories' => 'nullable|array',
-            'tab' => 'nullable|string', // Pour déterminer l'onglet actif
-        ]);
+{
+    $request->validate([
+        'code' => 'nullable|string',
+        'name' => 'nullable|string',
+        'description' => 'nullable|string',
+        'min' => 'nullable|numeric',
+        'max' => 'nullable|numeric',
+        'categories' => 'nullable|array',
+        'tab' => 'nullable|string', // Pour déterminer l'onglet actif
+        'category' => 'nullable|integer',
+    ]);
 
-        // Récupération des catégories avec des produits
-        $categories = Category::with('products')->has('products')->get();
+    // Récupération des catégories avec des produits
+    $categories = Category::with('products')->has('products')->get();
 
-        // Initialisation de la requête de produits
-        $productsQuery = Product::with('category');
+    // Initialisation de la requête de produits
+    $productsQuery = Product::with('category');
 
-        // Récupération des filtres depuis la requête
-        $code = $request->input('code');
-        $min = $request->input('min') ?? 0;
-        $max = $request->input('max');
-        $categoriesIds = $request->input('categories');
-        $tab = $request->input('tab', 'list'); // Onglet par défaut
+    // Récupération des filtres depuis la requête
+    $categoryFilter = $request->input('category');
+    $code = $request->input('code');
+    $min = $request->input('min') ?? 0;
+    $max = $request->input('max');
+    $categoriesIds = $request->input('categories');
+    $tab = $request->input('tab', 'list'); // Onglet par défaut
 
-        // Filtre par nom, description ou code barre
-        if (!empty($code)) {
-            $productsQuery->where(function($query) use ($code) {
-                $query->where('name', 'like', "%{$code}%")
-                      ->orWhere('description', 'like', "%{$code}%")
-                      ->orWhere('codebare', 'like', "%{$code}%");
-            });
-        }
-
-        // Filtre par catégorie
-        if (!empty($categoriesIds)) {
-            $productsQuery->whereIn('category_id', $categoriesIds);
-        }
-
-        // Filtre par prix minimum
-        $productsQuery->where('priceV', '>=', $min);
-
-        // Filtre par prix maximum
-        if (!empty($max)) {
-            $productsQuery->where('priceV', '<=', $max);
-        }
-
-        // Exécution de la requête et récupération des produits
-        $products = $productsQuery->paginate(15);
-
-        // Calcul des options de prix
-        $pricesV = $products->pluck('priceV')->all();
-        $priceVOptions = new \stdClass();
-        $priceVOptions->maxPriceV = $pricesV ? max($pricesV) : 0;
-        $priceVOptions->minPriceV = $pricesV ? min($pricesV) : 0;
-
-        // Retourne la vue avec les variables nécessaires
-        return view('product.index', compact('products', 'categories', 'priceVOptions', 'tab'));
+    // Filtre par nom, description ou code barre
+    if (!empty($code)) {
+        $productsQuery->where(function($query) use ($code) {
+            $query->where('name', 'like', "%{$code}%")
+                  ->orWhere('description', 'like', "%{$code}%")
+                  ->orWhere('codebare', 'like', "%{$code}%");
+        });
     }
 
+    // Appliquer le filtre par catégorie
+    if ($categoryFilter) {
+        $productsQuery->whereHas('category', function($q) use ($categoryFilter) {
+            $q->where('id', $categoryFilter);
+        });
+    }
+
+    // Filtre par prix minimum
+    $productsQuery->where('priceV', '>=', $min);
+
+    // Filtre par prix maximum
+    if (!empty($max)) {
+        $productsQuery->where('priceV', '<=', $max);
+    }
+
+    // Exécution de la requête et récupération des produits
+    $products = $productsQuery->paginate(15);
+
+    // Calcul des options de prix
+    $pricesV = $products->pluck('priceV')->all();
+    $priceVOptions = new \stdClass();
+    $priceVOptions->maxPriceV = $pricesV ? max($pricesV) : 0;
+    $priceVOptions->minPriceV = $pricesV ? min($pricesV) : 0;
+
+    // Retourne la vue avec les variables nécessaires
+    return view('product.index', compact('products', 'categories', 'priceVOptions', 'tab'));
+}
 
 
     /**

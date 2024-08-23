@@ -2,7 +2,21 @@
 @section('title', 'Stock Out')
 
 @section('content')
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">Stock Sorti</h4>
 
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Stock</a></li>
+                    <li class="breadcrumb-item active">Stock Sorti</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
 
@@ -69,8 +83,10 @@
                                id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
                             <thead style="background-color: #dde0e0;">
                                 <tr align="center">
+                                    <th>Image</th>
                                     <th>Product</th>
                                     <th>Description</th>
+                                    <th>Catégorie</th>
                                     <th>Quantity</th>
                                     <th>Date</th>
                                 </tr>
@@ -79,13 +95,22 @@
                                 @foreach ($stockOuts as $stockOut)
                                 <tr data-category-id="{{ $stockOut['product']->category->id }}">
                                     <td hidden class="product-codebar">{{ $stockOut['product']->codebare }}</td>
+                                    <td class="text-center">
+                                        @if ($stockOut['product'] && $stockOut['product']->image)
+                                            <img width="50px" height="50px" src="{{ asset('storage/' . $stockOut['product']->image) }}" alt="Product Image" class="rounded-circle">
+                                        @else
+                                            <img width="50px" height="50px" src="{{ asset('storage/default-image.png') }}" alt="Default Image" class="rounded-circle">
+                                        @endif
+                                    </td>
                                     <td class="product-name">{{ $stockOut['product']->name }}</td>
                                     <td class="product-description">{{ $stockOut['product']->description }}</td>
-                                    <td>{{ $stockOut['quantity'] }}</td>
+                                    <td> <span class="badge" style="background-color:#F97300;">{{ $stockOut['product']->category->name ?? 'Non spécifié' }}</span></td>
+                                    <td> <span class="badge bg-success" style="font-size: 12px;">{{ $stockOut['quantity'] }}</span></td>
                                     <td>{{ $stockOut['date'] }}</td>
                                 </tr>
-                            @endforeach
+                                @endforeach
                             </tbody>
+
                         </table>
 
                     </div>

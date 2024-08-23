@@ -9,6 +9,21 @@
 
 
 <div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <h4 class="mb-0">Liste Produits</h4>
+
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Produits</a></li>
+                        <li class="breadcrumb-item active">Liste Produits</li>
+                    </ol>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="product-tabs" role="tablist">
         <li class="nav-item" role="presentation">
@@ -23,18 +38,41 @@
     <div class="tab-content mt-4" id="product-tabs-content">
         <!-- List Tab -->
         <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="{{ route('products.create') }}" class="btn btn-success waves-effect waves-light mb-3">
-                    <i class="mdi mdi-plus me-1"></i>
-                    Nouveau Produit
-                </a>
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <a href="{{ route('products.create') }}" class="btn btn-success waves-effect waves-light mb-3">
+                        <i class="mdi mdi-plus me-1"></i>
+                        Nouveau Produit
+                    </a>
+                </div>
             </div>
+            <div class="row">
 
+            </div>
             <div class="table-responsive mb-4">
                 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                     <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <form method="get" action="{{ route('products.index') }}">
+                        <!-- Formulaire de Filtrage par Catégorie -->
+                        <div class="col-md-6">
+                            <form method="get" action="{{ route('products.index') }}" id="categoryForm">
+                                <div class="dataTables_length" id="DataTables_Table_0_length">
+                                    <label class="d-flex align-items-center">
+                                        <select id="category-filter" name="category" class="form-control form-control-sm me-2 w-auto" aria-controls="DataTables_Table_0">
+                                            <option value="">Select Category</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
+                                                    {{ $category->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Formulaire de Recherche -->
+                        <div class="col-md-6">
+                            <form method="get" action="{{ route('products.index') }}" id="searchForm">
                                 <div class="dataTables_length" id="DataTables_Table_0_length">
                                     <label class="d-flex align-items-center">
                                         <input type="search" name="code" id="code" class="form-control form-control-sm me-2 w-auto"
@@ -42,9 +80,7 @@
                                         <input type="hidden" name="tab" value="list">
                                     </label>
                                 </div>
-                                <!-- Ajoutez ici les autres champs de filtre -->
                             </form>
-
                         </div>
                     </div>
 
@@ -118,6 +154,31 @@
                     </table>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-5">
+                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 12 entrées
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                        <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                            <ul class="pagination">
+                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
+                                    <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                                </li>
+                                <li class="paginate_button page-item active">
+                                    <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                </li>
+                                <li class="paginate_button page-item ">
+                                    <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                                </li>
+                                <li class="paginate_button page-item next" id="DataTables_Table_0_next">
+                                    <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">Next
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+            </div>
         </div>
 
         <!-- Grid Tab -->
@@ -130,21 +191,8 @@
 
             </div>
                         <!-- Zone de recherche pour l'onglet grille -->
-                    <div class="row mb-4">
-                        <div class="col-sm-12 col-md-6">
-                            <form method="get" action="{{ route('products.index') }}">
-                                <div class="dataTables_length" id="DataTables_Table_0_length">
-                                    <label class="d-flex align-items-center">
-                                        <input type="search" name="code" id="code" class="form-control form-control-sm me-2 w-auto"
-                                               placeholder="Code / Nom / Description" value="{{ request()->input('code') }}" aria-controls="DataTables_Table_0">
-                                        <input type="hidden" name="tab" value="grid">
-                                    </label>
-                                </div>
-                                <!-- Ajoutez ici les autres champs de filtre -->
-                            </form>
-
-                        </div>
-                    </div>
+                        <div class="row">
+                            <!-- Formulaire de Filtrage par Catégorie -->
 
 
             <div class="row">
@@ -213,7 +261,7 @@
                                 </button>
 
                                 <input type="number" id="quantity-{{ $product->id }}" name="quantity"
-                                    min="1" max="{{ $product->stock ? $product->stock->quantity : 1 }}" value="1"
+                                    min="1" max="{{ $product->stock ? $product->stock->quantity : 1 }}" value="0"
                                     class="form-control mx-2"
                                     style="max-width: 60px; font-size: 0.75rem; text-align: center;">
 
@@ -383,5 +431,36 @@
            });
        </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion du filtre par catégorie
+        const categoryFilter = document.getElementById('category-filter');
+        const categoryForm = document.getElementById('categoryForm');
+
+        function filterStocks() {
+            categoryForm.submit();
+        }
+
+        categoryFilter.addEventListener('change', filterStocks);
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion de la recherche
+        const searchInput = document.getElementById('code');
+        const searchForm = document.getElementById('searchForm');
+        let timeout;
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(function() {
+                if (searchInput.value.trim() === '') {
+                    searchForm.submit();
+                }
+            }, 300); // Délai de 300ms
+        });
+    });
+</script>
 
 @endsection

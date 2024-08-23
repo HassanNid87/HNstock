@@ -3,6 +3,22 @@
 @section('title', 'Stocks')
 
 @section('content')
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h4 class="mb-0">Liste Stock</h4>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Stock</a></li>
+                    <li class="breadcrumb-item active">Liste Stock</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
 
@@ -75,12 +91,20 @@
                                             <input type="checkbox" class="form-check-input" id="stockcheck{{ $stock->id }}" value="{{ $stock->id }}">
                                         </td>
                                         <td class="text-center">
-                                            <img width="50px" height="50px" src="{{ asset('storage/' . $stock->product->image) }}" alt="Product Image" class="rounded-circle">
+                                            @if ($stock->product && $stock->product->image)
+                                                <img width="50px" height="50px" src="{{ asset('storage/' . $stock->product->image) }}" alt="Product Image" class="rounded-circle">
+                                            @else
+                                                <img width="50px" height="50px" src="{{ asset('storage/default-image.png') }}" alt="Default Image" class="rounded-circle">
+                                            @endif
                                         </td>
-                                        <td>{{ $stock->product->name }}</td>
-                                        <td>{{ $stock->product->description }}</td>
                                         <td>
-                                            @if ($stock->product->category)
+                                            {{ $stock->product ? $stock->product->name : 'N/A' }}
+                                        </td>
+                                        <td>
+                                            {{ $stock->product ? $stock->product->description : 'N/A' }}
+                                        </td>
+                                        <td>
+                                            @if ($stock->product && $stock->product->category)
                                                 <a href="{{ route('categories.show', $stock->product->category->id) }}" class="btn btn-link">
                                                     <span class="badge" style="background-color:#F97300;">
                                                         {{ $stock->product->category->name }}
@@ -90,17 +114,14 @@
                                                 ----------
                                             @endif
                                         </td>
-
                                         <td>
                                             <span class="badge {{ $stock->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
                                                 {{ $stock->quantity }}
                                             </span>
                                         </td>
-
                                         <td style="white-space: nowrap;">
                                             <!-- Edit Stock Button -->
-
-                                            <a href="{{ route('stocks.edit',$stock) }}" class="btn btn-sm btn-outline-primary rounded" title="Edit">
+                                            <a href="{{ route('stocks.edit', $stock) }}" class="btn btn-sm btn-outline-primary rounded" title="Edit">
                                                 <i class="mdi mdi-pencil-outline"></i>
                                             </a>
                                         </td>
@@ -112,6 +133,7 @@
                                 @endforelse
                             </tbody>
                         </table>
+
 
                     </div>
                 </div>
@@ -139,7 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     categoryFilter.addEventListener('change', filterStocks);
 });
-
 
 </script>
 
