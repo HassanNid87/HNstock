@@ -25,9 +25,6 @@ return new class extends Migration
             $table->double('mttc')->default(0);
 	        $table->date('deleted_at');
             $table->timestamps();
-            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
-
-
         });
     }
 }

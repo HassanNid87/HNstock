@@ -48,7 +48,6 @@ class PaymentController extends Controller
         }
 
 
-
         // Filtrage par mode de paiement
         if ($request->filled('mode_payment')) {
             $query->whereIn('mode_payment', $request->mode_payment);
@@ -89,30 +88,29 @@ class PaymentController extends Controller
     }
 
     public function create()
-{
-    // Récupérer tous les clients
-    $clients = Client::all();
+    {
+        // Récupérer tous les clients
+        $clients = Client::all();
 
-    // Récupérer uniquement les ventes avec le statut 'Attente' ou 'Partiellement Payée' et les clients associés
-    $sales = Sale::whereIn('status', ['EnAttente', 'PartPayée'])->with('client')->get();
+        // Récupérer uniquement les ventes avec le statut 'Attente' ou 'Partiellement Payée' et les clients associés
+        $sales = Sale::whereIn('status', ['EnAttente', 'PartPayée'])->with('client')->get();
 
-    // Compter le nombre de paiements existants
-    $paymentCount = Payment::count() + 1;
+        // Compter le nombre de paiements existants
+        $paymentCount = Payment::count() + 1;
 
-    $payment = new Payment();
-    // Formater le numéro de paiement
-    $payment->fill([
-        'montant' => 0,
-        'Npayment' => Payment::generateNextNReglement(), // Génération du numéro de facture
-    ]);
-    // Créer une nouvelle instance de Payment
+        $payment = new Payment();
+        // Formater le numéro de paiement
+        $payment->fill([
+            'montant' => 0,
+            'Npayment' => Payment::generateNextNReglement(), // Génération du numéro de facture
+        ]);
+        // Créer une nouvelle instance de Payment
 
 
-    $isUpdate = false;
+        $isUpdate = false;
 
-    return view('payment.form', compact('sales', 'clients',  'isUpdate', 'payment'));
-}
-
+        return view('payment.form', compact('sales', 'clients', 'isUpdate', 'payment'));
+    }
 
 
     public function store(Request $request)
@@ -171,117 +169,112 @@ class PaymentController extends Controller
             $totalAmount -= $amountToPay;
         }
 
-         // Mise à jour du crédit du client
+        // Mise à jour du crédit du client
         /* $client = $payment->client;
          $client->credit += $payment->montant; // `amount` est le montant du paiement
          $client->solde = $client->debit - $client->credit; // Mise à jour du solde
          $client->save();*/
 
-                // Recalcul du solde du client
-            $client = $payment->client;
-            $client->credit = $client->payments->sum('montant');
-            $client->solde = $client->debit - $client->credit;
-            $client->save();
+        // Recalcul du solde du client
+        $client = $payment->client;
+        $client->credit = $client->payments->sum('montant');
+        $client->solde = $client->debit - $client->credit;
+        $client->save();
 
         return redirect()->route('payments.index')->with('success', 'Paiement ajouté avec succès.');
     }
 
-    public function edit(Payment $payment) {
+    public function edit(Payment $payment)
+    {
         // Récupérer tous les clients
         $clients = Client::all();
         $isUpdate = true;
 
         // Récupérer les ventes associées au client du paiement en cours
         $sales = Sale::where('client_id', $payment->client_id)
-                     ->where('status', 'pending')
-                     ->get();
+            ->where('status', 'pending')
+            ->get();
 
         // Récupérer les ventes associées à ce paiement
 
         $selectedSales = $payment->details->pluck('sale_id')->toArray();
-       // dd($selectedSales);
+        // dd($selectedSales);
 
-        return view('payment.form', compact('payment', 'clients','isUpdate', 'sales', 'selectedSales'));
+        return view('payment.form', compact('payment', 'clients', 'isUpdate', 'sales', 'selectedSales'));
     }
 
 
     public function update(Request $request, Payment $payment)
-{
-    // Valider les données du formulaire
-    $validated = $request->validate([
-        'Npayment' => 'required|string',
-        'montant' => 'required|numeric',
-        'date_payment' => 'required|date',
-        'mode_payment' => 'required|string',
-        'client_id' => 'required|exists:clients,id',
-        'sales' => 'nullable|array', // Les factures sélectionnées sont optionnelles lors de la mise à jour
-    ]);
-
-    // Mettre à jour les informations du paiement
-    $payment->update($validated);
-
-    // Supprimer les anciens détails de paiement
-    $payment->details()->delete();
-
-    $totalAmount = $validated['montant'];
-    $selectedSales = Sale::whereIn('id', $request->input('sales', []))->get();
-
-    foreach ($selectedSales as $sale) {
-        if ($totalAmount <= 0) {
-            break;
-        }
-
-        $amountToPay = min($sale->montant_restant, $totalAmount);
-        $sale->montant_restant -= $amountToPay;
-        $sale->status = $sale->montant_restant > 0 ? 'PartPayée' : 'Réglée';
-        $sale->save();
-
-        $payment->details()->create([
-            'sale_id' => $sale->id,
-            'NFact' => $sale->NFact,
-            'DateFact' => $sale->DateFact,
-            'mttc' => $sale->mttc,
-            'montant_restant' => $sale->montant_restant,
-            'montant_regle' => $amountToPay, // Enregistrer le montant réglé pour cette vente
+    {
+        // Valider les données du formulaire
+        $validated = $request->validate([
+            'Npayment' => 'required|string',
+            'montant' => 'required|numeric',
+            'date_payment' => 'required|date',
+            'mode_payment' => 'required|string',
+            'client_id' => 'required|exists:clients,id',
+            'sales' => 'nullable|array', // Les factures sélectionnées sont optionnelles lors de la mise à jour
         ]);
 
-        $totalAmount -= $amountToPay;
+        // Mettre à jour les informations du paiement
+        $payment->update($validated);
+
+        // Supprimer les anciens détails de paiement
+        $payment->details()->delete();
+
+        $totalAmount = $validated['montant'];
+        $selectedSales = Sale::whereIn('id', $request->input('sales', []))->get();
+
+        foreach ($selectedSales as $sale) {
+            if ($totalAmount <= 0) {
+                break;
+            }
+
+            $amountToPay = min($sale->montant_restant, $totalAmount);
+            $sale->montant_restant -= $amountToPay;
+            $sale->status = $sale->montant_restant > 0 ? 'PartPayée' : 'Réglée';
+            $sale->save();
+
+            $payment->details()->create([
+                'sale_id' => $sale->id,
+                'NFact' => $sale->NFact,
+                'DateFact' => $sale->DateFact,
+                'mttc' => $sale->mttc,
+                'montant_restant' => $sale->montant_restant,
+                'montant_regle' => $amountToPay, // Enregistrer le montant réglé pour cette vente
+            ]);
+
+            $totalAmount -= $amountToPay;
+        }
+
+        // Recalcul du solde du client
+        $client = $payment->client;
+        $client->credit = $client->payments->sum('montant');
+        $client->solde = $client->debit - $client->credit;
+        $client->save();
+
+        return redirect()->route('payments.index')->with('success', 'Paiement mis à jour avec succès.');
     }
 
-    // Recalcul du solde du client
-    $client = $payment->client;
-    $client->credit = $client->payments->sum('montant');
-    $client->solde = $client->debit - $client->credit;
-    $client->save();
 
-    return redirect()->route('payments.index')->with('success', 'Paiement mis à jour avec succès.');
-}
+    public function destroy(Payment $payment)
+    {
+        $payment->details()->delete(); // Supprimer les détails associés
+        $payment->delete();
 
+        // Recalcul du solde du client
+        $client = $payment->client;
+        $client->credit = $client->payments->sum('montant');
+        $client->solde = $client->debit - $client->credit;
+        $client->save();
 
+        return redirect()->route('payments.index')->with('success', 'Paiement supprimé avec succès.');
+    }
 
-
-
-   public function destroy(Payment $payment)
-{
-    $payment->details()->delete(); // Supprimer les détails associés
-    $payment->delete();
-
-       // Recalcul du solde du client
-       $client = $payment->client;
-       $client->credit = $client->payments->sum('montant');
-       $client->solde = $client->debit - $client->credit;
-       $client->save();
-
-    return redirect()->route('payments.index')->with('success', 'Paiement supprimé avec succès.');
-}
-
-public function show(Payment $payment)
-{
-    return view('payment.show', compact('payment'));
-}
-
-
-
+    public function show(Payment $payment)
+    {
+        return view('payment.show', compact('payment'));
+    }
 
 
 }
