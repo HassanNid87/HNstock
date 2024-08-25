@@ -20,7 +20,7 @@ class PaymentController extends Controller
             'Npayment' => 'nullable|string',
             'code' => 'nullable|exists:clients,code', // Validation mise à jour
             'mode_payment' => 'nullable|array',
-            'mode_payment.*' => 'in:espece,chéque',
+            'mode_payment.*' => 'in:Espèce,Chèque,VirBancaire,Carte de Crédit,Autre',
             'min_amount' => 'nullable|numeric',
             'max_amount' => 'nullable|numeric|gte:min_amount',
         ]);
@@ -46,8 +46,6 @@ class PaymentController extends Controller
                 $q->where('code', $request->input('code')); // Assurez-vous d'utiliser la valeur du code correctement
             });
         }
-
-
 
         // Filtrage par mode de paiement
         if ($request->filled('mode_payment')) {

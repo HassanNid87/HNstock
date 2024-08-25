@@ -93,7 +93,7 @@
         <!-- Card for Payment Information -->
         <div class="card">
             <div class="card-header">
-                Détails du Paiement
+                Détails du Règlement
             </div>
             <div class="card-body">
                 <p><strong>Numéro de Paiement:</strong> {{ $payment->Npayment }}</p>
@@ -107,7 +107,7 @@
         <!-- Card for Payment Details Table -->
         <div class="card">
             <div class="card-header">
-                Détails du Règlement
+                Les Factures Réglées
             </div>
             <div class="card-body">
                 <table class="table">

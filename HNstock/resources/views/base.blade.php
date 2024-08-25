@@ -355,7 +355,7 @@
                     <li>
                         <a href="{{ route('payments.index') }}">
                             <i class="uil-credit-card"></i>
-                            <span>Paiements</span>
+                            <span>Réglements</span>
                         </a>
                     </li>
                     <!-- Ajout de l'onglet Dossier de Société -->
@@ -438,11 +438,11 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-6">
-                        <script>document.write(new Date().getFullYear())</script> - 2019 © All rights reserved.
+                        <script>document.write(new Date().getFullYear())</script> - 2018 © All rights reserved.
                     </div>
                     <div class="col-sm-6">
                         <div class="text-sm-end d-none d-sm-block">
-                            Created <i class="mdi mdi-heart text-danger"></i> by <a href="#" target="_blank" class="text-reset">HassanNid: 06.68.28.33.63</a>
+                            Created <i class="mdi text-danger"></i> by <a href="#" target="_blank" class="text-reset">HassanNid: 06.68.28.33.63</a>
                         </div>
                     </div>
                 </div>

@@ -231,31 +231,28 @@
     </div>
 </div>
 <div class="row">
-
-    <div class="col-md-2">
-        <div class="float-end">
-            <div class="mb-3">
-                <form method="get" action="{{ url()->current() }}" id="filterForm">
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="status[]" value="EnAttente" id="status_enattente" class="form-check-input" {{ in_array('EnAttente', Request::input('status', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="status_enattente">EnAttente</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="status[]" value="PartPayée" id="status_partpayee" class="form-check-input" {{ in_array('PartPayée', Request::input('status', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="status_partpayee">PartPayée</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="status[]" value="Réglée" id="status_reglee" class="form-check-input" {{ in_array('Réglée', Request::input('status', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="status_reglee">Réglée</label>
-                        </div>
+    <div class="col-md-12">
+        <div class="mb-3">
+            <form method="get" action="{{ url()->current() }}" id="filterForm">
+                <div class="form-group d-flex flex-wrap">
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="status[]" value="EnAttente" id="status_enattente" class="form-check-input" {{ in_array('EnAttente', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_enattente">EnAttente</label>
                     </div>
-                </form>
-            </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="status[]" value="PartPayée" id="status_partpayee" class="form-check-input" {{ in_array('PartPayée', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_partpayee">PartPayée</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="status[]" value="Réglée" id="status_reglee" class="form-check-input" {{ in_array('Réglée', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_reglee">Réglée</label>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-
 </div>
+
 
 
 

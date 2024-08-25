@@ -180,17 +180,60 @@
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
                         <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-                            Affichage de 1 à 10 sur 12 entrées
-                        </div>
+                                 Affichage de 1 à 10 sur 12 entrées                        </div>
                     </div>
                     <div class="col-sm-12 col-md-7">
                         <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                            {{ $payments->links('pagination::bootstrap-4') }}
+                            <ul class="pagination">
+                                <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
+                                    <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0" class="page-link">
+                                        Previous</a>
+                                    </li>
+                                    <li class="paginate_button page-item active">
+                                        <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                    </li>
+                                    <li class="paginate_button page-item ">
+                                        <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                                    </li>
+                                    <li class="paginate_button page-item next" id="DataTables_Table_0_next">
+                                        <a href="#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0" class="page-link">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
 
             </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="mb-3">
+            <form method="get" action="{{ url()->current() }}" id="filterForm">
+                <div class="form-group d-flex flex-wrap">
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="mode_payment[]" value="Espèce" id="mode_payment_Espèce" class="form-check-input" {{ in_array('Espèce', Request::input('mode_payment', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="mode_payment_Espèce">Espèce</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="mode_payment[]" value="Chèque" id="mode_payment_Chèque" class="form-check-input" {{ in_array('Chèque', Request::input('mode_payment', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="mode_payment_Chèque">Chèque</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="mode_payment[]" value="VirBancaire" id="mode_payment_VirBancaire" class="form-check-input" {{ in_array('VirBancaire', Request::input('mode_payment', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="mode_payment_VirBancaire">Virement Bancaire</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="mode_payment[]" value="Carte de Crédit" id="mode_payment_Carte" class="form-check-input" {{ in_array('Carte de Crédit', Request::input('mode_payment', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="mode_payment_Carte">Carte de Crédit</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="mode_payment[]" value="Autre" id="mode_payment_Autre" class="form-check-input" {{ in_array('Autre', Request::input('mode_payment', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="mode_payment_Autre">Autre</label>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -225,5 +268,17 @@
         });
     });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Soumet le formulaire chaque fois qu'une case est cochée ou décochée
+        document.querySelectorAll('#filterForm input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                document.getElementById('filterForm').submit();
+            });
+        });
+    });
+</script>
+
 
 @endsection
