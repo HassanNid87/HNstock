@@ -22,7 +22,9 @@ class Sale extends Model
             'mremise',
             'mttc',
             'client_id',
-            'montant_restant'
+            'montant_restant',
+            'avance',
+            'notes',
 
 
 
