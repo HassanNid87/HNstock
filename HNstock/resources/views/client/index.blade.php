@@ -23,7 +23,6 @@
         <a href="{{ route('clients.create') }}" title="Nouveau Client">
             <button type="button" class="btn btn-success waves-effect waves-light">
                 <i class="mdi mdi-plus me-1"></i>
-                Nouveau Client
             </button>
         </a>
     </div>

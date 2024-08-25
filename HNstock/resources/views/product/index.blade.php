@@ -4,10 +4,6 @@
 
 @section('content')
 
-
-
-
-
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -24,6 +20,37 @@
             </div>
         </div>
     </div>
+    <div class="row mb-3">
+        <!-- Colonne du Bouton Nouveau Produit -->
+        <div class="col-sm-12 col-md-4">
+            <a href="{{ route('products.create') }}" class="btn btn-success waves-effect waves-light">
+                <i class="mdi mdi-plus me-1"></i>
+            </a>
+        </div>
+
+        <!-- Colonne du Filtre par Catégorie -->
+        <div class="col-sm-12 col-md-4 d-flex align-items-center">
+            <form method="get" action="{{ route('products.index') }}" id="categoryForm" class="d-flex w-100">
+                <select id="category-filter" name="category" class="form-control form-control-sm w-100" aria-controls="DataTables_Table_0">
+                    <option value="">Select Category</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </form>
+        </div>
+
+        <!-- Colonne du Filtre de Recherche -->
+        <div class="col-sm-12 col-md-4 d-flex align-items-center">
+            <form method="get" action="{{ route('products.index') }}" id="searchForm" class="d-flex w-100">
+                <input type="search" name="code" id="code" class="form-control form-control-sm w-100"
+                    placeholder="Code / Nom / Description" value="{{ request()->input('code') }}" aria-controls="DataTables_Table_0">
+                <input type="hidden" name="tab" value="list">
+            </form>
+        </div>
+    </div>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" id="product-tabs" role="tablist">
         <li class="nav-item" role="presentation">
@@ -38,39 +65,6 @@
     <div class="tab-content mt-4" id="product-tabs-content">
         <!-- List Tab -->
         <div class="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
-            <div class="row mb-3">
-                <!-- Colonne du Bouton Nouveau Produit -->
-                <div class="col-sm-12 col-md-4">
-                    <a href="{{ route('products.create') }}" class="btn btn-success waves-effect waves-light">
-                        <i class="mdi mdi-plus me-1"></i>
-                        Nouveau Produit
-                    </a>
-                </div>
-
-                <!-- Colonne du Filtre par Catégorie -->
-                <div class="col-sm-12 col-md-4 d-flex align-items-center">
-                    <form method="get" action="{{ route('products.index') }}" id="categoryForm" class="d-flex w-100">
-                        <select id="category-filter" name="category" class="form-control form-control-sm w-100" aria-controls="DataTables_Table_0">
-                            <option value="">Select Category</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
-                </div>
-
-                <!-- Colonne du Filtre de Recherche -->
-                <div class="col-sm-12 col-md-4 d-flex align-items-center">
-                    <form method="get" action="{{ route('products.index') }}" id="searchForm" class="d-flex w-100">
-                        <input type="search" name="code" id="code" class="form-control form-control-sm w-100"
-                            placeholder="Code / Nom / Description" value="{{ request()->input('code') }}" aria-controls="DataTables_Table_0">
-                        <input type="hidden" name="tab" value="list">
-                    </form>
-                </div>
-            </div>
-
 
             <div class="table-responsive mb-4">
                 <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">

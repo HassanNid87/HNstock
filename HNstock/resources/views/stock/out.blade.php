@@ -20,59 +20,66 @@
 <div class="row">
     <div class="col-lg-12">
 
-        <div class="d-inline-flex">
-            <a href="{{ route('stocks.index') }}" title="Add Stock">
-                <button type="button" class="btn btn-success waves-effect waves-light mb-3 me-2">
-                    <i class="mdi mdi-plus me-1"></i>
-                    Retour au Stock
-                </button>
-            </a>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <form method="get" id="dateFilterForm" action="{{ url()->current() }}">
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
-                        <input type="text" class="form-control text-start" placeholder="From" name="start_date" id="start_date" value="{{ request('start_date') }}" autocomplete="off" autocorrect="off">
-                        <input type="text" class="form-control text-start" placeholder="To" name="end_date" id="end_date" value="{{ request('end_date') }}" autocomplete="off" autocorrect="off">
-                        <button type="submit" class="btn btn-primary">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-inline-flex">
+                    <a href="{{ route('stocks.index') }}" title="Retour au Stock">
+                        <button type="button" class="btn btn-success waves-effect waves-light me-2">
+                            <i class="mdi mdi-eye me-1"></i> <!-- Nouvelle icône -->
+                            Stock Réel
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <!-- Formulaire pour le filtre de date (50%) -->
+                <div class="col-md-6">
+                    <form method="get" id="dateFilterForm" action="{{ url()->current() }}" class="d-flex align-items-center">
+                        <div class="input-daterange input-group w-100" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
+                            <input type="text" class="form-control text-start form-control-sm" placeholder="From" name="start_date" id="start_date" value="{{ request('start_date') }}" autocomplete="off" autocorrect="off">
+                            <input type="text" class="form-control text-start form-control-sm" placeholder="To" name="end_date" id="end_date" value="{{ request('end_date') }}" autocomplete="off" autocorrect="off">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm ms-2">
                             <i class="mdi mdi-filter-variant"></i>
                         </button>
-                        <a class="btn btn-secondary" href="{{ route('stock.out') }}" title="Reset">
+                        <a class="btn btn-secondary btn-sm ms-2" href="{{ route('stock.out') }}" title="Reset">
                             <i class="fas fa-redo"></i>
                         </a>
-                    </div>
-                </form>
-            </div>
-        </div>
+                    </form>
+                </div>
 
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <form method="get" id="categoryFilterForm">
-                    <div class="dataTables_length" id="DataTables_Table_0_length">
-                        <label class="d-flex align-items-center">
-                            <select id="category-filter" name="category" class="form-control form-control-sm me-2 w-auto" aria-controls="DataTables_Table_0">
-                                <option value="">Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </label>
+                <!-- Filtre pour la catégorie et la zone de recherche (50%) -->
+                <div class="col-md-6">
+                    <div class="row">
+                        <!-- Formulaire pour le filtre de catégorie (50% de la moitié) -->
+                        <div class="col-md-6">
+                            <form method="get" id="categoryFilterForm" class="d-flex align-items-center">
+                                <select id="category-filter" name="category" class="form-control form-control-sm w-100" aria-controls="DataTables_Table_0">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </div>
+
+                        <!-- Formulaire pour le filtre par nom (50% de la moitié) -->
+                        <div class="col-md-6">
+                            <form method="get" id="nameFilterForm" class="d-flex align-items-center">
+                                <input type="search" name="name" id="name-filter" class="form-control form-control-sm w-100"
+                                       placeholder="CodeBarre / Name / Description" value="{{ Request::input('name') }}" aria-controls="DataTables_Table_0">
+                            </form>
+                        </div>
                     </div>
-                </form>
-            </div>
-            <div class="col-sm-12 col-md-6">
-                <form method="get" id="nameFilterForm">
-                    <div class="dataTables_length" id="DataTables_Table_0_length">
-                        <label class="d-flex align-items-center">
-                            <input type="search" name="name" id="name-filter" class="form-control form-control-sm me-2 w-auto"
-                                   placeholder="CodeBarre / Name / Description" value="{{ Request::input('name') }}" aria-controls="DataTables_Table_0">
-                        </label>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
+<br>
+
 
         <div class="table-responsive mb-4">
             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
