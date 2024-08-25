@@ -254,9 +254,7 @@
                             <div class="flex-shrink-0">
                                 <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                             </div>
-
                         </div>
-
                     </div>
                 </a>
 
@@ -304,9 +302,30 @@
                                 value="{{ old('mttc', $sale->mttc) }}" step="0.01" readonly>
                                 </div>
                             </div>
+
+                            <!-- Champs "Avance" et "Notes" -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label for="avance" class="form-label">Avance</label>
+                                        <input type="number" name="avance" id="avance" class="form-control"
+                                        value="{{ old('avance', $sale->avance) }}" step="0.01">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="mb-3">
+                                        <label for="notes" class="form-label">Notes</label>
+                                        <textarea name="notes" id="notes" class="form-control">{{ old('notes', $sale->notes) }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fin des champs "Avance" et "Notes" -->
+
+                        </form>
                     </div>
                 </div>
             </div>
+
 
         <div class="row mb-4">
             <div class="col ms-auto">

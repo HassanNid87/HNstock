@@ -188,6 +188,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+
+                        <div class="mb-0">
+                            <label for="Notes" class="form-label">Notes</label>
+                            <textarea name="description" id="description" placeholder="Notes" class="form-control"></textarea>
+                        </div>
+
+                </div>
             </div>
         </div>
     </div>
