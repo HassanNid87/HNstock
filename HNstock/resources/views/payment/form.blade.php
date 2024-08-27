@@ -8,58 +8,60 @@
 
 @section('content')
 
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-flex align-items-center justify-content-between">
-                <h4 class="mb-0">{{ $isUpdate ? 'Editer Un Réglement' : 'Ajouter Un Réglement' }}</h4>
+    <form action="{{ $route }}" method="POST">
+        @csrf
+        @if ($isUpdate)
+            @method('PUT')
+        @endif
 
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="javascript: void(0);">Réglements</a></li>
-                        <li class="breadcrumb-item active">{{ $isUpdate ? 'Editer Un Réglement' : 'Ajouter Un Réglement' }}</li>
-                    </ol>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">{{ $isUpdate ? 'Editer Un Réglement' : 'Ajouter Un Réglement' }}</h4>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Réglements</a></li>
+                            <li class="breadcrumb-item active">{{ $isUpdate ? 'Editer Un Réglement' : 'Ajouter Un Réglement' }}</li>
+                        </ol>
+                    </div>
+
                 </div>
-
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div id="addproduct-accordion" class="custom-accordion">
-                <div class="card">
-                    <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse"
-                       aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
-                        <div class="p-4">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0 me-3">
-                                    <div class="avatar-xs">
-                                        <div class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                            01
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="addproduct-accordion" class="custom-accordion">
+                    <div class="card">
+                        <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse"
+                           aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
+                            <div class="p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar-xs">
+                                            <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                                01
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="flex-grow-1 overflow-hidden">
-                                    <h5 class="font-size-16 mb-1">Informations de Base</h5>
-                                    <p class="text-muted text-truncate mb-0">Remplissez toutes les informations
-                                        ci-dessous</p>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <h5 class="font-size-16 mb-1">Informations de Base</h5>
+                                        <p class="text-muted text-truncate mb-0">Remplissez toutes les informations
+                                            ci-dessous</p>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                    </div>
+
                                 </div>
 
                             </div>
+                        </a>
 
-                        </div>
-                    </a>
-
-                    <div id="addproduct-billinginfo-collapse" class="collapse show"
-                         data-bs-parent="#addproduct-accordion">
-                        <div class="p-4 border-top">
-                            <form action="{{ $route }}" method="POST">
-                                @csrf
-                                @if ($isUpdate)
-                                    @method('PUT')
-                                @endif
+                        <div id="addproduct-billinginfo-collapse" class="collapse show"
+                             data-bs-parent="#addproduct-accordion">
+                            <div class="p-4 border-top">
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-3">
@@ -132,12 +134,11 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                        <!-- Liste des factures -->
+                            </div>
+                            <!-- Liste des factures -->
 
-                        <div class="row">
-                            <div class="mb-3">
+                            <div class="mb-3 ps-relative">
+                                <div class="table-loading-indicator"></div>
                                 <table class="table" id="sales-table">
                                     <thead>
                                     <tr>
@@ -158,111 +159,142 @@
                         </div>
 
                     </div>
-
                 </div>
-            </div>
-            <div class="card">
-                <a href="#addproduct-metadata-collapse" class="text-dark collapsed" data-bs-toggle="collapse"
-                   aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-metadata-collapse">
-                    <div class="p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-xs">
-                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                        02
+                <div class="card">
+                    <a href="#addproduct-metadata-collapse" class="text-dark collapsed" data-bs-toggle="collapse"
+                       aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-metadata-collapse">
+                        <div class="p-4">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0 me-3">
+                                    <div class="avatar-xs">
+                                        <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                            02
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <h5 class="font-size-16 mb-1">Montants Totaux</h5>
+                                    <p class="text-muted text-truncate mb-0">les montants totaux calculés les factures
+                                        declient</p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </a>
+
+                    <div id="addproduct-metadata-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
+                        <div class="p-4 border-top">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="total_remaining" class="form-label">Total des Montants
+                                            Restants </label>
+                                        <input type="text" id="total_remaining" class="form-control" readonly></div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="total_selected" class="form-label">Total des Factures
+                                            Sélectionnées</label>
+                                        <input type="text" id="total_selected" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label for="difference" class="form-label">Solde</label>
+                                        <input type="text" id="difference" class="form-control" readonly>
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 overflow-hidden">
-                                <h5 class="font-size-16 mb-1">Montants Totaux</h5>
-                                <p class="text-muted text-truncate mb-0">les montants totaux calculés les factures
-                                    declient</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </a>
-
-                <div id="addproduct-metadata-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
-                    <div class="p-4 border-top">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="total_remaining" class="form-label">Total des Montants
-                                        Restants </label>
-                                    <input type="text" id="total_remaining" class="form-control" readonly></div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="total_selected" class="form-label">Total des Factures
-                                        Sélectionnées</label>
-                                    <input type="text" id="total_selected" class="form-control" readonly>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="mb-3">
-                                    <label for="difference" class="form-label">Solde</label>
-                                    <input type="text" id="difference" class="form-control" readonly>
-                                </div>
-                            </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
-
-            <div class="row mb-4">
-                <div class="col ms-auto">
-                    <div class="d-flex flex-reverse flex-wrap gap-2">
-                        <a href="{{ route('payments.index') }}" class="btn btn-secondary" title="Liste Factures">
-                            <i class="fas fa-list"></i>
-                        </a>
-                        <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
-                        <a href="#" class="btn btn-success" t> <i class="uil uil-file-alt">
-                                <button type="submit">
-                                    {{ $isUpdate ? 'Update' : 'Create' }}
-                                </button>
-                            </i> </a>
-                    </div>
-                </div> <!-- end col -->
+                <div class="row mb-4">
+                    <div class="col ms-auto">
+                        <div class="d-flex flex-reverse flex-wrap gap-2">
+                            <a href="{{ route('payments.index') }}" class="btn btn-secondary" title="Liste Factures">
+                                <i class="fas fa-list"></i>
+                            </a>
+                            <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="uil uil-file-alt"></i>
+                                {{ $isUpdate ? 'Update' : 'Create' }}
+                            </button>
+                        </div>
+                    </div> <!-- end col -->
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 
 
     <!-- Script JavaScript pour filtrer les factures -->
     <script>
+        const salesTable = $("#sales-table");
+        const salesTableBody = $("#sales-list");
+        const tableLoadingIndicator = $(".table-loading-indicator");
+        const clientIdInput = document.querySelector("#client_id");
+
+
+        const clientSalesCache = {};
+        const getSales = async (clientId, skipLoading = false) => {
+            if (!skipLoading) {
+                salesTableBody.html(`<tr><td colspan="6">${loadingHtml}</td></tr>`);
+            }
+
+            return new Promise((resolve, reject) => {
+                const cachedSales = clientSalesCache[clientId];
+                if (cachedSales) {
+                    if (skipLoading) {
+                        resolve(cachedSales);
+                        return;
+                    }
+
+                    setTimeout(() => resolve(cachedSales), 200)
+                    return;
+                }
+
+                const url = "{{ route('clients.sales' , ['client' => -1]) }}".replace("-1", clientId);
+                $.getJSON(url, {}, (data) => {
+                    clientSalesCache[clientId] = data.sales;
+                    resolve(data.sales);
+                }).fail(() => {
+                    reject();
+                    salesTable.html(`<div class="alert alert-danger">Request failed! Please refresh the page and retry again...</div>`);
+                });
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             var totalAmount = 0; // Montant total de paiement
             var today = new Date().toISOString().split('T')[0]; // Obtenir la date actuelle au format 'YYYY-MM-DD'
             document.getElementById('date_payment').value = today; // Définir la valeur par défaut du champ "date_payment"
 
-
             // Quand le client est changé
-            document.getElementById('client_id').addEventListener('change', function () {
-                var clientId = this.value;
-                var salesTableBody = document.getElementById('sales-list');
-                salesTableBody.innerHTML = ''; // Vider le tableau actuel des factures
-                totalAmount = parseFloat(document.getElementById('montant').value) || 0; // Montant total de paiement
+            clientIdInput.addEventListener('change', async function (e) {
+                const clientId = this.value;
+                if (isEmpty(clientId)) {
+                    return;
+                }
+
                 var remainingAmount = totalAmount; // Montant restant à appliquer sur les factures
                 var totalRemainingAmount = 0; // Montant total des montants restants de toutes les factures
 
-                var salesItems = @json($sales); // Charger toutes les ventes
-
+                let newHtml = '';
+                const salesItems = await getSales(clientId, e.detail?.skipLoading); // Charger toutes les ventes
                 salesItems.forEach(function (sale) {
-                    if (sale.client_id == clientId && (sale.status === 'EnAttente' || sale.status === 'PartPayée')) { // Filtrer par statuts 'Attente' et 'Partiellement Payée'
+                    if ((sale.status === 'EnAttente' || sale.status === 'PartPayée')) { // Filtrer par statuts 'Attente' et 'Partiellement Payée'
                         totalRemainingAmount += sale.montant_restant; // Ajouter au total des montants restants
-                        var amountToApply = Math.min(sale.montant_restant, remainingAmount); // Calculer le montant à appliquer pour cette facture
+                        const amountToApply = Math.min(sale.montant_restant, remainingAmount); // Calculer le montant à appliquer pour cette facture
                         remainingAmount -= amountToApply; // Réduire le montant restant
 
-                        var isChecked = amountToApply > 0 ? 'checked' : ''; // Sélectionner la facture si elle reçoit un paiement
-
-                        var row = `
-                    <tr>
+                        const isChecked = amountToApply > 0 ? 'checked' : ''; // Sélectionner la facture si elle reçoit un paiement
+                        newHtml += `<tr>
                         <td>
                             <input class="form-check-input" type="checkbox" name="sales[]" value="${sale.id}" data-amount="${sale.montant_restant}" id="sale${sale.id}" ${isChecked}>
                         </td>
@@ -275,9 +307,7 @@
                         <td>${sale.mttc}</td>
                         <td>${sale.montant_restant}</td>
                         <td>${amountToApply.toFixed(2)}</td> <!-- Afficher le montant appliqué -->
-                    </tr>
-                `;
-                        salesTableBody.innerHTML += row;
+                    </tr>`;
 
                         if (remainingAmount <= 0) {
                             return false; // Arrêter la boucle si tout le montant a été utilisé
@@ -285,6 +315,7 @@
                     }
                 });
 
+                salesTableBody.html(newHtml);
                 // Mettre à jour le total des montants restants et la différence
                 document.getElementById('total_remaining').value = totalRemainingAmount.toFixed(2);
                 updateTotalAndDifference();
@@ -293,7 +324,11 @@
             // Quand le montant du paiement est modifié
             document.getElementById('montant').addEventListener('input', function () {
                 totalAmount = parseFloat(this.value) || 0; // Réinitialiser le montant total de paiement
-                document.getElementById('client_id').dispatchEvent(new Event('change')); // Réexécuter la logique pour mettre à jour le tableau
+                clientIdInput.dispatchEvent(new CustomEvent('change', {
+                    detail: {
+                        skipLoading: true
+                    }
+                })); // Réexécuter la logique pour mettre à jour le tableau
             });
 
             // Mettre à jour le total et la différence entre le montant payé et le total sélectionné
@@ -323,5 +358,11 @@
 
         });
 
+        $(document).ready(() => {
+            const initClientIdValue = clientIdInput.value;
+            if (isEmpty(initClientIdValue)) return;
+
+            clientIdInput.dispatchEvent(new Event('change')); // trigger by default when the client id is already selected
+        });
     </script>
 @endsection

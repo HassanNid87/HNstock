@@ -92,12 +92,6 @@ class PaymentController extends Controller
         // Récupérer tous les clients
         $clients = Client::all();
 
-        // Récupérer uniquement les ventes avec le statut 'Attente' ou 'Partiellement Payée' et les clients associés
-        $sales = Sale::whereIn('status', ['EnAttente', 'PartPayée'])->with('client')->get();
-
-        // Compter le nombre de paiements existants
-        $paymentCount = Payment::count() + 1;
-
         $payment = new Payment();
         // Formater le numéro de paiement
         $payment->fill([
@@ -106,10 +100,8 @@ class PaymentController extends Controller
         ]);
         // Créer une nouvelle instance de Payment
 
-
         $isUpdate = false;
-
-        return view('payment.form', compact('sales', 'clients', 'isUpdate', 'payment'));
+        return view('payment.form', compact('clients', 'isUpdate', 'payment'));
     }
 
 
@@ -190,17 +182,10 @@ class PaymentController extends Controller
         $clients = Client::all();
         $isUpdate = true;
 
-        // Récupérer les ventes associées au client du paiement en cours
-        $sales = Sale::where('client_id', $payment->client_id)
-            ->where('status', 'pending')
-            ->get();
-
         // Récupérer les ventes associées à ce paiement
-
         $selectedSales = $payment->details->pluck('sale_id')->toArray();
-        // dd($selectedSales);
 
-        return view('payment.form', compact('payment', 'clients', 'isUpdate', 'sales', 'selectedSales'));
+        return view('payment.form', compact('payment', 'clients', 'isUpdate', 'selectedSales'));
     }
 
 
