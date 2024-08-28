@@ -28,121 +28,127 @@
 
 @section('content')
 
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">{{ $isUpdate ? 'Editer Une Vente' : 'Ajouter Une Vente' }}</h4>
+    <form action="{{ $route }}" method="POST" id="saleForm" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0">{{ $isUpdate ? 'Editer Une Vente' : 'Ajouter Une Vente' }}</h4>
 
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Ventes</a></li>
-                    <li class="breadcrumb-item active">{{ $isUpdate ? 'Editer Une Vente' : 'Ajouter Une Vente' }}</li>
-                </ol>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ventes</a></li>
+                            <li class="breadcrumb-item active">{{ $isUpdate ? 'Editer Une Vente' : 'Ajouter Une Vente' }}</li>
+                        </ol>
+                    </div>
+
+                </div>
             </div>
-
         </div>
-    </div>
-</div>
-<div class="row">
+        <div class="row">
 
-    <div class="col-lg-12">
-        <div id="addproduct-accordion" class="custom-accordion">
-            <div class="card">
-                <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse" aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
-                    <div class="p-4">
+            <div class="col-lg-12">
+                <div id="addproduct-accordion" class="custom-accordion">
+                    <div class="card">
+                        <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse"
+                           aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
+                            <div class="p-4">
 
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-xs">
-                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                        01
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar-xs">
+                                            <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                                01
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 overflow-hidden">
-                                <h5 class="font-size-16 mb-1">Informations de Base</h5>
-                                <p class="text-muted text-truncate mb-0">Remplissez toutes les informations ci-dessous</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </a>
-
-                <div id="addproduct-billinginfo-collapse" class="collapse show" data-bs-parent="#addproduct-accordion">
-                    <div class="p-4 border-top">
-                        <form action="{{ $route }}" method="POST" id="saleForm" enctype="multipart/form-data">
-                            @csrf
-
-                            @if ($isUpdate)
-                                @method('PUT')
-                            @endif
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label for="NFact" class="form-label">NFact</label>
-                                    <input type="text" name="NFact" id="NFact" class="form-control"
-                                    value="{{ old('NFact', $sale->NFact) }}" readonly>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <h5 class="font-size-16 mb-1">Informations de Base</h5>
+                                        <p class="text-muted text-truncate mb-0">Remplissez toutes les informations
+                                            ci-dessous</p>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label for="DateFact" class="form-label">DateFact</label>
-                                        <input type="date" name="DateFact" id="DateFact" class="form-control"
-                                            value="{{ $sale->DateFact ?? date('Y-m-d') }}">
+                                    <div class="flex-shrink-0">
+                                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label for="client_id" class="form-label">Client</label>
-                                        <select name="client_id" id="client_id" class="form-select">
-                                            <option value="">Sélectionnez un client</option>
-                                            @foreach ($clients as $client)
-                                                <option @selected(old('client_id', $sale->client_id) == $client->id) value="{{ $client->id }}">
-                                                    {{ $client->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                     <!--   </form>-->
-                    </div>
-                </div>
-                </div>
-            </div>
 
-
-            <div class="card">
-                <a href="#addproduct-img-collapse" class="text-dark collapsed" data-bs-toggle="collapse" aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-img-collapse">
-                    <div class="p-4">
-
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-xs">
-                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                        02
-                                    </div>
                                 </div>
+
                             </div>
-                            <div class="flex-grow-1 overflow-hidden">
-                                <h5 class="font-size-16 mb-1">Lignes Facture</h5>
-                                <p class="text-muted text-truncate mb-0">ajouter et  gérer les produits de la facture</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                        </a>
+
+                        <div id="addproduct-billinginfo-collapse" class="collapse show"
+                             data-bs-parent="#addproduct-accordion">
+                            <div class="p-4 border-top">
+                                @csrf
+
+                                @if ($isUpdate)
+                                    @method('PUT')
+                                @endif
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label for="NFact" class="form-label">NFact</label>
+                                            <input type="text" name="NFact" id="NFact" class="form-control"
+                                                   value="{{ old('NFact', $sale->NFact) }}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label for="DateFact" class="form-label">DateFact</label>
+                                            <input type="date" name="DateFact" id="DateFact" class="form-control"
+                                                   value="{{ $sale->DateFact ?? date('Y-m-d') }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label for="client_id" class="form-label">Client</label>
+                                            <select name="client_id" id="client_id" class="form-select">
+                                                <option value="">Sélectionnez un client</option>
+                                                @foreach ($clients as $client)
+                                                    <option
+                                                        @selected(old('client_id', $sale->client_id) == $client->id) value="{{ $client->id }}">
+                                                        {{ $client->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--   </form>-->
+                                </div>
                             </div>
                         </div>
                     </div>
-                </a>
-                <div id="addproduct-img-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
-                    <div class="p-4 border-top">
-                        <form action="#" class="dropzone dz-clickable">
-                            <div class="dz-message needsclick">
-                                <!-- table ligne facture -->
-                                <table class="table">
-                                    <thead>
+
+
+                    <div class="card">
+                        <a href="#addproduct-img-collapse" class="text-dark collapsed" data-bs-toggle="collapse"
+                           aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-img-collapse">
+                            <div class="p-4">
+
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar-xs">
+                                            <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                                02
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <h5 class="font-size-16 mb-1">Lignes Facture</h5>
+                                        <p class="text-muted text-truncate mb-0">ajouter et gérer les produits de la
+                                            facture</p>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div id="addproduct-img-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
+                            <div class="p-4 border-top">
+                                <div class="dz-message needsclick">
+                                    <!-- table ligne facture -->
+                                    <table class="table">
+                                        <thead>
                                         <tr>
                                             <th>Code Barre</th>
                                             <th>Categorie</th>
@@ -153,200 +159,206 @@
                                             <th>Total</th>
                                             <th></th>
                                         </tr>
-                                    </thead>
-                                    <tbody id="sales-table-body">
+                                        </thead>
+                                        <tbody id="sales-table-body">
                                         @foreach ($sale->details as $index => $detail)
                                             <tr class="sale-row" data-index="{{ $index }}">
                                                 <td>
                                                     <input type="text" name="barcode[]" class="form-control barcode"
-                                                        value="{{ $detail->barcode }}" placeholder="Enter Barcode">
+                                                           value="{{ $detail->barcode }}" placeholder="Enter Barcode">
                                                 </td>
                                                 <td>
                                                     <select name="category_id[]" class="form-select category-select"
-                                                        data-index="{{ $index }}">
+                                                            data-index="{{ $index }}">
                                                         <option value="">Select Category</option>
                                                         @foreach ($categories as $category)
-                                                            <option @selected($detail->product && $detail->product->category_id == $category->id) value="{{ $category->id }}">
+                                                            <option
+                                                                @selected($detail->product && $detail->product->category_id == $category->id) value="{{ $category->id }}">
                                                                 {{ $category->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
                                                 <td>
                                                     <select name="product_id[]" class="form-select product-select"
-                                                        data-index="{{ $index }}">
+                                                            data-index="{{ $index }}">
                                                         <option value="">Select Product</option>
                                                         @foreach ($products as $product)
-                                                            <option @selected($detail->product_id == $product->id) data-price="{{ $product->priceV }}"
-                                                                data-category="{{ $product->category_id }}" value="{{ $product->id }}">
+                                                            <option
+                                                                @selected($detail->product_id == $product->id) data-price="{{ $product->priceV }}"
+                                                                data-category="{{ $product->category_id }}"
+                                                                value="{{ $product->id }}">
                                                                 {{ $product->name }}</option>
                                                         @endforeach
                                                     </select>
 
                                                 </td>
                                                 <td class="text-center">
-                                                    <img src="{{ getProductImage($detail->product) }}" class="product-image"
-                                                        data-index="{{ $index }}" style="max-width: 100px;">
+                                                    <img src="{{ getProductImage($detail->product) }}"
+                                                         class="product-image"
+                                                         data-index="{{ $index }}" style="max-width: 100px;">
                                                 </td>
                                                 <td>
-                                                    <input type="number" name="quantity[]" min="1" value="1"
-                                                        class="form-control quantity" value="{{ $detail->quantity }}">
+                                                    <input type="number" name="quantity[]" min="1"
+                                                           class="form-control quantity"
+                                                           value="{{ $detail->quantity }}">
                                                 </td>
                                                 <td>
-                                                    <input type="number" name="unit_price[]" class="form-control unit-price" step="0.01"
-                                                        value="{{ $detail->unit_price }}">
+                                                    <input type="number" name="unit_price[]"
+                                                           class="form-control unit-price"
+                                                           step="0.01"
+                                                           value="{{ $detail->unit_price }}">
                                                 </td>
                                                 <td>
                                                     <input type="number" class="form-control total" name="total[]"
-                                                        value="{{ $detail->total }}" step="0.01" readonly>
+                                                           value="{{ $detail->total }}" step="0.01" readonly>
                                                 </td>
                                                 <td>
-                                                    <button @disabled($index === 0) class="btn btn-danger btn-rounded delete-product"
+                                                    <button
+                                                        @disabled($index === 0) class="btn btn-danger btn-rounded delete-product"
                                                         type="button">
                                                         <i class="uil uil-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    </tbody>
+                                        </tbody>
 
 
-                                </table>
+                                    </table>
 
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                         <!-- Bouton pour ajouter une nouvelle ligne -->
-                                        <button type="button" id="add-sale-row" class="btn btn-primary">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
                                 </div>
+                                <div class="row">
                                     <div class="col-lg-4">
-                                    <div class="mb-3">
+                                        <div class="mb-3">
+                                            <!-- Bouton pour ajouter une nouvelle ligne -->
+                                            <button type="button" id="add-sale-row" class="btn btn-primary">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
                                             <label for="stockmax" class="form-label">Montant HT</label>
                                             <input type="number" name="mht" id="mht" class="form-control"
-                                               value="{{ old('mht', $sale->mht) }}" step="0.01" readonly>
+                                                   value="{{ old('mht', $sale->mht) }}" step="0.01" readonly>
+                                        </div>
                                     </div>
-                                    </div>
+                                </div>
+                                <!--   </form>-->
                             </div>
-                         <!--   </form>-->
+
+                        </div>
                     </div>
 
-                </div>
-            </div>
-
-            <div class="card">
-                <a href="#addproduct-metadata-collapse" class="text-dark collapsed" data-bs-toggle="collapse" aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-metadata-collapse">
-                    <div class="p-4">
-                        <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0 me-3">
-                                <div class="avatar-xs">
-                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
-                                        03
+                    <div class="card">
+                        <a href="#addproduct-metadata-collapse" class="text-dark collapsed" data-bs-toggle="collapse"
+                           aria-haspopup="true" aria-expanded="false" aria-controls="addproduct-metadata-collapse">
+                            <div class="p-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0 me-3">
+                                        <div class="avatar-xs">
+                                            <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                                03
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <h5 class="font-size-16 mb-1">Montants Totaux</h5>
+                                        <p class="text-muted text-truncate mb-0">les montants totaux calculés pour la
+                                            facture</p>
+                                    </div>
+                                    <div class="flex-shrink-0">
+                                        <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
                                     </div>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 overflow-hidden">
-                                <h5 class="font-size-16 mb-1">Montants Totaux</h5>
-                                <p class="text-muted text-truncate mb-0">les montants totaux calculés pour la facture</p>
-                            </div>
-                            <div class="flex-shrink-0">
-                                <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                        </a>
+
+                        <div id="addproduct-metadata-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
+                            <div class="p-4 border-top">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="ttva" class="form-label">Taux Tva</label>
+                                            <input type="number" name="ttva" value="0" id="ttva" class="form-control"
+                                                   value="{{ old('ttva', $sale->ttva) }}" step="0.01">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="mtva" class="form-label">Montant TVA</label>
+                                            <input type="number" name="mtva" id="mtva" class="form-control"
+                                                   value="{{ old('mtva', $sale->mtva) }}" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="tremise" class="form-label">Taux Remise</label>
+                                            <input type="number" name="tremise" id="tremise" value="0"
+                                                   class="form-control"
+                                                   value="{{ old('tremise', $sale->tremise) }}" step="0.01">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="mremise" class="form-label">Montant Remise</label>
+                                            <input type="number" name="mremise" id="mremise" class="form-control"
+                                                   value="{{ old('mremise', $sale->mremise) }}" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mb-3">
+                                        <label for="mttc" class="form-label">Montant TTC</label>
+                                        <input type="number" name="mttc" id="mttc" class="form-control"
+                                               value="{{ old('mttc', $sale->mttc) }}" step="0.01" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Champs "Avance" et "Notes" -->
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="avance" class="form-label">Avance</label>
+                                            <input type="number" name="avance" id="avance" class="form-control"
+                                                   value="{{ old('avance', $sale->avance) }}" step="0.01">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="mb-3">
+                                            <label for="notes" class="form-label">Notes</label>
+                                            <textarea name="notes" id="notes"
+                                                      class="form-control">{{ old('notes', $sale->notes) }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Fin des champs "Avance" et "Notes" -->
                             </div>
                         </div>
                     </div>
-                </a>
 
-                <div id="addproduct-metadata-collapse" class="collapse" data-bs-parent="#addproduct-accordion">
-                    <div class="p-4 border-top">
-                        <form>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <label for="ttva" class="form-label">Taux Tva</label>
-                                        <input type="number" name="ttva" value="0" id="ttva" class="form-control"
-                                        value="{{ old('ttva', $sale->ttva) }}" step="0.01">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <label for="mtva" class="form-label">Montant TVA</label>
-                                        <input type="number" name="mtva" id="mtva" class="form-control"
-                                        value="{{ old('mtva', $sale->mtva) }}" step="0.01">
-                                    </div>
-                                </div>
+                    <div class="row mb-4">
+                        <div class="col ms-auto">
+                            <div class="d-flex flex-reverse flex-wrap gap-2">
+                                <a href="{{ route('sales.index') }}" class="btn btn-secondary" title="Liste Factures">
+                                    <i class="fas fa-list"></i>
+                                </a>
+                                <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="uil uil-file-alt"></i>
+                                    {{ $isUpdate ? 'Update' : 'Create' }}
+                                </button>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <label for="tremise" class="form-label">Taux Remise</label>
-                                        <input type="number" name="tremise" id="tremise" value="0" class="form-control"
-                                        value="{{ old('tremise', $sale->tremise) }}" step="0.01">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <label for="mremise" class="form-label">Montant Remise</label>
-                                        <input type="number" name="mremise" id="mremise" class="form-control"
-                                        value="{{ old('mremise', $sale->mremise) }}" step="0.01">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3">
-                                    <label for="mttc" class="form-label">Montant TTC</label>
-                                    <input type="number" name="mttc" id="mttc" class="form-control"
-                                value="{{ old('mttc', $sale->mttc) }}" step="0.01" readonly>
-                                </div>
-                            </div>
-
-                            <!-- Champs "Avance" et "Notes" -->
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <label for="avance" class="form-label">Avance</label>
-                                        <input type="number" name="avance" id="avance" class="form-control"
-                                        value="{{ old('avance', $sale->avance) }}" step="0.01">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="mb-3">
-                                        <label for="notes" class="form-label">Notes</label>
-                                        <textarea name="notes" id="notes" class="form-control">{{ old('notes', $sale->notes) }}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Fin des champs "Avance" et "Notes" -->
-
-                        </form>
+                        </div> <!-- end col -->
                     </div>
                 </div>
-            </div>
-
-                <div class="row mb-4">
-                    <div class="col ms-auto">
-                        <div class="d-flex flex-reverse flex-wrap gap-2">
-                            <a href="{{ route('sales.index') }}" class="btn btn-secondary" title="Liste Factures">
-                                <i class="fas fa-list"></i>
-                            </a>
-                            <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
-                            <button type="submit" class="btn btn-success">
-                                <i class="uil uil-file-alt"></i>
-                                {{ $isUpdate ? 'Update' : 'Create' }}
-                            </button>
-                        </div>
-                    </div> <!-- end col -->
-                </div>
-                </form>
             </div>
         </div>
-    </div>
-
-
-
+    </form>
 
     <script>
         const productsImages = @json($products->keyBy('id')->map(fn($item) => $item->image));
