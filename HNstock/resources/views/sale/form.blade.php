@@ -198,7 +198,7 @@
                                                          data-index="{{ $index }}" style="max-width: 100px;">
                                                 </td>
                                                 <td>
-                                                    <input type="number" name="quantity[]" min="1" value="1"
+                                                    <input type="number" name="quantity[]" min="1"
                                                            class="form-control quantity"
                                                            value="{{ $detail->quantity }}">
                                                 </td>
@@ -349,20 +349,20 @@
     <script>
         const productsImages = @json($products->keyBy('id')->map(fn($item) => $item->image));
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleButton = document.getElementById('toggle-amounts');
-            const additionalAmounts = document.getElementById('additional-amounts');
-
-            toggleButton.addEventListener('click', function () {
-                if (additionalAmounts.style.display === 'none') {
-                    additionalAmounts.style.display = 'block';
-                    toggleButton.innerHTML = '<i class="fas fa-minus"></i> '; // Change the button text
-                } else {
-                    additionalAmounts.style.display = 'none';
-                    toggleButton.innerHTML = '<i class="fas fa-plus"></i> '; // Change the button text
-                }
-            });
-        });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const toggleButton = document.getElementById('toggle-amounts');
+        //     const additionalAmounts = document.getElementById('additional-amounts');
+        //
+        //     toggleButton.addEventListener('click', function () {
+        //         if (additionalAmounts.style.display === 'none') {
+        //             additionalAmounts.style.display = 'block';
+        //             toggleButton.innerHTML = '<i class="fas fa-minus"></i> '; // Change the button text
+        //         } else {
+        //             additionalAmounts.style.display = 'none';
+        //             toggleButton.innerHTML = '<i class="fas fa-plus"></i> '; // Change the button text
+        //         }
+        //     });
+        // });
 
 
         // Initialiser le tableau lors du chargement du document
@@ -427,23 +427,16 @@
                 .removeAttr('style')
                 .attr('data-index', newRowIndex);
 
-            const deleteBtn = newRow
-                .children('td')
-                .last()
-                .children('.delete-product');
+            const deleteBtn = newRow.find('.delete-product');
             deleteBtn.removeAttr("disabled");
 
-            const categorySelect = newRow
-                .children("td")
-                .eq(1)
-                .children('.category-select');
+            const categorySelect = newRow.find(".category-select");
             categorySelect.attr('data-index', newRowIndex);
+            categorySelect.val(null);
 
-            const productSelect = newRow
-                .children("td")
-                .eq(2)
-                .children('.product-select');
+            const productSelect = newRow.find(".product-select");
             productSelect.attr('data-index', newRowIndex);
+            productSelect.val(null);
 
             $('#sales-table-body').append(newRow);
             resetRow(newRow);
@@ -504,8 +497,6 @@
 
             // Lorsqu'un produit est sélectionné, mettez à jour l'image
             $(document).on('change', '.product-select', function () {
-                console.log(this);
-
                 updateProductImage(this);
             });
 
