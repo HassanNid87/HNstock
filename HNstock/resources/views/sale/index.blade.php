@@ -5,88 +5,78 @@
 <div class="row">
     <div class="col-12">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">Liste Ventes</h4>
+            <h4 class="mb-0">Liste des Ventes</h4>
 
             <div class="page-title-right">
                 <ol class="breadcrumb m-0">
                     <li class="breadcrumb-item"><a href="javascript: void(0);">Ventes</a></li>
-                    <li class="breadcrumb-item active">Liste Ventes</li>
+                    <li class="breadcrumb-item active">Liste des Ventes</li>
                 </ol>
             </div>
 
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <div>
-            <a href="{{ route('sales.create') }}" title="Nouvelle Facture">
-                <button type="button" class="btn btn-success waves-effect waves-light mb-3">
-                    <i class="mdi mdi-plus me-1">
-                        </i>
-                        Nouvelle Facture
+
+<div class="col-lg-12">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="col-md-4">
+            <div>
+                <a href="{{ route('sales.create') }}" title="Nouvelle Facture">
+                    <button type="button" class="btn btn-success waves-effect waves-light me-2">
+                    <i class="mdi mdi-plus me-1"></i> <!-- Nouvelle icône -->
+
                 </button>
             </a>
         </div>
     </div>
-    <div class="col-md-8">
-        <div class="float-end">
-            <div class="mb-3">
-                <form method="get" action="{{ url()->current() }}">
-                    <div class="input-daterange input-group" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
-                        <input type="text" class="form-control text-start" placeholder="From" name="start_date" value="{{ request('start_date') }}" autocomplete="off" autocorrect="off">
-                        <input type="text" class="form-control text-start" placeholder="To" name="end_date" value="{{ request('end_date') }}" autocomplete="off" autocorrect="off">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="mdi mdi-filter-variant"></i>
-                        </button>
-                        <a class="btn btn-secondary" href="{{ route('sales.index') }}" title="Reset">
-                            <i class="fas fa-redo"></i>
-                        </a>
-                    </div>
-                </form>
+
+    <div class="row">
+        <!-- Formulaire pour le filtre de date (50%) -->
+        <div class="col-md-6">
+            <form method="get" id="dateFilterForm" action="{{ url()->current() }}" class="d-flex align-items-center">
+                <div class="input-daterange input-group w-100" id="datepicker6" data-date-format="yyyy-mm-dd" data-date-autoclose="true">
+                    <input type="text" class="form-control text-start form-control-sm" placeholder="From" name="start_date" id="start_date" value="{{ request('start_date') }}" autocomplete="off" autocorrect="off">
+                    <input type="text" class="form-control text-start form-control-sm" placeholder="To" name="end_date" id="end_date" value="{{ request('end_date') }}" autocomplete="off" autocorrect="off">
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm ms-2">
+                    <i class="mdi mdi-filter-variant"></i>
+                </button>
+                <a class="btn btn-secondary btn-sm ms-2" href="{{ route('sales.index') }}" title="Reset">
+                    <i class="fas fa-redo"></i>
+                </a>
+            </form>
+        </div>
+
+        <!-- Filtre pour le code client et le numéro de facture (50%) -->
+        <div class="col-md-6">
+            <div class="row">
+                <!-- Formulaire pour le filtre de code client (50% de la moitié) -->
+                <div class="col-md-6">
+                    <form method="get" id="clientForm" class="d-flex align-items-center">
+                        <input type="search" name="code" id="code" class="form-control form-control-sm w-100"
+                               placeholder="Client Code" value="{{ Request::input('code') }}" aria-controls="DataTables_Table_0">
+                    </form>
+                </div>
+
+                <!-- Formulaire pour le filtre de numéro de facture (50% de la moitié) -->
+                <div class="col-md-6">
+                    <form method="get" id="searchForm" class="d-flex align-items-center">
+                        <input type="search" name="NFacture" id="NFacture" class="form-control form-control-sm w-100"
+                               placeholder="N° Facture" value="{{ Request::input('NFacture') }}" aria-controls="DataTables_Table_0">
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
+
+
 <div class="row">
     <div class="col-lg-12">
         <div class="table-responsive mb-4">
             <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
-                        <form method="get" id="clientForm">
-                            <div class="dataTables_length" id="DataTables_Table_0_length">
-                                <label>
-                                    <input type="search" name="code" id="code" class="form-control form-control-sm" placeholder="Client Code" value="{{ Request::input('code') }}" aria-controls="DataTables_Table_0">
-                                </label>
-                            </div>
-                        </form>
 
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-                        <form method="get" id="searchForm">
-                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
-                                <label>
-                                    <input type="search" name="NFacture" id="NFacture" class="form-control form-control-sm" placeholder="N° Facture" value="{{ Request::input('NFacture') }}" aria-controls="DataTables_Table_0">
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <!--<div class="row">
-                    <div class="col-sm-12 col-md-6">
-                        <div class="dataTables_length" id="DataTables_Table_0_length">
-                            <label>Show entries
-                                <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="custom-select custom-select-sm form-control form-control-sm form-select form-select-sm">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select> </label>
-                        </div>
-                     </div>
-               </div>-->
                     <div class="row">
                         <div class="col-sm-12">
                             <table class="table table-centered datatable dt-responsive nowrap table-card-list dataTable no-footer dtr-inline" style="border-collapse: collapse; border-spacing: 0px 12px; width: 100%;" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
@@ -231,31 +221,28 @@
     </div>
 </div>
 <div class="row">
-
-    <div class="col-md-2">
-        <div class="float-end">
-            <div class="mb-3">
-                <form method="get" action="{{ url()->current() }}" id="filterForm">
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="status[]" value="EnAttente" id="status_enattente" class="form-check-input" {{ in_array('EnAttente', Request::input('status', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="status_enattente">EnAttente</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="status[]" value="PartPayée" id="status_partpayee" class="form-check-input" {{ in_array('PartPayée', Request::input('status', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="status_partpayee">PartPayée</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="status[]" value="Réglée" id="status_reglee" class="form-check-input" {{ in_array('Réglée', Request::input('status', [])) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="status_reglee">Réglée</label>
-                        </div>
+    <div class="col-md-12">
+        <div class="mb-3">
+            <form method="get" action="{{ url()->current() }}" id="filterForm">
+                <div class="form-group d-flex flex-wrap">
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="status[]" value="EnAttente" id="status_enattente" class="form-check-input" {{ in_array('EnAttente', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_enattente">EnAttente</label>
                     </div>
-                </form>
-            </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="status[]" value="PartPayée" id="status_partpayee" class="form-check-input" {{ in_array('PartPayée', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_partpayee">PartPayée</label>
+                    </div>
+                    <div class="form-check me-3">
+                        <input type="checkbox" name="status[]" value="Réglée" id="status_reglee" class="form-check-input" {{ in_array('Réglée', Request::input('status', [])) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="status_reglee">Réglée</label>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-
 </div>
+
 
 
 

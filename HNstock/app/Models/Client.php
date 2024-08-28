@@ -20,6 +20,8 @@ class Client extends Model
         'solde',
         'debit',
         'credit',
+        'notes',
+
     ];
     public function payments()
     {
