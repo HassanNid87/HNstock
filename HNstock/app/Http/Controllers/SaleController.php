@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\CompanyInfo;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class SaleController extends Controller
@@ -50,11 +51,10 @@ class SaleController extends Controller
         }
 
 
-
-         // Filtrer par statut
-    if ($request->filled('status')) {
-        $query->whereIn('status', $request->status);
-    }
+        // Filtrer par statut
+        if ($request->filled('status')) {
+            $query->whereIn('status', $request->status);
+        }
 
         // Filtrer par date de début
         $query->where('DateFact', '>=', $startDate . ' 00:00:00');
@@ -87,9 +87,8 @@ class SaleController extends Controller
         }
 
         // Passer les données à la vue
-        return view('sale.index', compact('sales',   'clients', 'startDate', 'endDate'));
+        return view('sale.index', compact('sales', 'clients', 'startDate', 'endDate'));
     }
-
 
 
     // Générer automatiquement le numéro de facture
@@ -109,33 +108,44 @@ class SaleController extends Controller
     {
         $validatedData = $request->validated();
 
-        $sale = Sale::create($validatedData);
-
         $products = Product::whereIn('id', $request->product_id)->get();
+        if ($products->isEmpty()) {
+            return response()->json([
+                'status' => "error",
+                'message' => 'You should select some products'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $sale = Sale::create($validatedData);
+        $details = [];
+
         foreach ($products as $key => $product) {
             // Check stock availability
             if ($product->stock->quantity < $request->quantity[$key]) {
-                return redirect()->back()->with('error', 'Not enough stock available for product: ' . $product->name);
+                return response()->json([
+                    'status' => "error",
+                    'message' => 'Not enough stock available for product: ' . $product->name
+                ], Response::HTTP_BAD_REQUEST);
             }
 
             // Create sale detail
-            $detail = [
+            $details[] = [
                 'product_id' => $product->id,
                 'quantity' => $request->quantity[$key],
                 'unit_price' => $request->unit_price[$key],
                 'total' => $request->quantity[$key] * $request->unit_price[$key],
             ];
-            $sale->details()->create($detail);
 
             // Decrement the stock
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
 
-            // Calculer le montant restant comme étant égal au montant TTC
+        $sale->details()->createMany($details);
+        // Calculer le montant restant comme étant égal au montant TTC
         $sale->montant_restant = $sale->mttc;
         $sale->save();
 
-         // Recalcul du solde du client
+        // Recalcul du solde du client
         $client = $sale->client;
         $client->debit = $client->sales->sum('mttc');
         $client->solde = $client->debit - $client->credit;
@@ -184,37 +194,41 @@ class SaleController extends Controller
         $sale->details()->delete();
 
         // Create new sale details and adjust stock
+        $details = [];
         foreach ($request->product_id as $key => $productId) {
             $product = Product::findOrFail($productId);
 
             // Check stock availability
             if ($product->stock->quantity < $request->quantity[$key]) {
-                return redirect()->back()->with('error', 'Not enough stock available for product: ' . $product->name);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Not enough stock available for product: ' . $product->name
+                ]);
             }
 
-            $detail = [
+            $details[] = [
                 'product_id' => $productId,
                 // 'image' => $request->image[$key],
                 'quantity' => $request->quantity[$key],
                 'unit_price' => $request->unit_price[$key],
                 'total' => $request->quantity[$key] * $request->unit_price[$key],
             ];
-            $sale->details()->create($detail);
 
             // Decrement the stock
             $product->stock->decrement('quantity', $request->quantity[$key]);
         }
 
-            // Recalcul du solde du client
-            $client = $sale->client;
-            $client->debit = $client->sales->sum('mttc');
-            $client->solde = $client->debit - $client->credit;
-            $client->save();
+        $sale->details()->createMany($details);
 
+        // Recalcul du solde du client
+        $client = $sale->client;
+        $client->debit = $client->sales->sum('mttc');
+        $client->solde = $client->debit - $client->credit;
+        $client->save();
 
         $sale->save();
 
-        return redirect()->route('sales.index')->with('success', 'Sale updated successfully');
+        return response()->json(['status' => 'ok']);
     }
 
     public function destroy(Sale $sale)
@@ -224,11 +238,11 @@ class SaleController extends Controller
             $product = Product::findOrFail($detail->product_id);
             $product->stock->increment('quantity', $detail->quantity);
         }
-            // Recalcul du solde du client
-            $client = $sale->client;
-            $client->debit = $client->sales->sum('mttc');
-            $client->solde = $client->debit - $client->credit;
-            $client->save();
+        // Recalcul du solde du client
+        $client = $sale->client;
+        $client->debit = $client->sales->sum('mttc');
+        $client->solde = $client->debit - $client->credit;
+        $client->save();
 
         $sale->delete();
 

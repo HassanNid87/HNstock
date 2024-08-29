@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->date('deleted_at')->nullable(false)->change();
+            $table->softDeletes();
         });
     }
 
@@ -23,7 +23,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('sales', function (Blueprint $table) {
-            $table->date('deleted_at')->nullable(false)->change();
+            $table->dropSoftDeletes();
         });
     }
 };

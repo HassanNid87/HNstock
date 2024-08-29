@@ -11,7 +11,7 @@ class AddCodebareAndEtagereToProductsTable extends Migration
             $table->string('codebare')->nullable();
             $table->string('etagere')->nullable();
             $table->string('unite')->nullable(); // Ajout de la colonne unite
-            $table->double('priceVgros');
+            $table->double('priceVgros')->nullable();
 
         });
     }

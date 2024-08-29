@@ -32,7 +32,7 @@ class SaleRequest extends FormRequest
             'tremise' => 'required|numeric',
             'mremise' => 'required|numeric',
             'mttc' => 'required|numeric',
-            'montant_restant' => 'required|numeric',
+//            'montant_restant' => 'required|numeric',
             'client_id' => 'required',
             'product_id' => ['required' , 'array' , 'min:1'],
             'product_id.*' => ['required' , 'numeric', Rule::exists(Product::class , 'id')],
