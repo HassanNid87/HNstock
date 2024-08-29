@@ -200,7 +200,7 @@
                                                              data-index="{{ $index }}" style="max-width: 100px;">
                                                     </td>
                                                     <td>
-                                                        <input type="number" name="quantity[]" min="1" value="1"
+                                                        <input type="number" name="quantity[]" min="1"
                                                                class="form-control quantity"
                                                                value="{{ $detail->quantity }}">
                                                     </td>
