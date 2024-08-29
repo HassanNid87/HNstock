@@ -171,18 +171,10 @@
 
         <!-- Grid Tab -->
         <div class="tab-pane fade" id="grid" role="tabpanel" aria-labelledby="grid-tab">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="{{ route('products.create') }}" class="btn btn-success waves-effect waves-light mb-3">
-                    <i class="mdi mdi-plus me-1"></i>
-                    Nouveau Produit
-                </a>
 
-            </div>
                         <!-- Zone de recherche pour l'onglet grille -->
-                        <div class="row">
+         <div class="row">
                             <!-- Formulaire de Filtrage par Catégorie -->
-
-
             <div class="row">
                     <!-- Sidebar for cart -->
                     <aside class="col-md-12">

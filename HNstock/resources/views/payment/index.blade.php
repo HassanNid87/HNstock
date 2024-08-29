@@ -21,7 +21,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="col-md-4">
             <div>
-                <a href="{{ route('sales.create') }}" title="Nouvelle Facture">
+                <a href="{{ route('payments.create') }}" title="Nouvelle Facture">
                     <button type="button" class="btn btn-success waves-effect waves-light me-2">
                     <i class="mdi mdi-plus me-1"></i>
 

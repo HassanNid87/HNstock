@@ -315,7 +315,7 @@
                                 <div class="col-sm-6">
                                     <div class="mb-3">
                                         <label for="notes" class="form-label">Notes</label>
-                                        <textarea name="notes" id="notes" class="form-control">{{ old('notes', $sale->notes) }}</textarea>
+                                        <textarea name="notes" id="notes" rows="1" class="form-control">{{ old('notes', $sale->notes) }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@
                         <i class="fas fa-list"></i>
                     </a>
                     <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
-                    <a href="#" class="btn btn-success" t> <i class="uil uil-file-alt">
+                    <a href="#" t> <i class="uil uil-file-alt">
                         <button type="submit">
                             {{ $isUpdate ? 'Update' : 'Create' }}
                         </button>
