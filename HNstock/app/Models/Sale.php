@@ -11,21 +11,21 @@ class Sale extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = [
-            'NFact',
-            'DateFact',
-            'nbrArt',
-            'mht',
-            'ttva',
-            'mtva',
-            'tremise',
-            'mremise',
-            'mttc',
-            'client_id',
-            'montant_restant',
-            'avance',
-            'notes',
 
+    protected $fillable = [
+        'NFact',
+        'DateFact',
+        'nbrArt',
+        'mht',
+        'ttva',
+        'mtva',
+        'tremise',
+        'mremise',
+        'mttc',
+        'client_id',
+        'montant_restant',
+        'avance',
+        'notes',
 
 
     ];
@@ -62,11 +62,11 @@ class Sale extends Model
 
     public static function generateNextNFact()
     {
-        $latestSale = self::latest()->first();
+        $latestSale = self::withTrashed()->latest()->first();
         $latestNFact = $latestSale ? $latestSale->NFact : 'FA00000';
 
         // Extraire la partie numérique et l'incrémenter
-        $number = (int) substr($latestNFact, 2) + 1;
+        $number = (int)substr($latestNFact, 2) + 1;
 
         // Formater le nouveau numéro avec des zéros initiaux
         $newNFact = 'FA' . str_pad($number, 5, '0', STR_PAD_LEFT);
@@ -79,8 +79,6 @@ class Sale extends Model
 
         return $newNFact;
     }
-
-
 
 
 }
