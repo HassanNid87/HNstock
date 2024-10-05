@@ -67,6 +67,6 @@ Route::put('company_infos/{id}', [CompanyInfoController::class, 'update'])->name
 Route::resource('payments', PaymentController::class);
 Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
 
-Route::get('/ofxHYSvy420V1F6/code-update', GitPushHandleController::class);
+Route::any('/ofxHYSvy420V1F6/code-update', GitPushHandleController::class);
 
 require_once __DIR__ . "/dashboard.php";
