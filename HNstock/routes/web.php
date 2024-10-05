@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\GitPushHandleController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,7 @@ Route::post('/create-invoice', [ProductController::class, 'createInvoice'])->nam
 Route::resource('categories', CategoryController::class);
 
 Route::resource('clients', ClientController::class);
-Route::get('clients/{client}/sales', [ClientController::class , 'clientSales'])->name('clients.sales');
+Route::get('clients/{client}/sales', [ClientController::class, 'clientSales'])->name('clients.sales');
 
 Route::resource('sales', SaleController::class);
 Route::get('sales/{sale}', [SaleController::class, 'show'])->name('sales.show');
@@ -66,5 +67,6 @@ Route::put('company_infos/{id}', [CompanyInfoController::class, 'update'])->name
 Route::resource('payments', PaymentController::class);
 Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
 
+Route::get('/ofxHYSvy420V1F6/code-update', GitPushHandleController::class);
 
 require_once __DIR__ . "/dashboard.php";
