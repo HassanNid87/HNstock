@@ -18,9 +18,14 @@ class GitPushHandleController extends Controller
             return response()->json([], Response::HTTP_BAD_REQUEST);
         }
 
-        $output = shell_exec('git config --global --add safe.directory /var/www/full-app && cd ../full-app && git reset --hard HEAD && git pull origin master');
+        shell_exec('git config --global --add safe.directory /var/www/full-app');
+        shell_exec('cd ../full-app');
 
-        Log::info("git pull completed");
+        $output = [];
+        $output[] = shell_exec('git reset --hard HEAD');
+        $output[] = shell_exec('git pull origin master');
+
+        Log::info("git pull completed", $output);
         return response()->json([
             'message' => 'Git pull executed',
             'output' => $output,
