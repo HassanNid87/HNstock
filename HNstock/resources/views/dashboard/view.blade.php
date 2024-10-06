@@ -20,7 +20,7 @@
         <div class="card">
             <div class="card-body position-relative">
                 <h3 class="card-title mb-4">
-                    Summary
+                    Summary (new)
 
                     <div class="dropdown float-end">
                         <span class="text-muted" id="summaryDropDown" data-bs-toggle="dropdown" aria-haspopup="true"
