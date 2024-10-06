@@ -1,6 +1,6 @@
 FROM php:8.1-fpm-alpine
 
-WORKDIR /var/www/app
+WORKDIR /var/www/app/HNstock
 
 RUN apk update && apk add \
     curl \
