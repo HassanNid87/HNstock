@@ -1,30 +1,31 @@
 <?php
+
 use App\Models\Category;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-return new class extends Migration
-{
+
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        if (!Schema::hasTable('products')) {
+        if (Schema::hasTable('products')) return;
+
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
-            $table->unsignedBigInteger('quantity');
+            $table->string('description')->default("");
             $table->string('image');
-            $table->double('priceA');
-            $table->double('priceV');
+            $table->double('priceA')->default(0);
+            $table->double('priceV')->default(0);
             $table->foreignIdFor(Category::class);
             $table->softDeletes();
             $table->timestamps();
         });
-     }
     }
+
     /**
      * Reverse the migrations.
      */
