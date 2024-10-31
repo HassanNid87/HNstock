@@ -17,10 +17,15 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('description')->default("");
-            $table->string('image');
             $table->double('priceA')->default(0);
             $table->double('priceV')->default(0);
             $table->foreignIdFor(Category::class);
+            $table->string('codebare')->default("");
+            $table->string('etagere')->default("");
+            $table->string("unite")->default("");
+            $table->unsignedInteger("stockmax")->nullable();
+            $table->unsignedInteger("stockmin")->nullable();
+            $table->string('image');
             $table->softDeletes();
             $table->timestamps();
         });
