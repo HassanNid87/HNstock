@@ -31,7 +31,7 @@ class Product extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->withDefault(fn() => Category::defaultCategory());
     }
 
     public function saleDetails()
@@ -43,4 +43,5 @@ class Product extends Model
     {
         return $this->hasOne(Stock::class);
     }
+
 }
