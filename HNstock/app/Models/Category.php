@@ -20,8 +20,14 @@ class Category extends Model
 
     public static function defaultCategory(): self
     {
-        return new self([
+        $result = new self([
             'name' => '--',
+            'id' => 0
         ]);
+
+        $result->isDefault = true;
+        $result->id = 0;
+
+        return $result;
     }
 }

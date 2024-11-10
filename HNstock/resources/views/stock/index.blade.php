@@ -94,7 +94,7 @@
                                             {{ $stock->product ? $stock->product->description : 'N/A' }}
                                         </td>
                                         <td>
-                                            @if ($stock->product && $stock->product->category)
+                                            @if ($stock->product && !$stock->product->category->isDefault)
                                                 <a href="{{ route('categories.show', $stock->product->category->id) }}" class="btn btn-link">
                                                     <span class="badge" style="background-color:#F97300;">
                                                         {{ $stock->product->category->name }}

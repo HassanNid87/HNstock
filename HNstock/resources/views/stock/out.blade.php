@@ -58,6 +58,7 @@
                             <form method="get" id="categoryFilterForm" class="d-flex align-items-center">
                                 <select id="category-filter" name="category" class="form-control form-control-sm w-100" aria-controls="DataTables_Table_0">
                                     <option value="">Select Category</option>
+                                    <option value="0">Default</option>
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}" {{ Request::input('category') == $category->id ? 'selected' : '' }}>
                                             {{ $category->name }}
