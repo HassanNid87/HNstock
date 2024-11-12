@@ -22,9 +22,9 @@ func main() {
         fmt.Fprintf(w, "Git pull output:\n%s", output)
     })
 
-    // Start the server on port 9000
-    log.Println("Server started on port 9000")
-    if err := http.ListenAndServe(":9000", nil); err != nil {
+    // Start the server on port 8002
+    log.Println("Server started on port 8002")
+    if err := http.ListenAndServe(":8002", nil); err != nil {
         log.Fatalf("Failed to start server: %v", err)
     }
 }
