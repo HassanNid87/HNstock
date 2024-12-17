@@ -17,6 +17,10 @@
 
 @section('content')
     <div class="container-fluid">
+
+        <a class="btn btn-success" href="{{  route('storage-test') }}">
+            go storage
+        </a>
         <div class="card">
             <div class="card-body position-relative">
                 <h3 class="card-title mb-4">
@@ -24,11 +28,12 @@
 
                     <div class="dropdown float-end">
                         <span class="text-muted" id="summaryDropDown" data-bs-toggle="dropdown" aria-haspopup="true"
-                            role="button" aria-expanded="false"> Daily <i class="mdi mdi-chevron-down ms-1"></i></span>
+                              role="button" aria-expanded="false"> Daily <i
+                                class="mdi mdi-chevron-down ms-1"></i></span>
                         <div class="dropdown-menu summaryDropDown" aria-labelledby="summaryDropDown">
                             @foreach (TimeBreakdown::cases() as $time)
-                            <span role="button" data-type="{{ $time->value }}"
-                                class="dropdown-item">{{ $time->getText() }}</span>
+                                <span role="button" data-type="{{ $time->value }}"
+                                      class="dropdown-item">{{ $time->getText() }}</span>
                             @endforeach
                         </div>
                     </div>
@@ -55,10 +60,10 @@
             $.ajax({
                 url: "{{ route('dashboard.load-summary') }}",
                 data: {
-                    period : type
+                    period: type
                 },
                 success: (content) => {
-                    summarySection.html(content) ;
+                    summarySection.html(content);
                 },
             });
         }
@@ -69,7 +74,7 @@
         });
 
 
-        $(".summaryDropDown .dropdown-item").click(function() {
+        $(".summaryDropDown .dropdown-item").click(function () {
             const period = $(this).data('type');
             loadSummary(period);
         });
