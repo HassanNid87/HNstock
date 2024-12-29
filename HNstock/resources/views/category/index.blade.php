@@ -44,16 +44,6 @@
                                             title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
-
-                                    {{--                                    <form method="POST" action=""--}}
-                                    {{--                                          style="display: inline-block;">--}}
-                                    {{--                                        @csrf--}}
-                                    {{--                                        @method('DELETE')--}}
-                                    {{--                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded"--}}
-                                    {{--                                                title="Delete">--}}
-                                    {{--                                            <i class="fas fa-trash"></i>--}}
-                                    {{--                                        </button>--}}
-                                    {{--                                    </form>--}}
                                 </div>
                             </td>
                         </tr>
