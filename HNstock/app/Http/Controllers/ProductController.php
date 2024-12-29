@@ -9,6 +9,7 @@ use App\Models\Sale;
 use App\Models\SaleDetail;
 use App\Models\Stock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -175,10 +176,15 @@ class ProductController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws \Throwable
      */
     public function destroy(product $product)
     {
-        $product->delete();
+        DB::transaction(function () use ($product) {
+            $product->delete();
+            $product->stock()->delete();
+        });
+
         return to_route(route: 'products.index')->with('success', 'Product deleted successfully');
     }
 

@@ -34,7 +34,7 @@ class ProductRequest extends FormRequest
             'stockmin' => 'nullable|integer|min:0',
         ] ;
 
-        if ($this->route()->getActionMethod() === 'create') {
+        if ($this->route()->getActionMethod() === 'store') {
             $rules['image'] = 'required|image';
         }
 

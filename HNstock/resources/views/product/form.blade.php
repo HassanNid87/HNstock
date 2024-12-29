@@ -6,7 +6,7 @@
 @endphp
 
 @section('content')
-    <div class="row">
+    <div class="row" xmlns="http://www.w3.org/1999/html">
         <div class="col-12">
             <div class="page-title-box d-flex align-items-center justify-content-between">
                 <h4 class="mb-0">{{ $isUpdate ? 'Editer Un Produit' : 'Ajouter Un Produit' }}</h4>
@@ -72,7 +72,8 @@
                                             <select name="category_id" id="category_id" class="form-select">
                                                 <option value="">Categorie</option>
                                                 @foreach ($categories as $category)
-                                                    <option value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>{{ $category->name }}</option>
+                                                    <option
+                                                        value="{{ $category->id }}" @selected(old('category_id', $product->category_id) == $category->id)>{{ $category->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -114,31 +115,39 @@
                                             <label for="unite" class="form-label">Unité</label>
                                             <select name="unite" id="unite" class="form-select" required>
                                                 <option value="" disabled selected>Sélectionnez une unité</option>
-                                                <option value="pièce" @selected(old('unite', $product->unite) == 'pièce')>
+                                                <option
+                                                    value="pièce" @selected(old('unite', $product->unite) == 'pièce')>
                                                     Pièce
                                                 </option>
-                                                <option value="boîte" @selected(old('unite', $product->unite) == 'boîte')>
+                                                <option
+                                                    value="boîte" @selected(old('unite', $product->unite) == 'boîte')>
                                                     Boîte
                                                 </option>
-                                                <option value="kilogramme" @selected(old('unite', $product->unite) == 'kilogramme')>
+                                                <option
+                                                    value="kilogramme" @selected(old('unite', $product->unite) == 'kilogramme')>
                                                     Kilogramme
                                                 </option>
-                                                <option value="Litre" @selected(old('unite', $product->unite) == 'Litre')>
+                                                <option
+                                                    value="Litre" @selected(old('unite', $product->unite) == 'Litre')>
                                                     Litre
                                                 </option>
                                                 <option value="pack" @selected(old('unite', $product->unite) == 'pack')>
                                                     Pack
                                                 </option>
-                                                <option value="rouleau" @selected(old('unite', $product->unite) == 'rouleau')>
+                                                <option
+                                                    value="rouleau" @selected(old('unite', $product->unite) == 'rouleau')>
                                                     Rouleau
                                                 </option>
-                                                <option value="Mètre carré" @selected(old('unite', $product->unite) == 'Mètre carré')>
+                                                <option
+                                                    value="Mètre carré" @selected(old('unite', $product->unite) == 'Mètre carré')>
                                                     Mètre carré
                                                 </option>
-                                                <option value="mètre cube" @selected(old('unite', $product->unite) == 'mètre cube')>
+                                                <option
+                                                    value="mètre cube" @selected(old('unite', $product->unite) == 'mètre cube')>
                                                     Mètre cube
                                                 </option>
-                                                <option value="tonne" @selected(old('unite', $product->unite) == 'tonne')>
+                                                <option
+                                                    value="tonne" @selected(old('unite', $product->unite) == 'tonne')>
                                                     Tonne
                                                 </option>
                                             </select>
@@ -262,11 +271,10 @@
                 <div class="col ms-auto">
                     <div class="d-flex flex-reverse flex-wrap gap-2">
                         <a href="#" class="btn btn-danger"> <i class="uil uil-times"></i> Cancel </a>
-                        <a href="#" class="btn btn-success" t> <i class="uil uil-file-alt">
-                                <button type="submit">
-                                    {{ $isUpdate ? 'Update' : 'Create' }}
-                                </button>
-                            </i> </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="uil uil-file-alt"></i>
+                            {{ $isUpdate ? 'Update' : 'Create' }}
+                        </button>
                     </div>
                 </div> <!-- end col -->
             </div>
