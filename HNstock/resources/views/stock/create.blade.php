@@ -1,21 +1,21 @@
-@extends('base')
+@extends('layouts.base')
 
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h4 class="mb-0">Créer Stock</h4>
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box d-flex align-items-center justify-content-between">
+                <h4 class="mb-0">Créer Stock</h4>
 
-            <div class="page-title-right">
-                <ol class="breadcrumb m-0">
-                    <li class="breadcrumb-item"><a href="javascript: void(0);">Stock</a></li>
-                    <li class="breadcrumb-item active">Créer Stock</li>
-                </ol>
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="javascript: void(0);">Stock</a></li>
+                        <li class="breadcrumb-item active">Créer Stock</li>
+                    </ol>
+                </div>
+
             </div>
-
         </div>
     </div>
-</div>
     <a href="{{ route('stocks.index') }}" class="btn btn-secondary mb-3">
         <i class="fas fa-arrow-left"></i> Back to Stock List
     </a>
@@ -37,7 +37,8 @@
             <select name="product_id" id="product_id" class="form-control">
                 <option value="">Select Product</option>
                 @foreach ($products as $product)
-                    <option value="{{ $product->id }}" data-category="{{ $product->category_id }}" data-price="{{ $product->price }}">
+                    <option value="{{ $product->id }}" data-category="{{ $product->category_id }}"
+                            data-price="{{ $product->price }}">
                         {{ $product->name }}
                     </option>
                 @endforeach
@@ -56,31 +57,31 @@
 @endsection
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const categorySelect = document.querySelector('#category_id');
-        const productSelect = document.querySelector('#product_id');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categorySelect = document.querySelector('#category_id');
+            const productSelect = document.querySelector('#product_id');
 
-        // Handle category change
-        categorySelect.addEventListener('change', function() {
-            const selectedCategory = this.value;
-            const products = productSelect.querySelectorAll('option');
+            // Handle category change
+            categorySelect.addEventListener('change', function () {
+                const selectedCategory = this.value;
+                const products = productSelect.querySelectorAll('option');
 
-            products.forEach(product => {
-                product.style.display = product.getAttribute('data-category') === selectedCategory || selectedCategory === '' ? 'block' : 'none';
+                products.forEach(product => {
+                    product.style.display = product.getAttribute('data-category') === selectedCategory || selectedCategory === '' ? 'block' : 'none';
+                });
+
+                if (selectedCategory === '') {
+                    productSelect.value = ''; // Reset product selection if no category is selected
+                }
             });
 
-            if (selectedCategory === '') {
-                productSelect.value = ''; // Reset product selection if no category is selected
-            }
+            // Handle product selection change to update price
+            productSelect.addEventListener('change', function () {
+                const selectedProduct = this.options[this.selectedIndex];
+                const price = selectedProduct.getAttribute('data-price');
+                console.log('Selected product price:', price); // You can use the price as needed
+            });
         });
-
-        // Handle product selection change to update price
-        productSelect.addEventListener('change', function() {
-            const selectedProduct = this.options[this.selectedIndex];
-            const price = selectedProduct.getAttribute('data-price');
-            console.log('Selected product price:', price); // You can use the price as needed
-        });
-    });
-</script>
+    </script>
 @endsection

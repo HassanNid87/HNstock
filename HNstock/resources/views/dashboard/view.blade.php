@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 @php
     use App\Enums\TimeBreakdown;
 @endphp
@@ -17,10 +17,6 @@
 
 @section('content')
     <div class="container-fluid">
-
-        <a class="btn btn-success" href="{{  route('storage-test') }}">
-            go storage
-        </a>
         <div class="card">
             <div class="card-body position-relative">
                 <h3 class="card-title mb-4">

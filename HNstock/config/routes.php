@@ -31,4 +31,14 @@ return [
         'route' => 'stocks.index',
         'icon' => 'books',
     ],
+    [
+        'name' => 'Réglements',
+        'route' => 'payments.index',
+        'icon' => 'credit-card',
+    ],
+    [
+        'name' => 'Infos Société',
+        'route' => 'company_infos.show',
+        'icon' => 'building',
+    ],
 ];

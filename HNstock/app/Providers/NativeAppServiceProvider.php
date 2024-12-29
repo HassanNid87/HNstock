@@ -13,7 +13,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
      */
     public function boot(): void
     {
-        Window::open()->maximized()->titleBarHidden();
+        Window::open()->maximized()->hideMenu();
     }
 
     /**

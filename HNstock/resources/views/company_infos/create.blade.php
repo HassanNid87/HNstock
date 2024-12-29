@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 
 @section('title', 'Créer les informations de la société')
 
@@ -24,7 +24,8 @@
 
                     <div class="form-group mb-3">
                         <label for="address" class="form-label">Adresse</label>
-                        <input type="text" name="address" id="address" class="form-control" value="{{ old('address') }}">
+                        <input type="text" name="address" id="address" class="form-control"
+                               value="{{ old('address') }}">
                     </div>
 
                     <div class="form-group mb-3">
@@ -44,12 +45,14 @@
 
                     <div class="form-group mb-3">
                         <label for="website" class="form-label">Site web</label>
-                        <input type="text" name="website" id="website" class="form-control" value="{{ old('website') }}">
+                        <input type="text" name="website" id="website" class="form-control"
+                               value="{{ old('website') }}">
                     </div>
 
                     <div class="form-group mb-3">
                         <label for="patente" class="form-label">Patente</label>
-                        <input type="text" name="patente" id="patente" class="form-control" value="{{ old('patente') }}">
+                        <input type="text" name="patente" id="patente" class="form-control"
+                               value="{{ old('patente') }}">
                     </div>
 
                     <div class="form-group my-3">

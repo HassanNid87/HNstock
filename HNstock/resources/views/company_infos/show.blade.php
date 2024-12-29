@@ -1,5 +1,5 @@
 <!-- resources/views/company_infos/show.blade.php -->
-@extends('base')
+@extends('layouts.base')
 
 @section('title', 'Informations de la société')
 
@@ -48,7 +48,8 @@
                     <div class="col-md-4"><strong>Logo:</strong></div>
                     <div class="col-md-8">
                         @if ($companyInfo->logo)
-                            <img src="{{ asset('storage/' . $companyInfo->logo) }}" alt="Logo de la société" width="100">
+                            <img src="{{ asset('storage/' . $companyInfo->logo) }}" alt="Logo de la société"
+                                 width="100">
                         @else
                             <span>Aucun logo disponible</span>
                         @endif

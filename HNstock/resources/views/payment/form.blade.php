@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 
 @section('title', $isUpdate ? 'Update Réglement' : 'Create Réglement')
 
@@ -87,23 +87,23 @@
                                             <select name="mode_payment" id="mode_payment" class="form-select" required>
                                                 <option value="" disabled selected>Sélectionnez un mode</option>
                                                 <option
-                                                    value="Espèce" @selected(old('mode_payment', $payment->mode_payment) == 'Espèce')>
+                                                        value="Espèce" @selected(old('mode_payment', $payment->mode_payment) == 'Espèce')>
                                                     Espèce
                                                 </option>
                                                 <option
-                                                    value="Chèque" @selected(old('mode_payment', $payment->mode_payment) == 'Chèque')>
+                                                        value="Chèque" @selected(old('mode_payment', $payment->mode_payment) == 'Chèque')>
                                                     Chèque
                                                 </option>
                                                 <option
-                                                    value="VirBancaire" @selected(old('mode_payment', $payment->mode_payment) == 'VirBancaire')>
+                                                        value="VirBancaire" @selected(old('mode_payment', $payment->mode_payment) == 'VirBancaire')>
                                                     Virement Bancaire
                                                 </option>
                                                 <option
-                                                    value="Carte de Crédit" {{ old('mode_payment', $payment->mode_payment) == 'Carte de Crédit' ? 'selected' : '' }}>
+                                                        value="Carte de Crédit" {{ old('mode_payment', $payment->mode_payment) == 'Carte de Crédit' ? 'selected' : '' }}>
                                                     Carte de Crédit
                                                 </option>
                                                 <option
-                                                    value="Autre" {{ old('mode_payment', $payment->mode_payment) == 'Autre' ? 'selected' : '' }}>
+                                                        value="Autre" {{ old('mode_payment', $payment->mode_payment) == 'Autre' ? 'selected' : '' }}>
                                                     Autre
                                                 </option>
                                             </select>
@@ -119,7 +119,7 @@
                                                 <option value="" disabled selected>Sélectionnez un client</option>
                                                 @foreach ($clients as $client)
                                                     <option
-                                                        @selected(old('client_id', $payment->client_id) == $client->id) value="{{ $client->id }}">
+                                                            @selected(old('client_id', $payment->client_id) == $client->id) value="{{ $client->id }}">
                                                         {{ $client->name }}</option>
                                                 @endforeach
                                             </select>

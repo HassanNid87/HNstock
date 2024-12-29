@@ -1,6 +1,6 @@
 <!-- resources/views/sale/show.blade.php -->
 
-@extends('base')
+@extends('layouts.base')
 
 @section('title', 'Sale Details')
 
@@ -104,22 +104,22 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th>Produit</th>
-                            <th>Quantité</th>
-                            <th>Prix Unitaire</th>
-                            <th>Total</th>
-                        </tr>
+                    <tr>
+                        <th>Produit</th>
+                        <th>Quantité</th>
+                        <th>Prix Unitaire</th>
+                        <th>Total</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach ($sale->details as $detail)
-                            <tr>
-                                <td>{{ $detail->product->name }}</td>
-                                <td>{{ $detail->quantity }}</td>
-                                <td>{{ number_format($detail->unit_price, 2) }} MAD</td>
-                                <td>{{ number_format($detail->total, 2) }} MAD</td>
-                            </tr>
-                        @endforeach
+                    @foreach ($sale->details as $detail)
+                        <tr>
+                            <td>{{ $detail->product->name }}</td>
+                            <td>{{ $detail->quantity }}</td>
+                            <td>{{ number_format($detail->unit_price, 2) }} MAD</td>
+                            <td>{{ number_format($detail->total, 2) }} MAD</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>

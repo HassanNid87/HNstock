@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 @section('title' , 'Categories')
 
 @section('content')
@@ -8,29 +8,29 @@
     </div>
     <table class="table">
         <thead class="">
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Update Product</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Update Product</th>
+        </tr>
         </thead>
         <tbody>
-         @forelse ($products as $product)
-         <tr>
+        @forelse ($products as $product)
+            <tr>
                 <td>{{$product->id}}</td>
                 <td>{{$product->name}}</td>
 
                 <td>
-                  <div class="btn-group gap-2">
-                        <a href="{{ route('products.edit', $product) }}" class="btn btn-primary" >Update</a>
-                  </div>
+                    <div class="btn-group gap-2">
+                        <a href="{{ route('products.edit', $product) }}" class="btn btn-primary">Update</a>
+                    </div>
                 </td>
             </tr>
-            @empty
+        @empty
             <tr>
                 <td colspan="3" align="center"><h6>No Products for this category</h6></td>
             </tr>
-         @endforelse
+        @endforelse
 
         </tbody>
     </table>

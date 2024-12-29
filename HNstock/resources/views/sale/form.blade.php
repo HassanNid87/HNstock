@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 @section('title', ($isUpdate ? 'Update' : 'Create') . ' Sale')
 
 @php
@@ -106,7 +106,7 @@
                                                 <option value="">Sélectionnez un client</option>
                                                 @foreach ($clients as $client)
                                                     <option
-                                                        @selected(old('client_id', $sale->client_id) == $client->id) value="{{ $client->id }}">
+                                                            @selected(old('client_id', $sale->client_id) == $client->id) value="{{ $client->id }}">
                                                         {{ $client->name }}</option>
                                                 @endforeach
                                             </select>
@@ -175,7 +175,7 @@
                                                             <option value="">Select Category</option>
                                                             @foreach ($categories as $category)
                                                                 <option
-                                                                    @selected($detail->product && $detail->product->category_id == $category->id) value="{{ $category->id }}">
+                                                                        @selected($detail->product && $detail->product->category_id == $category->id) value="{{ $category->id }}">
                                                                     {{ $category->name }}</option>
                                                             @endforeach
                                                         </select>
@@ -186,9 +186,9 @@
                                                             <option value="">Select Product</option>
                                                             @foreach ($products as $product)
                                                                 <option
-                                                                    @selected($detail->product_id == $product->id) data-price="{{ $product->priceV }}"
-                                                                    data-category="{{ $product->category_id }}"
-                                                                    value="{{ $product->id }}">
+                                                                        @selected($detail->product_id == $product->id) data-price="{{ $product->priceV }}"
+                                                                        data-category="{{ $product->category_id }}"
+                                                                        value="{{ $product->id }}">
                                                                     {{ $product->name }}</option>
                                                             @endforeach
                                                         </select>
@@ -215,8 +215,8 @@
                                                     </td>
                                                     <td>
                                                         <button
-                                                            @disabled($index === 0) class="btn btn-danger btn-rounded delete-product"
-                                                            type="button">
+                                                                @disabled($index === 0) class="btn btn-danger btn-rounded delete-product"
+                                                                type="button">
                                                             <i class="uil uil-trash"></i>
                                                         </button>
                                                     </td>

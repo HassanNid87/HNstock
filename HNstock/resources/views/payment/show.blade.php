@@ -1,4 +1,4 @@
-@extends('base')
+@extends('layouts.base')
 
 @section('title', 'Détails du Paiement')
 
@@ -112,24 +112,24 @@
             <div class="card-body">
                 <table class="table">
                     <thead>
-                        <tr>
-                            <th>N Facture</th>
-                            <th>Date Facture</th>
-                            <th>Montant TTC</th>
-                            <th>Montant Restant</th>
-                            <th>Montant Réglé</th>
-                        </tr>
+                    <tr>
+                        <th>N Facture</th>
+                        <th>Date Facture</th>
+                        <th>Montant TTC</th>
+                        <th>Montant Restant</th>
+                        <th>Montant Réglé</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach ($payment->details as $detail)
-                            <tr>
-                                <td>{{ $detail->NFact }}</td>
-                                <td>{{ $detail->DateFact }}</td>
-                                <td>{{ number_format($detail->mttc, 2) }} MAD</td>
-                                <td>{{ number_format($detail->montant_restant, 2) }} MAD</td>
-                                <td>{{ number_format($detail->montant_regle, 2) }} MAD</td>
-                            </tr>
-                        @endforeach
+                    @foreach ($payment->details as $detail)
+                        <tr>
+                            <td>{{ $detail->NFact }}</td>
+                            <td>{{ $detail->DateFact }}</td>
+                            <td>{{ number_format($detail->mttc, 2) }} MAD</td>
+                            <td>{{ number_format($detail->montant_restant, 2) }} MAD</td>
+                            <td>{{ number_format($detail->montant_regle, 2) }} MAD</td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
             </div>
