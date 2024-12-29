@@ -25,7 +25,7 @@
                     </thead>
                     <tbody align="center">
                     @forelse ($categories as $category)
-                        <tr>
+                        <tr id="category_row_{{ $category->id }}">
                             <td>{{ $category->name }}</td>
                             <td>
                                 <div class="btn-group gap-2">
@@ -39,15 +39,21 @@
                                             title="Modifier">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <form method="POST" action="{{ route('categories.destroy', $category) }}"
-                                          style="display: inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded"
-                                                title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button role="button" data-id="{{ $category->id }}"
+                                            class="btn btn-sm btn-outline-danger delete-category rounded"
+                                            title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+
+                                    {{--                                    <form method="POST" action=""--}}
+                                    {{--                                          style="display: inline-block;">--}}
+                                    {{--                                        @csrf--}}
+                                    {{--                                        @method('DELETE')--}}
+                                    {{--                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded"--}}
+                                    {{--                                                title="Delete">--}}
+                                    {{--                                            <i class="fas fa-trash"></i>--}}
+                                    {{--                                        </button>--}}
+                                    {{--                                    </form>--}}
                                 </div>
                             </td>
                         </tr>
@@ -145,6 +151,30 @@
                         showError(error.responseJSON.message);
                         return;
                     }
+                },
+            });
+        });
+
+
+        $(".delete-category").click(function () {
+            const id = $(this).data('id');
+            const url = "{{ route('categories.destroy', "-1") }}".replace("-1", id);
+
+
+            const isOk = confirm("Are you sure you want to delete this category?");
+            if (!isOk) return;
+
+            $.ajax(url, {
+                method: "DELETE",
+                dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token()  }}"
+                },
+                success: function () {
+                    $(`#category_row_${id}`).remove();
+                },
+                error: function (error) {
+                    alert("Sorry we had an unexpected error please try again later.")
                 },
             });
         });

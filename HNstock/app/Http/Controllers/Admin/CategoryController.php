@@ -56,7 +56,7 @@ class CategoryController extends Controller
     {
         $isUpdate = true;
         return view('category.form', compact('category', 'isUpdate'));
-     }
+    }
 
     /**
      * Update the specified resource in storage.
@@ -76,6 +76,6 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return to_route(route: 'categories.index')->with('success', 'Category deleted successfully');
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }
