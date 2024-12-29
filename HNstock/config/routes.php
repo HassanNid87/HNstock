@@ -22,7 +22,7 @@ return [
         'icon' => 'users-alt',
     ],
     [
-        'name' => 'Sales',
+        'name' => 'Ventes',
         'route' => 'sales.index',
         'icon' => 'money-stack',
     ],
