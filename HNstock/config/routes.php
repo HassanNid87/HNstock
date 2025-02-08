@@ -12,7 +12,7 @@ return [
         'icon' => 'tag',
     ],
     [
-        'name' => 'Products',
+        'name' => 'Produits',
         'route' => 'products.index',
         'icon' => 'shopping-bag',
     ],
