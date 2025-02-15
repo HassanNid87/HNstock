@@ -33,7 +33,11 @@ class CompanyInfoController extends Controller
     }
 
     public function show() {
-        $companyInfo = CompanyInfo::firstOrFail();
+        $companyInfo = CompanyInfo::first();
+        if (blank($companyInfo)) {
+            return redirect()->route("company_infos.create");
+        }
+
         return view('company_infos.show', compact('companyInfo'));
     }
 
