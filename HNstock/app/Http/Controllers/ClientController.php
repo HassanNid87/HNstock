@@ -67,6 +67,7 @@ class ClientController extends Controller
         if ($request->hasFile(key: 'photo')) {
             $formFields['photo'] = $request->file(key: 'photo')->store(path: 'client', options: 'public');
         }
+        $formFields["email"] = $formFields['email'] ?? "";
         Client::create($formFields);
         return to_route(route: 'clients.index')->with('success', 'client create successfully');
     }
@@ -88,7 +89,10 @@ class ClientController extends Controller
     public function update(ClientRequest $request, Client $client)
     {
         // Mettre à jour les autres champs du client
-        $client->fill($request->validated());
+        $formFields = $request->validated();
+        $formFields["email"] = $formFields['email'] ?? "";
+
+        $client->fill($formFields);
 
         // Vérifier si un fichier d'image a été téléchargé
         if ($request->hasFile('photo')) {
