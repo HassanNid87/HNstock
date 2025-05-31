@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\ClientFilterData;
 use App\Http\Requests\ClientRequest;
 use App\Models\Client;
 use App\Models\Sale;
+use App\Repository\ClientsRepository;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,10 +16,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ClientController extends Controller
 {
+    public function __construct(
+        protected readonly ClientsRepository $repository
+    )
+    {
+    }
+
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $request->validate([
             'minsolde' => 'nullable|numeric',
@@ -26,33 +36,15 @@ class ClientController extends Controller
             'adresse' => 'nullable|string',
         ]);
 
-        // Initialisation de la requête de base
-        $query = Client::query();
+        $filter = new ClientFilterData(
+            code: $request->get("code"),
+            minSold: $request->integer("minsolde"),
+            maxSold: $request->integer("maxsolde"),
+        );
 
-        // Filtrage par code, nom ou adresse
-        if ($request->filled('code')) {
-            $code = $request->input('code');
-            $query->where(function ($query) use ($code) {
-                $query->where('name', 'like', "%{$code}%")
-                    ->orWhere('adresse', 'like', "%{$code}%")
-                    ->orWhere('code', 'like', "%{$code}%");
-            });
-        }
-
-        // Filtrage par solde minimum
-        if ($request->filled('minsolde')) {
-            $query->where('solde', '>=', $request->minsolde);
-        }
-
-        // Filtrage par solde maximum
-        if ($request->filled('maxsolde')) {
-            $query->where('solde', '<=', $request->maxsolde);
-        }
-
-        // Exécution de la requête avec pagination
-        $clients = $query->paginate(10);
-
-        return view('client.index', compact('clients'));
+        return view('client.index', [
+            'clients' => $this->repository->fetch($filter)
+        ]);
     }
 
 
@@ -64,7 +56,6 @@ class ClientController extends Controller
         $client = new client();
         $isUpdate = false;
         return view('client.form', compact('client', 'isUpdate'));
-
     }
 
     /**
@@ -78,15 +69,6 @@ class ClientController extends Controller
         }
         Client::create($formFields);
         return to_route(route: 'clients.index')->with('success', 'client create successfully');
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Client $client)
-    {
-        //
     }
 
     /**
@@ -94,9 +76,10 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        $isUpdate = true;
-        return view('client.form', compact('client', 'isUpdate'));
-
+        return view('client.form', [
+            'client' => $client,
+            'isUpdate' => true
+        ]);
     }
 
     /**
@@ -132,8 +115,6 @@ class ClientController extends Controller
     {
         $client->delete();
         return to_route(route: 'clients.index')->with('success', 'client deleted successfully');
-
-        //dd($client);
     }
 
 

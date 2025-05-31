@@ -1,3 +1,4 @@
+@php use App\Http\Requests\ClientRequest; @endphp
 @extends('layouts.base')
 
 @section('title', ($isUpdate ? 'Update' : 'Create') . ' Client')
@@ -81,10 +82,12 @@
                                         <label for="type" class="form-label">Type</label>
                                         <select name="type" id="type" class="form-control">
                                             <option value="">Sélectionner un type</option>
-                                            <option value="Société" {{ old('type', $client->type) == 'Société' ? 'selected' : '' }}>
+                                            <option
+                                                value="Société" {{ old('type', $client->type) == 'Société' ? 'selected' : '' }}>
                                                 Société
                                             </option>
-                                            <option value="Individuel" {{ old('type', $client->type) == 'Individuel' ? 'selected' : '' }}>
+                                            <option
+                                                value="Individuel" {{ old('type', $client->type) == 'Individuel' ? 'selected' : '' }}>
                                                 Individuel
                                             </option>
                                         </select>
@@ -126,6 +129,8 @@
                                 <div class="form-group mb-3">
                                     <label for="tel" class="form-label">Téléphone</label>
                                     <input type="text" name="tel" id="tel" class="form-control"
+                                           minlength="{{ ClientRequest::MIN_PHONE_NUMBER_LENGTH  }}"
+                                           maxlength="{{ ClientRequest::MAX_PHONE_NUMBER_LENGTH  }}"
                                            value="{{ old('tel', $client->tel) }}">
                                 </div>
                             </div>
@@ -133,6 +138,8 @@
                                 <div class="form-group mb-3">
                                     <label for="whatsapp" class="form-label">WhatsApp</label>
                                     <input type="text" name="whatsapp" id="whatsapp" class="form-control"
+                                           minlength="{{ ClientRequest::MIN_PHONE_NUMBER_LENGTH  }}"
+                                           maxlength="{{ ClientRequest::MAX_PHONE_NUMBER_LENGTH  }}"
                                            value="{{ old('whatsapp', $client->whatsapp) }}">
                                 </div>
                             </div>

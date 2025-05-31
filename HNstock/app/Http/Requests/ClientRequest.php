@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ClientRequest extends FormRequest
 {
+    public const MIN_PHONE_NUMBER_LENGTH = 10;
+    public const MAX_PHONE_NUMBER_LENGTH = 10;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,21 +24,33 @@ class ClientRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
+        $telRule = $this->getPhoneRule();
 
+        $rules = [
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:255',
-            'tel' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
+            'tel' => 'required|' . $telRule,
+            'email' => 'nullable|email|max:255',
             'adresse' => 'nullable|string|max:255',
-            //'soldemax' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-
+            'whatsapp' => ["nullable", $telRule],
         ];
-        if ($this->route()->getActionMethod() === 'create') {
+
+        if ($this->route()->getActionMethod() === 'store') {
             $rules['photo'] = 'required|image';
         }
 
         return $rules;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneRule(): string
+    {
+        $telRule = self::MIN_PHONE_NUMBER_LENGTH === self::MAX_PHONE_NUMBER_LENGTH
+            ? "digits:" . self::MIN_PHONE_NUMBER_LENGTH
+            : sprintf("digits_between:%s,%s", self::MIN_PHONE_NUMBER_LENGTH, self::MAX_PHONE_NUMBER_LENGTH);
+        return $telRule;
     }
 }

@@ -21,8 +21,9 @@ class Client extends Model
         'debit',
         'credit',
         'notes',
-
+        'whatsapp',
     ];
+
     public function payments()
     {
         return $this->hasMany(Payment::class);
@@ -35,7 +36,7 @@ class Client extends Model
     }
 
 
-       // Calcul du débit total basé sur les ventes
+    // Calcul du débit total basé sur les ventes
     public function getTotalDebitAttribute()
     {
         return $this->sales->sum('mttc');  // Assurez-vous que 'mttc' est le montant total des ventes
