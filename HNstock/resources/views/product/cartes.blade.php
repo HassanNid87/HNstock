@@ -387,6 +387,7 @@
 
             document.querySelectorAll('.add-to-cart').forEach(button => {
                 button.addEventListener('click', function () {
+                    console.log("cliockk")
                     const id = this.dataset.id;
                     const name = this.dataset.name;
                     const price = parseFloat(this.dataset.price);

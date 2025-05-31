@@ -2,6 +2,23 @@
 
 @section('title', 'Produits')
 
+
+@section('style')
+    <style>
+        input[name="quantity"]::-webkit-outer-spin-button,
+        input[name="quantity"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .add-to-cart {
+            height: 30px;
+            width: 30px;
+            padding: 0;
+        }
+    </style>
+@endsection
+
 @section('content')
 
     <div class="container-fluid">
@@ -239,7 +256,7 @@
                                             </button>
 
                                             <input type="number" id="quantity-{{ $product->id }}" name="quantity"
-                                                   min="1" max="{{ $product->stock ? $product->stock->quantity : 1 }}"
+                                                   min="0" max="{{ $product->stock ? $product->stock->quantity : 1 }}"
                                                    value="0"
                                                    class="form-control mx-2"
                                                    style="max-width: 60px; font-size: 0.75rem; text-align: center;">
@@ -256,8 +273,7 @@
                                                     data-id="{{ $product->id }}"
                                                     data-name="{{ $product->name }}"
                                                     data-price="{{ $product->priceV }}"
-                                                    data-image="{{ asset('storage/' . $product->image) }}"
-                                                    style="height: 30px; width: 30px;">
+                                                    data-image="{{ asset('storage/' . $product->image) }}">
                                                 <i class="fas fa-cart-plus" style="font-size: 0.7rem;"></i>
                                             </button>
                                         </div>
@@ -283,9 +299,16 @@
                 document.querySelectorAll('.add-to-cart').forEach(button => {
                     button.addEventListener('click', function () {
                         const id = this.dataset.id;
+
+                        const quantityInput = document.getElementById('quantity-' + id);
+                        const quantity = parseInt(quantityInput.value);
+                        if (quantity > parseInt(quantityInput.max) || quantity < 1) {
+                            alert("la quantité n'est pas valide")
+                            return;
+                        }
+
                         const name = this.dataset.name;
                         const price = parseFloat(this.dataset.price);
-                        const quantity = parseInt(document.getElementById('quantity-' + id).value);
                         const imageUrl = this.dataset.image; // Ajouter une donnée pour l'image
 
                         const existingProduct = cart.find(product => product.id === id);
