@@ -117,6 +117,10 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        if (!$this->repository->isDeletable($client)) {
+            return to_route(route: 'clients.index')->with('error', 'cannot delete client');
+        }
+
         $client->delete();
         return to_route(route: 'clients.index')->with('success', 'client deleted successfully');
     }

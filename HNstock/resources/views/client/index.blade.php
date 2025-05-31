@@ -102,16 +102,24 @@
                                         <td>{{ $client->siteweb }}</td>
                                         <td style="white-space: nowrap;">
                                             <!-- Delete Button -->
-                                            <form method="POST" action="{{ route('clients.destroy', $client) }}"
-                                                  onsubmit="return confirm('Are you sure you want to delete this client?')"
-                                                  style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
+                                            {{ $client->is_deletable ? "Yes" : "Ni.."  }}
+                                            @if($client->is_deletable)
+                                                <form method="POST" action="{{ route('clients.destroy', $client) }}"
+                                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce client ?')"
+                                                      style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded"
+                                                            title="Delete">
+                                                        <i class="uil uil-trash-alt font-size-14"></i>
+                                                    </button>
+                                                </form>
+                                            @else
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded"
-                                                        title="Delete">
+                                                        title="Désolé, vous ne pouvez pas supprimer ce client" disabled>
                                                     <i class="uil uil-trash-alt font-size-14"></i>
                                                 </button>
-                                            </form>
+                                            @endif
                                             <!-- Edit Button -->
                                             <a href="{{ route('clients.edit', $client) }}"
                                                class="btn btn-sm btn-outline-primary rounded" title="Update">

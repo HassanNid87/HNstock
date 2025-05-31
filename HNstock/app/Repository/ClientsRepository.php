@@ -3,21 +3,21 @@
 namespace App\Repository;
 
 use App\Data\ClientFilterData;
-use App\Http\Requests\ClientRequest;
 use App\Models\Client;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ClientsRepository
 {
 
     protected const PER_PAGE = 10;
-    protected Client $model;
 
-    public function __construct()
+    public function __construct(
+        protected readonly Client $model,
+    )
     {
-        $this->model = app(Client::class);
     }
 
-    public function fetch(ClientFilterData $filter)
+    public function fetch(ClientFilterData $filter): LengthAwarePaginator
     {
         $query = $this->model::query();
 
@@ -39,11 +39,24 @@ class ClientsRepository
             $query->where('solde', '<=', $filter->getMaxSold());
         }
 
-        return $query->paginate(self::PER_PAGE);
+        $results = $query->withCount(['payments', 'sales'])->paginate(self::PER_PAGE);
+
+        return $this->mapClients($results);
+    }
+
+    public function isDeletable(Client $client): bool
+    {
+        return $client->sales_count < 1 && $client->payments_count < 1;
     }
 
 
-
+    protected function mapClients(LengthAwarePaginator $results): LengthAwarePaginator
+    {
+        return $results->through(function (Client $item) {
+            $item->is_deletable = $this->isDeletable($item);
+            return $item;
+        });
+    }
 
 
 }
